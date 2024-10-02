@@ -18,3 +18,6 @@ Im Anaconda/Miniconda Terminal anlegen über: \
 `conda create --name music`\
 Beim Start des Terminals muss das Environment jedes mal neu aktiviert werden über:\
 `conda activate music`\
+
+Im neuen Environment sollten folgende Libraries/Tools installiert werden:
+* `conda install pip`
