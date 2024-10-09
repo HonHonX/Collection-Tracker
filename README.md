@@ -24,7 +24,7 @@ Im neuen Environment sollten folgende Libraries/Tools installiert werden:
 
 ___
 
-##Was bisher geschah: Bereitstellung über PythonAnywhere
+## Was bisher geschah: Bereitstellung über PythonAnywhere
 
 Um den Code deiner Django-App von einem GitHub-Repository auf PythonAnywhere zu beziehen, kannst du die folgenden Schritte befolgen:
 
@@ -60,4 +60,4 @@ Klonen dein GitHub-Repository mit folgendem Befehl:
 10. Web-App neu starten
 * Gehe zurück zum Tab "Web" auf PythonAnywhere und klicke auf "Reload", um die Änderungen zu übernehmen.
 11. Zugriff auf deine App
-* Jetzt solltest du in der Lage sein, auf deine App über die URL http://yourusername.pythonanywhere.com zuzugreifen.
+* Jetzt solltest du in der Lage sein, auf deine App über die URL http://CollectionTracker.pythonanywhere.com zuzugreifen.
