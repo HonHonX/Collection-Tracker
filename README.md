@@ -49,6 +49,7 @@ Um den Code deiner Django-App von einem GitHub-Repository auf PythonAnywhere zu 
 ` cd CollectionTracker `
 Klonen dein GitHub-Repository mit folgendem Befehl:
 ` git clone https://github.com/HonHonX/Collection-Tracker.git `
+Da die Datei .env nicht im Repository hochgeladen wird (→gitignore), wird diese manuell hochgeladen (beinhaltet Token)
 7. Abhängigkeiten installieren
 * Wechsel in das Verzeichnis deines geklonten Repositories:
 ` cd Collection-Tracker `
@@ -56,7 +57,7 @@ Klonen dein GitHub-Repository mit folgendem Befehl:
 ` pip install -r requirements.txt `
 8. Django-Einstellungen anpassen
 * Stelle sicher, dass die ALLOWED_HOSTS in deiner settings.py-Datei korrekt konfiguriert ist:
-` ALLOWED_HOSTS = ['WTCollectionTracker.pythonanywhere.com'] `
+` ALLOWED_HOSTS = ['WTCollectionTracker.eu.pythonanywhere.com'] `
 9. Statische Dateien sammeln
 * Führe den Befehl aus, um statische Dateien zu sammeln:
   ```
