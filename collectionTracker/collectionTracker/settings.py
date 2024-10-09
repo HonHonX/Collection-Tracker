@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'collectionTracker.wsgi.application'
+WSGI_APPLICATION = 'WTcollectionTracker.wsgi.application'
 
 
 # Database
