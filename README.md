@@ -11,6 +11,9 @@
   ```
 ### Privatrechner/VM:
 * Siehe Schritt 2
+
+## Login
+Der Login erfolgt per Username und einem <a href="https://docs.github.com/de/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Token</a>. 
 ___
 
 ## Environment einrichten
@@ -56,8 +59,37 @@ Klonen dein GitHub-Repository mit folgendem Befehl:
 ` ALLOWED_HOSTS = ['CollectionTracker.pythonanywhere.com'] `
 9. Statische Dateien sammeln
 * Führe den Befehl aus, um statische Dateien zu sammeln:
-` python manage.py collectstatic `
-10. Web-App neu starten
+  ```
+  cd collectionTracker
+  python manage.py collectstatic
+  ```
+10. Änderung der WSGI-Datei
+Im Tab "Web" muss die WSGI-Datei editiert werden
+```
+# This is the WSGI configuration for your Django project.
+# It is used to help your web app communicate with the web server.
+
+import os
+import sys
+
+# 1. Add the project directory to the Python path (sys.path)
+project_home = '/home/CollectionTracker/Collection-Tracker/collectionTracker'
+if project_home not in sys.path:
+    sys.path = [project_home] + sys.path
+
+# 2. Set the Django settings module
+os.environ['DJANGO_SETTINGS_MODULE'] = 'collectionTracker.settings'
+
+# 3. Activate your virtual environment (if you are using one)
+# If you have a virtual environment, uncomment the next lines and adjust the path
+# activate_this = '/home/collectionTracker/.virtualenvs/music/bin/activate_this.py'
+# exec(open(activate_this).read(), {'__file__': activate_this})
+
+# 4. Get the WSGI application for Django
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+```
+11. Web-App neu starten
 * Gehe zurück zum Tab "Web" auf PythonAnywhere und klicke auf "Reload", um die Änderungen zu übernehmen.
-11. Zugriff auf deine App
-* Jetzt solltest du in der Lage sein, auf deine App über die URL http://CollectionTracker.pythonanywhere.com zuzugreifen.
+12. Zugriff auf deine App
+* Jetzt solltest du in der Lage sein, auf deine App über die URL http://WTCollectionTracker.pythonanywhere.com zuzugreifen.
