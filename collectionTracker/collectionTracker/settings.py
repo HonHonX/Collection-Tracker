@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-#6w@ul$1b==qm-23*&ah*o#%_#ri*z@mc2q5y=)ki(5k_c!lh0
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'honhon.pythonanywhere.com'
+    'collectionTracker.pythonanywhere.com'
 ]
 
 
@@ -129,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
