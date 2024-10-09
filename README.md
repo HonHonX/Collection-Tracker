@@ -13,7 +13,7 @@
 * Siehe Schritt 2
 ___
 
-## Environment A
+## Environment einrichten
 Im Anaconda/Miniconda Terminal anlegen über: \
 `conda create --name music`\
 Beim Start des Terminals muss das Environment jedes mal neu aktiviert werden über:\
