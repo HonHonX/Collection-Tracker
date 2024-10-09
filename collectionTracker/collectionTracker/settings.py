@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-#6w@ul$1b==qm-23*&ah*o#%_#ri*z@mc2q5y=)ki(5k_c!lh0
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'collectionTracker.pythonanywhere.com'
+    'WTCollectionTracker.eu.pythonanywhere.com'
 ]
 
 
