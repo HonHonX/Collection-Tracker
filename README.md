@@ -56,7 +56,7 @@ Klonen dein GitHub-Repository mit folgendem Befehl:
 ` pip install -r requirements.txt `
 8. Django-Einstellungen anpassen
 * Stelle sicher, dass die ALLOWED_HOSTS in deiner settings.py-Datei korrekt konfiguriert ist:
-` ALLOWED_HOSTS = ['CollectionTracker.pythonanywhere.com'] `
+` ALLOWED_HOSTS = ['WTCollectionTracker.pythonanywhere.com'] `
 9. Statische Dateien sammeln
 * Führe den Befehl aus, um statische Dateien zu sammeln:
   ```
