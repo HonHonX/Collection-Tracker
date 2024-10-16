@@ -49,6 +49,7 @@ Um den Code deiner Django-App von einem GitHub-Repository auf PythonAnywhere zu 
 ` cd CollectionTracker `
 Klonen dein GitHub-Repository mit folgendem Befehl:
 ` git clone https://github.com/HonHonX/Collection-Tracker.git `
+Da die Datei .env nicht im Repository hochgeladen wird (→gitignore), wird diese manuell hochgeladen (beinhaltet Token)
 7. Abhängigkeiten installieren
 * Wechsel in das Verzeichnis deines geklonten Repositories:
 ` cd Collection-Tracker `
@@ -56,7 +57,7 @@ Klonen dein GitHub-Repository mit folgendem Befehl:
 ` pip install -r requirements.txt `
 8. Django-Einstellungen anpassen
 * Stelle sicher, dass die ALLOWED_HOSTS in deiner settings.py-Datei korrekt konfiguriert ist:
-` ALLOWED_HOSTS = ['WTCollectionTracker.pythonanywhere.com'] `
+` ALLOWED_HOSTS = ['WTCollectionTracker.eu.pythonanywhere.com'] `
 9. Statische Dateien sammeln
 * Führe den Befehl aus, um statische Dateien zu sammeln:
   ```
@@ -73,16 +74,16 @@ import os
 import sys
 
 # 1. Add the project directory to the Python path (sys.path)
-project_home = '/home/CollectionTracker/Collection-Tracker/collectionTracker'
+project_home = '/home/WTCollectionTracker/Collection-Tracker/collectionTracker'
 if project_home not in sys.path:
     sys.path = [project_home] + sys.path
 
 # 2. Set the Django settings module
-os.environ['DJANGO_SETTINGS_MODULE'] = 'collectionTracker.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'WTCollectionTracker.settings'
 
 # 3. Activate your virtual environment (if you are using one)
 # If you have a virtual environment, uncomment the next lines and adjust the path
-# activate_this = '/home/collectionTracker/.virtualenvs/music/bin/activate_this.py'
+# activate_this = '/home/WTCollectionTracker/.virtualenvs/music/bin/activate_this.py'
 # exec(open(activate_this).read(), {'__file__': activate_this})
 
 # 4. Get the WSGI application for Django
