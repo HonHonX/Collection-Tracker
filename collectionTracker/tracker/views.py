@@ -49,7 +49,7 @@ def artist_search(request):
         except Exception as e:
             error = str(e)
     
-    return render(request, 'music/artist_search.html', {
+    return render(request, 'tracker/artist_search.html', {
         'albums': albums,
         'artist_name': request.POST.get('artist_name', ''),
         'error': error,
