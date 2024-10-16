@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Artist Search</title>
+    <link rel="stylesheet" href="{% static 'music/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Search for an Artist</h1>
+        <form method="POST" class="search-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="artist_name">Artist Name:</label>
+                <input type="text" name="artist_name" id="artist_name" class="input-field">
+                <button type="submit" class="btn">Search</button>
+            </div>
+        </form>
+        
+
+        {% if albums %}
+            <h2>Albums for {{ artist_name }}</h2>
+            <div class="album-grid">
+                {% for album in albums %}
+                    <div class="album-card">
+                        {% if album.image_url %}
+                            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                        {% endif %}
+                        <div class="album-info">
+                            <strong>{{ album.name }}</strong> <br>
+                            Release Date: {{ album.release_date }} <br>
+                            Total Tracks: {{ album.total_tracks }} <br>
+                            <a href="{{ album.url }}" target="_blank">Listen on Spotify</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif error %}
+            <p>{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
