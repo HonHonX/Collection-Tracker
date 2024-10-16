@@ -4,8 +4,8 @@ from decouple import config
 from django.shortcuts import render
 
 # Retrieve Spotify API credentials securely using decouple
-client_id = config('SPOTIPY_CLIENT_ID')
-client_secret = config('SPOTIPY_CLIENT_SECRET')
+client_id = config('SPOTIFY_CLIENT_ID')
+client_secret = config('SPOTIFY_CLIENT_SECRET')
 
 # Authenticate with Spotify API using client credentials flow
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
