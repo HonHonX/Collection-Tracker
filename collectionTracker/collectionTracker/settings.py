@@ -34,7 +34,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'WTCollectionTracker.eu.pythonanywhere.com',
     '127.0.0.1',
-    '127.0.0.1:8000',
     'localhost',
 ]
 
@@ -130,7 +129,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'tracker', 'static', 'tracker'), 
+    os.path.join(BASE_DIR, 'tracker', 'static'), 
 ]
 
 # Default primary key field type
