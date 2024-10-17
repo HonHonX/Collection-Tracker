@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,10 @@ SECRET_KEY = 'django-insecure-#6w@ul$1b==qm-23*&ah*o#%_#ri*z@mc2q5y=)ki(5k_c!lh0
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'WTCollectionTracker.eu.pythonanywhere.com'
+    'WTCollectionTracker.eu.pythonanywhere.com',
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost',
 ]
 
 
@@ -74,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'WTcollectionTracker.wsgi.application'
+WSGI_APPLICATION = 'collectionTracker.wsgi.application'
 
 
 # Database

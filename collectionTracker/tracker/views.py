@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from decouple import config
 from django.shortcuts import render
+from django.http import HttpResponse
 
 # Retrieve Spotify API credentials securely using decouple
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -14,7 +15,7 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Möge der Code immer mit uns sein! Willkommen Janine, Marlon und Marius 👩‍💻✨")
+    return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
 
 # View for searching artist and displaying albums
 def artist_search(request):
