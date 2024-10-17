@@ -1,6 +1,6 @@
 /* Base Styles - Mobile First */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif; /* Updated font */
     background-color: #121212; /* Dark background */
     color: #FFFFFF; /* Light text */
     margin: 0;
@@ -57,40 +57,38 @@ h1, h2 {
 /* Album List */
 .album-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Vertical stacking */
+    gap: 20px; /* Space between albums */
 }
 
 .album-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 15px;
+    display: flex; /* Align items horizontally */
+    align-items: center; /* Center vertically */
+    background-color: #1e1e1e; /* Match container background */
     border: 1px solid #333;
+    padding: 15px;
+    text-align: center;
     border-radius: 8px;
-    background-color: #1e1e1e;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Darker shadows */
 }
 
 .album-cover {
-    width: 100px;
+    max-width: 100px; /* Set fixed width for cover */
     height: auto;
     border-radius: 4px;
+    margin-right: 15px; /* Space between cover and info */
 }
 
 .album-info {
-    flex-grow: 1;
-    margin-left: 20px;
+    flex-grow: 1; /* Take remaining space */
+    margin: 0 10px; /* Margin around info */
+    text-align: left; /* Align text to the left */
     color: #b3b3b3; /* Light gray for album info */
 }
 
-.album-info strong {
-    color: #fff;
-}
-
 .spotify-player {
-    width: 300px;
-    height: 100px; /* Bigger player for usability */
+    width: 300px; /* Fixed width for player */
+    height: 80px;
     border-radius: 4px;
 }
 
@@ -115,49 +113,7 @@ h1, h2 {
         width: auto;
         padding: 10px 20px;
     }
-
-    .album-item {
-        padding: 20px;
-    }
 }
 
-/* Tablets and Desktops */
-@media (min-width: 1024px) {
-    .container {
-        max-width: 900px;
-        padding: 25px;
-    }
-
-    .album-cover {
-        width: 150px;
-    }
-
-    .spotify-player {
-        width: 350px; /* Larger player for bigger screens */
-        height: 100px;
-    }
-}
-
-/* Extra Large Screens */
-@media (min-width: 1440px) {
-    .container {
-        max-width: 1200px;
-    }
-
-    .spotify-player {
-        width: 400px;
-    }
-}
-
-/* Small Screens (Mobile) */
-@media screen and (max-width: 600px) {
-    .album-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .spotify-player {
-        width: 100%; /* Full width player on small devices */
-        height: 80px; /* Slightly smaller for mobile */
-    }
-}
+/* Add Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
