@@ -23,16 +23,21 @@ def update_repo(request):
         github_username = 'HonHonX'
         github_token = config('GITHUB_TOKEN')
 
-        # Set the repository path
+        # Change to repo
         repo_path = '/home/WTCollectionTracker/Collection-Tracker/collectionTracker/'
-
-        # Change to the repository directory
         os.chdir(repo_path)
 
+        # Select branch to pull from
+        branch_name = 'DjangoWebhook'
+
         # Pull the latest changes using the token
-        subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git'])
+        result = subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git', branch_name])
+        
+        logger.info("Git pull result: %d", result)
 
         return JsonResponse({'status': 'success'})
+    
+    logger.warning("Request method not allowed: %s", request.method)
     return JsonResponse({'status': 'error'}, status=400)
 
 
