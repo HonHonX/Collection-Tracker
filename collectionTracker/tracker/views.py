@@ -2,9 +2,12 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from decouple import config
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import os
+import subprocess
 
-# Retrieving Spotify API credientials from .env
+# Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
 client_secret = config('SPOTIFY_CLIENT_SECRET')
 
@@ -13,6 +16,26 @@ auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=clien
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Create your views here.
+@csrf_exempt  # Disable CSRF validation for this view
+def update_repo(request):
+    if request.method == 'POST':
+        # Set your GitHub username and personal access token
+        github_username = 'HonHonX'
+        github_token = config('GITHUB_TOKEN')
+
+        # Set the repository path
+        repo_path = '/home/WTCollectionTracker/Collection-Tracker/collectionTracker/'
+
+        # Change to the repository directory
+        os.chdir(repo_path)
+
+        # Pull the latest changes using the token
+        subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git'])
+
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+
 def index(request):
     return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
 

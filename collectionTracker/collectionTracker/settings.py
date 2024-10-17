@@ -18,10 +18,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 print(BASE_DIR)
 
-#Setup Token
-SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
