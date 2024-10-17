@@ -21,20 +21,23 @@
 
         {% if albums %}
             <h2>Albums for {{ artist_name }}</h2>
-            <div class="album-grid">
+            <div class="album-list">
                 {% for album in albums %}
-                    <div class="album-card">
+                    <div class="album-item">
+                        <!-- Album cover on the left -->
                         {% if album.image_url %}
                             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
                         {% endif %}
+                        
+                        <!-- Album info in the middle -->
                         <div class="album-info">
                             <strong>{{ album.name }}</strong> <br>
                             Release Date: {{ album.release_date }} <br>
                             Total Tracks: {{ album.total_tracks }} <br>
-                            <a href="{{ album.url }}" target="_blank">Listen on Spotify</a>
                         </div>
-                        <!-- Embed Spotify Web Player -->
-                        <iframe src="https://open.spotify.com/embed/album/{{ album.spotify_id }}" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+                        <!-- Spotify Web Player on the right -->
+                        <iframe src="https://open.spotify.com/embed/album/{{ album.spotify_id }}" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     </div>
                 {% endfor %}
             </div>

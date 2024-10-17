@@ -1,86 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head> 
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Artist Search</title>
-    <link rel="stylesheet" href="{% static 'tracker/styles.css' %}">
-    <style>
-        /* Style for the album list */
-        .album-list {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .album-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
+/* Base Styles - Mobile First */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #FFFFFF; /* Light text */
+    margin: 0;
+    padding: 10px;
+}
 
-        .album-cover {
-            width: 100px;
-            height: auto;
-        }
+.container {
+    width: 100%;
+    max-width: 100%; /* Full width on mobile */
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #1e1e1e; /* Slightly lighter dark shade */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Darker shadow for depth */
+    border-radius: 8px;
+}
 
-        .album-info {
-            flex-grow: 1;
-            margin-left: 20px;
-        }
+h1, h2 {
+    text-align: center;
+    color: #1DB954; /* Spotify green for headings */
+}
 
-        .spotify-player {
-            width: 300px;
-            height: 100px; /* Adjust for better usability */
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Search for an Artist</h1>
-        <form method="POST" class="search-form">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="artist_name">Artist Name:</label>
-                <input type="text" name="artist_name" id="artist_name" class="input-field" required>
-                <button type="submit" class="btn">Search</button>
-            </div>
-        </form>
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
 
-        {% if albums %}
-            <h2>Albums for {{ artist_name }}</h2>
-            <div class="album-list">
-                {% for album in albums %}
-                    <div class="album-item">
-                        <!-- Album Cover on the left -->
-                        {% if album.image_url %}
-                            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
-                        {% endif %}
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #333; /* Darker border */
+    background-color: #333; /* Dark input background */
+    color: #fff; /* Light text */
+    border-radius: 4px;
+}
 
-                        <!-- Album Info in the middle -->
-                        <div class="album-info">
-                            <strong>{{ album.name }}</strong> <br>
-                            Release Date: {{ album.release_date }} <br>
-                            Total Tracks: {{ album.total_tracks }}
-                        </div>
+.btn {
+    padding: 12px;
+    background-color: #1DB954; /* Spotify green */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+}
 
-                        <!-- Spotify Web Player on the right -->
-                        <iframe src="https://open.spotify.com/embed/album/{{ album.spotify_id }}" 
-                                class="spotify-player" 
-                                frameborder="0" 
-                                allowtransparency="true" 
-                                allow="encrypted-media">
-                        </iframe>
-                    </div>
-                {% endfor %}
-            </div>
-        {% elif error %}
-            <p>{{ error }}</p>
-        {% endif %}
-    </div>
-</body>
-</html>
+.btn:hover {
+    background-color: #1ed760; /* Lighter green on hover */
+}
+
+/* Album List */
+.album-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.album-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.album-cover {
+    width: 100px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.album-info {
+    flex-grow: 1;
+    margin-left: 20px;
+    color: #b3b3b3; /* Light gray for album info */
+}
+
+.album-info strong {
+    color: #fff;
+}
+
+.spotify-player {
+    width: 300px;
+    height: 100px; /* Bigger player for usability */
+    border-radius: 4px;
+}
+
+/* Larger Devices */
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px; /* Limit container width on larger screens */
+        padding: 20px;
+    }
+
+    .search-form {
+        flex-direction: row; /* Inputs and button aligned horizontally */
+        justify-content: center;
+    }
+
+    .input-field {
+        width: 300px;
+        margin-right: 10px;
+    }
+
+    .btn {
+        width: auto;
+        padding: 10px 20px;
+    }
+
+    .album-item {
+        padding: 20px;
+    }
+}
+
+/* Tablets and Desktops */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px;
+        padding: 25px;
+    }
+
+    .album-cover {
+        width: 150px;
+    }
+
+    .spotify-player {
+        width: 350px; /* Larger player for bigger screens */
+        height: 100px;
+    }
+}
+
+/* Extra Large Screens */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1200px;
+    }
+
+    .spotify-player {
+        width: 400px;
+    }
+}
+
+/* Small Screens (Mobile) */
+@media screen and (max-width: 600px) {
+    .album-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .spotify-player {
+        width: 100%; /* Full width player on small devices */
+        height: 80px; /* Slightly smaller for mobile */
+    }
+}
