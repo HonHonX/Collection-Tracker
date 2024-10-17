@@ -4,16 +4,15 @@ from decouple import config
 from django.shortcuts import render
 from django.http import HttpResponse
 
-# Retrieve Spotify API credentials securely using decouple
+# Retrieving Spotify API credientials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
 client_secret = config('SPOTIFY_CLIENT_SECRET')
 
-# Authenticate with Spotify API using client credentials flow
+# Authentication through Spotify API
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Create your views here.
-
 def index(request):
     return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
 
@@ -26,7 +25,7 @@ def artist_search(request):
         artist_name = request.POST.get('artist_name')
         
         try:
-            # Search for the artist by name
+            # Search by name
             result = sp.search(q=artist_name, type='artist')
             
             if len(result['artists']['items']) == 0:
@@ -45,7 +44,8 @@ def artist_search(request):
                         'release_date': album['release_date'],
                         'total_tracks': album['total_tracks'],
                         'url': album['external_urls']['spotify'],
-                        'image_url': album['images'][0]['url'] if album['images'] else None,  # Get the first (largest) image
+                        'image_url': album['images'][0]['url'] if album['images'] else None,
+                        'spotify_id': album['id'],
                     })
         except Exception as e:
             error = str(e)

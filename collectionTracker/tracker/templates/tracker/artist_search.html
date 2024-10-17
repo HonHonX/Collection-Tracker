@@ -14,11 +14,10 @@
             {% csrf_token %}
             <div class="input-group">
                 <label for="artist_name">Artist Name:</label>
-                <input type="text" name="artist_name" id="artist_name" class="input-field">
+                <input type="text" name="artist_name" id="artist_name" class="input-field" required>
                 <button type="submit" class="btn">Search</button>
             </div>
         </form>
-        
 
         {% if albums %}
             <h2>Albums for {{ artist_name }}</h2>
@@ -34,6 +33,8 @@
                             Total Tracks: {{ album.total_tracks }} <br>
                             <a href="{{ album.url }}" target="_blank">Listen on Spotify</a>
                         </div>
+                        <!-- Embed Spotify Web Player -->
+                        <iframe src="https://open.spotify.com/embed/album/{{ album.spotify_id }}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     </div>
                 {% endfor %}
             </div>
