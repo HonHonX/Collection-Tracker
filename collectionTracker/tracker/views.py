@@ -63,7 +63,7 @@ def artist_search(request):
                 artist_id = result['artists']['items'][0]['id']
                 
                 # Get all albums for the artist using the artist ID
-                album_results = sp.artist_albums(artist_id=artist_id, album_type='album')
+                album_results = sp.artist_albums(artist_id=artist_id, album_type='album, single')
                 
                 for album in album_results['items']:
                     # Fetch album details including the cover image
