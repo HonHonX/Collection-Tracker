@@ -12,15 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-#Setup Token
-SPOTIFY_CLIENT_ID = config('SPOTIFY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET = config('SPOTIFY_CLIENT_SECRET')
-
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -32,7 +28,9 @@ SECRET_KEY = 'django-insecure-#6w@ul$1b==qm-23*&ah*o#%_#ri*z@mc2q5y=)ki(5k_c!lh0
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'WTCollectionTracker.eu.pythonanywhere.com'
+    'WTCollectionTracker.eu.pythonanywhere.com',
+    '127.0.0.1',
+    'localhost',
 ]
 
 
@@ -76,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'WTcollectionTracker.wsgi.application'
+WSGI_APPLICATION = 'collectionTracker.wsgi.application'
 
 
 # Database
@@ -124,7 +122,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'tracker', 'static'), 
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
