@@ -6,6 +6,10 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 import subprocess
+import logging
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 # Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -27,6 +31,7 @@ def update_repo(request):
 
         # Change to repo
         repo_path = '/home/WTCollectionTracker/Collection-Tracker/collectionTracker/'
+        logger.info("Changing directory to: %s", repo_path)
         os.chdir(repo_path)
 
         # Select branch to pull from
@@ -35,6 +40,10 @@ def update_repo(request):
         # Pull the latest changes using the token
         result = subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git', branch_name])
         
+        if result != 0:
+            logger.error("Git pull failed with status: %d", result)
+            return JsonResponse({'status': 'error', 'message': 'Git pull failed'}, status=500)
+
         logger.info("Git pull result: %d", result)
 
         return JsonResponse({'status': 'success'})
