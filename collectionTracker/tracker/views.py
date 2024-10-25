@@ -42,7 +42,7 @@ def update_repo(request):
 
 
 def index(request):
-    return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
+    return HttpResponse("Neue Testseite unter /search 👩‍💻✨ bam ")
 
 # View for searching artist and displaying albums
 def artist_search(request):
