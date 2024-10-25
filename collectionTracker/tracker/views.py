@@ -25,7 +25,7 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 @csrf_exempt  # Disable CSRF validation for this view
 def update_repo(request):
     if request.method == 'POST':
-        # Set your GitHub username and personal access token
+        # Setting GitHub username and personal access token
         github_username = 'HonHonX'
         github_token = config('GITHUB_TOKEN')
 
@@ -53,7 +53,7 @@ def update_repo(request):
 
 # View for the landing page
 def index(request):
-    return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
+    return HttpResponse("Neue Testseite unter /search 👩‍💻✨ woo")
 
 # View for searching artist and displaying albums
 def artist_search(request):
