@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <h1>Artist Name 🔍</h1>
-        <form method="POST" class="search-form">
+        <form method="POST" class="search-form" action="{% url 'artist_search' %}">
             {% csrf_token %}
             <div class="input-group">
                 <label for="artist_name">Artist Name:</label>

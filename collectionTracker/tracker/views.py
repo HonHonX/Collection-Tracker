@@ -16,6 +16,8 @@ auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=clien
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Create your views here.
+
+#view which is connected to the Webhook to auto-pull at PythonAnywhere from GitHub
 @csrf_exempt  # Disable CSRF validation for this view
 def update_repo(request):
     if request.method == 'POST':
@@ -28,7 +30,7 @@ def update_repo(request):
         os.chdir(repo_path)
 
         # Select branch to pull from
-        branch_name = 'DjangoWebhook'
+        branch_name = 'TestAlbumSeite'
 
         # Pull the latest changes using the token
         result = subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git', branch_name])
@@ -40,7 +42,7 @@ def update_repo(request):
     logger.warning("Request method not allowed: %s", request.method)
     return JsonResponse({'status': 'error'}, status=400)
 
-
+# View for the landing page
 def index(request):
     return HttpResponse("Neue Testseite unter /search 👩‍💻✨")
 
@@ -53,10 +55,10 @@ def artist_search(request):
         artist_name = request.POST.get('artist_name')
         
         try:
-            # Search by name
+            # Search by name → Spotify API
             result = sp.search(q=artist_name, type='artist')
             
-            if len(result['artists']['items']) == 0:
+            if len(result['artists']['items']) == 0: #List empty
                 error = f"Artist {artist_name} not found!"
             else:
                 # Get artist's Spotify ID
@@ -76,10 +78,15 @@ def artist_search(request):
                         'spotify_id': album['id'],
                     })
         except Exception as e:
-            error = str(e)
+            error = str(e)# Redirect to artist_overview page, passing data as context
+
+        return render(request, 'tracker/artist_overview.html', {
+            'albums': albums,
+            'artist_name': artist_name,
+            'error': error,
+        })
     
     return render(request, 'tracker/artist_search.html', {
-        'albums': albums,
         'artist_name': request.POST.get('artist_name', ''),
         'error': error,
     })
