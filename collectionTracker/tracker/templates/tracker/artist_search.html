@@ -11,40 +11,12 @@
 <body>
     <div class="container">
         <h1>Artist Name 🔍</h1>
-        <form method="POST" class="search-form">
+        <form method="POST" class="search-form" action="{% url 'artist_search' %}">
             {% csrf_token %}
             <div class="input-group">
-                <label for="artist_name">Artist Name:</label>
                 <input type="text" name="artist_name" id="artist_name" class="input-field" required>
                 <button type="submit" class="btn">Search</button>
             </div>
         </form>
-
-        {% if albums %}
-            <h2>Albums for {{ artist_name }}</h2>
-            <div class="album-list">
-                {% for album in albums %}
-                    <div class="album-item">
-                        <!-- Album cover on the left -->
-                        {% if album.image_url %}
-                            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
-                        {% endif %}
-                        
-                        <!-- Album info in the middle -->
-                        <div class="album-info">
-                            <strong>{{ album.name }}</strong> <br>
-                            Release Date: {{ album.release_date }} <br>
-                            Total Tracks: {{ album.total_tracks }} <br>
-                        </div>
-
-                        <!-- Spotify Web Player on the right -->
-                        <iframe src="https://open.spotify.com/embed/album/{{ album.spotify_id }}" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                    </div>
-                {% endfor %}
-            </div>
-        {% elif error %}
-            <p>{{ error }}</p>
-        {% endif %}
-    </div>
 </body>
 </html>

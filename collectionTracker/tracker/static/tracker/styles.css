@@ -1,121 +1,142 @@
 /* Add Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Base Styles - Mobile First */
+/* Variables */
+:root {
+    --neutral100: #1f1f1f;
+    --neutral90: #292929;
+    --neutral70: #525252;
+    --neutral0: #ffffff;
+    --accent100: #6467fa;
+    --accent90: #4e50de;
+  }
+
 body {
-    font-family: 'Roboto', sans-serif; /* Updated font */
-    background-color: #121212; /* Dark background */
-    color: #FFFFFF; /* Light text */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    background-color: var(--neutral100);
+    color: var(--neutral0);
     margin: 0;
-    padding: 10px;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container {
-    width: 100%;
-    max-width: 100%; /* Full width on mobile */
     margin: 0 auto;
-    padding: 15px;
-    background-color: #1e1e1e; /* Slightly lighter dark shade */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Darker shadow for depth */
-    border-radius: 8px;
+    padding: 1rem;
+    background-color: var(--neutral90); /* Slightly lighter dark shade */
 }
 
 h1, h2 {
     text-align: center;
-    color: #1DB954; /* Spotify green for headings */
+    color: var(--accent100);
+}
+
+.main {
+    width: 75%;
+    display: flex;
+}
+
+.artist-detail {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    flex: 1;
+}
+
+.artist-detail p {
+    line-height: 1rem;
+    font-size: 0.75rem;
+}
+
+.artist-detail img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
 }
 
 .search-form {
     display: flex;
+    text-align: center;
     flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 20px;
 }
 
+.input-field, .btn {
+    width: 80%; /* Same width for both */
+    margin: 0 auto 1rem auto; /* Center align both */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Style the input field */
 .input-field {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #333; /* Darker border */
-    background-color: #333; /* Dark input background */
-    color: #fff; /* Light text */
-    border-radius: 4px;
+    background-color: var(--neutral70);
+    border: 1px solid var(--neutral70); /* Add border to match button */
 }
 
+/* Style the button */
 .btn {
-    padding: 12px;
-    background-color: #1DB954; /* Spotify green */
-    color: #fff;
+    background-color: var(--accent100);
+    color: var(--neutral0);
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     text-align: center;
-    width: 100%;
 }
 
 .btn:hover {
-    background-color: #1ed760; /* Lighter green on hover */
+    background-color: var(--accent90);
 }
 
 /* Album List */
 .album-list {
+    padding: 4rem;
     display: flex;
-    flex-direction: column; /* Vertical stacking */
-    gap: 20px; /* Space between albums */
+    gap: 2rem; /* Space between albums */
+}
+
+.album-grid {
+    display: flex;
+    padding: 0 4rem;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-between;
+    flex: 3;
 }
 
 .album-item {
-    display: flex; /* Align items horizontally */
-    align-items: center; /* Center vertically */
-    background-color: #1e1e1e; /* Match container background */
-    border: 1px solid #333;
-    padding: 15px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Darker shadows */
+    flex: 0 1 calc(25% - 1rem); /* Set flex basis to 25% for 4 columns */
+    margin-bottom: 2rem; /* Space between rows */
+    display: flex;
+    flex-direction: column;
+    border: var(--neutral0);
+    width: 20rem;
 }
 
 .album-cover {
-    max-width: 100px; /* Set fixed width for cover */
+    max-width: 100%;
     height: auto;
-    border-radius: 4px;
-    margin-right: 15px; /* Space between cover and info */
+    border-radius: 0.5rem;
 }
 
 .album-info {
     flex-grow: 1; /* Take remaining space */
-    margin: 0 10px; /* Margin around info */
+    margin: 1rem 0 0 0; /* Margin around info */
     text-align: left; /* Align text to the left */
-    color: #b3b3b3; /* Light gray for album info */
+    color: var(--neutral0); 
+    font-size: 0.6rem;
+    line-height: 1.25rem;
+    text-transform: capitalize;
+    /* text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; */
 }
 
-.spotify-player {
-    width: 300px; /* Fixed width for player */
-    height: 80px;
-    border-radius: 4px;
+.album-info strong {
+    font-size: 0.8rem; /* Set font size */
+    display: block; /* Ensure it behaves like a block element */
+
 }
-
-/* Larger Devices */
-@media (min-width: 768px) {
-    .container {
-        max-width: 700px; /* Limit container width on larger screens */
-        padding: 20px;
-    }
-
-    .search-form {
-        flex-direction: row; /* Inputs and button aligned horizontally */
-        justify-content: center;
-    }
-
-    .input-field {
-        width: 300px;
-        margin-right: 10px;
-    }
-
-    .btn {
-        width: auto;
-        padding: 10px 20px;
-    }
-}
-
-
