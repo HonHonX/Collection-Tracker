@@ -1,20 +1,47 @@
-{% block content %}
-<h1>{{ artist_name }}</h1>
-
-{% if error %}
-    <p>{{ error }}</p>
-{% else %}
-    <div class="album-grid">
-        {% for album in albums %}
-            <div class="album-tile">
-                <img src="{{ album.image_url }}" alt="{{ album.name }}">
-                <h3>{{ album.name }}</h3>
-                <p>Release Date: {{ album.release_date }}</p>
-                <p>Tracks: {{ album.total_tracks }}</p>
-                <a href="{{ album.url }}" target="_blank">Listen on Spotify</a>
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'tracker/styles.css' %}">
+    <link rel="icon" href="{% static 'tracker/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    {% block content %}
+        {% if error %}
+            <p>{{ error }}</p>
+        {% else %}
+            <div class="main">
+                <div class="artist-detail">
+                    {% if artist_photo_url %}
+                        <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                    {% endif %}
+                    <h1>{{ artist_name }}</h1>
+                    {% if artist_info.genres %}
+                        <p>Genres: {{ artist_info.genres | join:", " }}</p>
+                    {% endif %}
+                    <p>Popularity: {{ artist_info.popularity }}</p>
+                    <p>Total Albums: {{ artist_info.total_albums }}</p>
+                    <br>
+                    <h2>Latest Release:</h2>
+                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </div>
+                <div class="album-grid">
+                    {% for album in albums %}
+                        <div class="album-item">
+                            {% if album.image_url %}
+                                <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                            {% endif %}
+                            <div class="album-info">
+                                {{ album.album_type }} <br>
+                                <strong>{{ album.name }} <br></strong>
+                                {{ album.release_date }} <br>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% endblock %}
+        {% endif %}
+    {% endblock %}
+</body>
