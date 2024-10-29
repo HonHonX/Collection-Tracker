@@ -1,5 +1,5 @@
 /* Add Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
 
 /* Variables */
 :root {
@@ -10,6 +10,13 @@
     --accent100: #6467fa;
     --accent90: #4e50de;
   }
+
+  @font-face {
+    font-family: 'Bauhaus93';
+    src: url('./fonts/BAUHS93.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 body {
     font-family: 'Montserrat', sans-serif;
@@ -27,18 +34,64 @@ body {
     margin: 0 auto;
     padding: 1rem;
     background-color: var(--neutral90); /* Slightly lighter dark shade */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
 }
 
 h1, h2 {
     text-align: center;
     color: var(--accent100);
+    font-family: 'Bauhaus93', sans-serif;
 }
 
+.logo {
+    width: 50%;
+    height: auto;
+    align-self: center;
+}
+/* Search */
+.search-form {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.input-field, .btn {
+    width: 80%; /* Same width for both */
+    margin: 0 auto 1rem auto; /* Center align both */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.input-field {
+    background-color: var(--neutral70);
+    border: none;
+    color: var(--neutral0);
+    text-align: center;
+}
+
+.btn {
+    background-color: var(--accent100);
+    color: var(--neutral0);
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: var(--accent90);
+}
+
+/* Main Container */
 .main {
     width: 75%;
     display: flex;
 }
 
+/* Left Column */
 .artist-detail {
     display: flex;
     flex-direction: column;
@@ -59,46 +112,42 @@ h1, h2 {
     margin-bottom: 1rem;
 }
 
-.search-form {
+/* Right Column */
+
+/* Latest Release */
+.latest-release {
     display: flex;
-    text-align: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: auto;
     flex-direction: column;
+    padding: 0;
 }
 
-.input-field, .btn {
-    width: 80%; /* Same width for both */
-    margin: 0 auto 1rem auto; /* Center align both */
-    border-radius: 0.5rem;
-    padding: 1rem;
-    box-sizing: border-box; /* Include padding in width calculation */
+.latest-release h2 {
+    text-align: right;
 }
 
-/* Style the input field */
-.input-field {
-    background-color: var(--neutral70);
-    border: 1px solid var(--neutral70); /* Add border to match button */
+.spotify-player {
+    width: 100%;
 }
 
-/* Style the button */
-.btn {
-    background-color: var(--accent100);
+/* Controls like sort */
+.controls {
     color: var(--neutral0);
-    border: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn:hover {
-    background-color: var(--accent90);
-}
-
-/* Album List */
-.album-list {
-    padding: 4rem;
     display: flex;
-    gap: 2rem; /* Space between albums */
+    justify-content: flex-end; 
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 2rem;
 }
 
+.control-icon {
+    height: 1rem;
+    width: auto;
+}
+
+/* Album Overview */
 .album-grid {
     display: flex;
     padding: 0 4rem;
@@ -119,6 +168,7 @@ h1, h2 {
 .album-cover {
     max-width: 100%;
     height: auto;
+    aspect-ratio: 1/1;
     border-radius: 0.5rem;
 }
 
@@ -130,9 +180,6 @@ h1, h2 {
     font-size: 0.6rem;
     line-height: 1.25rem;
     text-transform: capitalize;
-    /* text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden; */
 }
 
 .album-info strong {

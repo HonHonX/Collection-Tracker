@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'tracker/styles.css' %}">
     <link rel="icon" href="{% static 'tracker/favicon.ico' %}" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
     {% block content %}
@@ -23,11 +26,17 @@
                     {% endif %}
                     <p>Popularity: {{ artist_info.popularity }}</p>
                     <p>Total Albums: {{ artist_info.total_albums }}</p>
-                    <br>
-                    <h2>Latest Release:</h2>
-                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    
                 </div>
                 <div class="album-grid">
+                    <div class="latest-release">
+                        <h2>latest release</h2>
+                        <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    </div>
+                    <div class="controls">
+                        <img src="{% static 'tracker/filter.svg' %}" alt="Filter" class="control-icon">
+                        <img src="{% static 'tracker/sort.svg' %}" alt="Sort" class="control-icon">   
+                    </div>
                     {% for album in albums %}
                         <div class="album-item">
                             {% if album.image_url %}
