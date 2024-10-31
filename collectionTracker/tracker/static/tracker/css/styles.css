@@ -1,0 +1,191 @@
+/* Add Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+
+/* Variables */
+:root {
+    --neutral100: #1f1f1f;
+    --neutral90: #292929;
+    --neutral70: #525252;
+    --neutral0: #ffffff;
+    --accent100: #6467fa;
+    --accent90: #4e50de;
+  }
+
+  @font-face {
+    font-family: 'Bauhaus93';
+    src: url('static/tracker/fonts/BAUHS93.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    background-color: var(--neutral100);
+    color: var(--neutral0);
+    margin: 0;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: var(--neutral90); /* Slightly lighter dark shade */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
+    border-radius: 0.5rem;
+}
+
+h1, h2 {
+    text-align: center;
+    color: var(--accent100);
+    font-family: 'Bauhaus93', sans-serif;
+}
+
+.logo {
+    width: 50%;
+    height: auto;
+    align-self: center;
+}
+
+/* Search */
+.search-form {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+}
+
+.input-field, .btn {
+    width: 80%; /* Same width for both */
+    margin: 0 auto 1rem auto; /* Center align both */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.input-field {
+    background-color: var(--neutral70);
+    border: none;
+    color: var(--neutral0);
+    text-align: center;
+}
+
+.btn {
+    background-color: var(--accent100);
+    color: var(--neutral0);
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: var(--accent90);
+}
+
+/* Main Container */
+.main {
+    width: 75%;
+    display: flex;
+}
+
+/* Left Column */
+.artist-detail {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    flex: 1;
+}
+
+.artist-detail p {
+    line-height: 1rem;
+    font-size: 0.75rem;
+}
+
+.artist-detail img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+/* Right Column */
+
+/* Latest Release */
+.latest-release {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    padding: 0;
+}
+
+.latest-release h2 {
+    text-align: right;
+}
+
+.spotify-player {
+    width: 100%;
+}
+
+/* Controls like sort */
+.controls {
+    color: var(--neutral0);
+    display: flex;
+    justify-content: flex-end; 
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.control-icon {
+    height: 1rem;
+    width: auto;
+}
+
+/* Album Overview */
+.album-grid {
+    display: flex;
+    padding: 0 4rem;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-between;
+    flex: 3;
+}
+
+.album-item {
+    flex: 0 1 calc(25% - 1rem); /* Set flex basis to 25% for 4 columns */
+    margin-bottom: 2rem; /* Space between rows */
+    display: flex;
+    flex-direction: column;
+    border: var(--neutral0);
+    width: 20rem;
+}
+
+.album-cover {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    border-radius: 0.5rem;
+}
+
+.album-info {
+    flex-grow: 1; /* Take remaining space */
+    margin: 1rem 0 0 0; /* Margin around info */
+    text-align: left; /* Align text to the left */
+    color: var(--neutral0); 
+    font-size: 0.6rem;
+    line-height: 1.25rem;
+    text-transform: capitalize;
+}
+
+.album-info strong {
+    font-size: 0.8rem; /* Set font size */
+    display: block; /* Ensure it behaves like a block element */
+
+}

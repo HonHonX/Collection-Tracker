@@ -13,7 +13,7 @@
 * Siehe Schritt 2
 
 ## Login
-Der Login erfolgt per Username und einem <a href="https://docs.github.com/de/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Token</a>. 
+Der Login erfolgt per Username und einem <a href="https://docs.github.com/de/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Token, wenn das Repository private ist.</a>. 
 ___
 
 ## Environment einrichten

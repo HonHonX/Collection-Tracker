@@ -1,2 +1,7 @@
-# .gitignore
+# Virtuelle Umgebung ignorieren
+venv/
+
+# Andere Beispiele für zu ignorierende Dateien
+*.pyc
+__pycache__/
 .env
