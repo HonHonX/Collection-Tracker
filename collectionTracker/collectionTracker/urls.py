@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import os
+from django.views.static import serve
 
 
 urlpatterns = [
@@ -28,4 +30,13 @@ urlpatterns = [
     #path('settings/', include("settings.urls")),
 
     path("tracker/", include("tracker.urls")),  # for testing
+]
+
+# for favicon
+urlpatterns += [
+    path('favicon.ico', serve, {
+        'path': 'favicon.ico',
+        'document_root': os.path.join('home/static'),
+            }   
+        ),
 ]
