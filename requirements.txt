@@ -7,6 +7,7 @@ python-decouple==3.8
 redis==5.1.1
 requests==2.32.3
 setuptools==75.1.0
+social_auth_app_django==5.4.2
 spotipy==2.24.0
 sqlparse==0.5.1
 tzdata==2024.2

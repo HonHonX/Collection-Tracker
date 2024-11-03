@@ -1,4 +1,4 @@
-<!-- from https://github.com/csev/dj4e-samples/blob/main/home/templates/registration/login.html -->
+<!-- from https://github.com/csev/dj4e-samples/blob/main/home/templates/registration/login_social.html -->
 
 {# {% extends "base_bootstrap.html" %} #}
 
@@ -14,6 +14,16 @@
 <input type="submit" value="Login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
+    
+<p>New? <a href="{% url 'register' %}">Register</a> now!</p>
 
-<p>New? <a href="{% url 'register' %}">Register</a> now!</p> 
+<p></br>Alternative you can use your Github-Account to login:</p>
+{% if settings.SOCIAL_AUTH_GITHUB_KEY %}
+<a href="{% url 'social:begin' 'github' %}?next={{ next }}">
+    Login with GitHub</a>
+
+{% else %}
+<p>Login with Github is not available right now. Check the template.</p>    
+{% endif %}
+
 {% endblock %}
