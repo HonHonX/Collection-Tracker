@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/css/mobile_sidebar.css' %}">
+    <link rel="icon" href="{% static 'home/favicon.ico' %}" type="image/x-icon">
+    <title>Mobile Navbar</title>
+</head>
+<body>
+
+<!-- Main Content -->
+<div class="content">
+    <!-- Your page content goes here -->
+</div>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="nav-item" onclick="togglePopup('popup1')">
+        <span class="icon">🏠</span>
+    </div>
+    <div class="nav-item" onclick="togglePopup('popup2')">
+        <span class="icon">🔍</span>
+    </div>
+    <div class="nav-item" onclick="togglePopup('popup3')">
+        <span class="icon">❤️</span>
+    </div>
+    <div class="nav-item" onclick="togglePopup('popup4')">
+        <span class="icon">⚙️</span>
+    </div>
+</div>
+
+<!-- Pop-ups for each icon -->
+<div id="popup1" class="popup">
+    <div class="popup-content">Home Content</div>
+</div>
+<div id="popup2" class="popup">
+    <div class="popup-content">Search Content</div>
+</div>
+<div id="popup3" class="popup">
+    <div class="popup-content">Favorites Content</div>
+</div>
+<div id="popup4" class="popup">
+    <div class="popup-content">Settings Content</div>
+</div>
+
+<script>
+    // JavaScript to toggle pop-ups
+    function togglePopup(popupId) {
+        const popup = document.getElementById(popupId);
+        popup.classList.toggle('show');
+    }
+</script>
+
+</body>
+</html>

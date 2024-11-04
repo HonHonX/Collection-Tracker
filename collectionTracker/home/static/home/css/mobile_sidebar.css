@@ -1,0 +1,65 @@
+/* Reset some default styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* General content styling */
+.content {
+    padding-bottom: 60px; /* Extra space for the navbar */
+}
+
+/* Navbar styling */
+.navbar {
+    position: fixed;
+    left: 10%;
+    right: 10%;
+    bottom: 5%;
+    width: 80%;
+    height: 12%;
+    background-color: #000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 1000;
+    border-radius: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-item {
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.nav-item:hover {
+    transform: scale(1.1);
+}
+
+/* Popup styling */
+.popup {
+    display: none;
+    position: fixed;
+    bottom: 17%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000000;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 300px;
+    z-index: 1001;
+    text-align: center;
+}
+
+.popup.show {
+    display: block;
+}
+
+.popup-content {
+    font-size: 16px;
+}
