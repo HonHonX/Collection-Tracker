@@ -20,18 +20,22 @@
 # Then copy the client_key and secret to this file
 
 from decouple import config
-import socket
+##import socket
+## fixed for pythonanywhere:
+# the hostname cannot be called reliably via pythonanywhere and github, 
+# although the hostname is correct, 
+# the "else" branch is chosen and the data is used for localhost
 
 # Determine the hostname
-hostname = socket.gethostname()
+##hostname = socket.gethostname()
 
 # Check if you're on localhost or production based on the hostname or environment variable
-if hostname == 'wtcollectiontracker.eu.pythonanywhere.com':
+##if hostname == 'wtcollectiontracker.eu.pythonanywhere.com':
 
-    SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY_PyA')
-    SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_KEY_PyA')
+SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY_PyA')
+SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET_PyA')
 
-else:
+##else:
     # If you are running on localhost, here are some settings:
 
     # Application name: ChuckList Local
@@ -39,8 +43,8 @@ else:
     # Application Description: Whatever
     # Authorization callback URL: http://127.0.0.1:8000/oauth/complete/github/
 
-    SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY_LOCAL')
-    SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_KEY_LOCAL')
+##    SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY_LOCAL')
+##    SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET_LOCAL')
 
 # Ask for the user's email (don't edit this line)
 SOCIAL_AUTH_GITHUB_SCOPE = ['user:email']
