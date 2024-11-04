@@ -27,7 +27,20 @@
         <!--<li><p>This is the authentification page <a href="/users"></a></p></li>--> <!-- coming soon -->
    <!-- <li><p><a href="/tutorial_pages">Tutorial Pages</a></p></li> --> <!-- example-->
     </ul>
+    
+{% if user.is_authenticated %}
+<p>Logged in as {{ user.username }}  
+    <form action="{% url 'logout' %}?next=/" method="post">
+        {% csrf_token %}
+        <button type="submit">
+            Logout
+        </button>
+    </form>
+</p>
 
+{% else %}
+<p> <a href="{% url 'login' %}?next={{ request.get_full_path }}">Login</a> | 
+    <a href="{% url 'register' %}?next={{ request.get_full_path }}">Register</a> </p>
+{% endif %}
 
-          
 {% endblock content %}

@@ -13,12 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from . import views
 from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import path, include, re_path
+from django.contrib.auth import views as auth_views    # for github login
+from django.views.generic import TemplateView    # for github login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')), # for login / logout
+    path('register/', views.register, name='register'), # for new users
+    re_path(r'^oauth/', include('social_django.urls', namespace='social')), # for github login
 
     path('', include("home.urls")),
     #path('friends/', include("friends.urls")),
@@ -29,3 +34,14 @@ urlpatterns = [
 
     path("tracker/", include("tracker.urls")),  # for testing
 ]
+
+# https://github.com/csev/dj4e-samples/blob/main/dj4e-samples/urls.py
+# for login with github
+try:
+    from . import github_settings
+    social_login = 'registration/login.html'
+    urlpatterns.insert(0,
+                       path('accounts/login/', auth_views.LoginView.as_view(template_name=social_login))
+                       )
+except:
+    print('Using registration/login.html as the login template')
