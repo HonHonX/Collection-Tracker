@@ -9,10 +9,10 @@
 
 # Using PythonAnywhere here are some settings:
 
-# Application name: ChuckList PythonAnywhere
-# Homepage Url: https://drchuck.pythonanywhere.com
-# Application Description: Whatever
-# Authorization callback URL: https://drchuck.pythonanywhere.com/oauth/complete/github/
+# Application name: CollectionTracker PythonAnywhere
+# Homepage Url: https://wtcollectiontracker.eu.pythonanywhere.com
+# Application Description: Developing a web application
+# Authorization callback URL: https://wtcollectiontracker.eu.pythonanywhere.com/oauth/complete/github/
 
 # Also on PythonAnywhere, go into the Web tab and enable "Force HTTPS"
 # so you don't get a redirect URI mismatch.
@@ -38,9 +38,9 @@ SOCIAL_AUTH_GITHUB_SECRET = config('SOCIAL_AUTH_GITHUB_SECRET_PyA')
 ##else:
     # If you are running on localhost, here are some settings:
 
-    # Application name: ChuckList Local
+    # Application name: Collectiontracker Localhost
     # Homepage Url: http://localhost:8000
-    # Application Description: Whatever
+    # Application Description: Developing a web application
     # Authorization callback URL: http://127.0.0.1:8000/oauth/complete/github/
 
 ##    SOCIAL_AUTH_GITHUB_KEY = config('SOCIAL_AUTH_GITHUB_KEY_LOCAL')
