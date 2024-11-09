@@ -3,12 +3,15 @@
 
 /* Variables */
 :root {
-    --neutral100: #1f1f1f;
-    --neutral90: #292929;
+    --neutral100: #050505;
+    --activity: black;
+    --neutral90: #1d1c1c;
     --neutral70: #525252;
     --neutral0: #ffffff;
-    --accent100: #6467fa;
-    --accent90: #4e50de;
+    --accent100: #BB86FC;
+    --accent90: #3700B3;
+    --success: #03DAC5;
+    --danger: #FF0266;
   }
 
  @font-face {
@@ -21,15 +24,18 @@
 body {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
-    background-color: #1f1f1f;
+    background-color: var(--neutral90);
     color: var(--neutral0);
-    margin: 0;
-    padding: 4rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    margin-top: 12%;
 }
 
-h1, h2, a {
-    color: var(--accent100)
+/* Structuring Site */
+.main{
+    align-items: left;
+    margin-left: 8%;
+    margin-right: 10%;
+    margin-top: 3%;
+    margin-bottom: 25%;
 }

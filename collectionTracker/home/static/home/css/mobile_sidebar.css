@@ -1,24 +1,13 @@
-/* Reset some default styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-/* General content styling */
-.content {
-    padding-bottom: 60px; /* Extra space for the navbar */
-}
-
 /* Navbar styling */
+@import "styles.css";
 .navbar {
     position: fixed;
     left: 10%;
     right: 10%;
     bottom: 5%;
     width: 80%;
-    height: 12%;
-    background-color: #000;
+    height: 6%;
+    background-color: var(--activity);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -28,38 +17,44 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.nav-item {
-    color: #fff;
-    font-size: 24px;
+.navbar .nav-item {
     cursor: pointer;
     transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Force icon sizing */
+.icon {
+    width: 24px !important;   /* Set a specific width with !important */
+    height: 24px !important;  /* Set a specific height with !important */
+    object-fit: contain;      /* Keeps image aspect ratio */
+}
+
+/* Hover effect */
 .nav-item:hover {
     transform: scale(1.1);
 }
 
-/* Popup styling */
-.popup {
-    display: none;
+/* Top Bar Styling */
+.topbar {
+    top: 0;
+    left: 0;
     position: fixed;
-    bottom: 17%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #000000;
-    color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 80%;
-    max-width: 300px;
-    z-index: 1001;
-    text-align: center;
+    width: 100%;
+    height: 4%;
+    background-color: var(--activity);
+    display: flex;
+    justify-content: space-around;
+    align-items: left;
+    padding: 4%;
 }
 
-.popup.show {
-    display: block;
-}
-
-.popup-content {
-    font-size: 16px;
+.topbar .pagetitle{
+    width: 100%;
+    padding-left: 6%;
+    color: var(--neutral0);
+    font-size: 20px;
+    font-weight: 500;
 }
