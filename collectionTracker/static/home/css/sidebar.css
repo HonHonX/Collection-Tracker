@@ -1,6 +1,5 @@
 /* Regular Sidebar styling */
 @import "styles.css";
-
 .navbar {
    display: none;
 }
@@ -12,7 +11,7 @@
     left: 0;
     width: 350px;
     height: 100vh; /* Full viewport height */
-    background-color: var(--neutral70);
+    background-color: black;
     color: var(--neutral0);
     font-size: 18px;
     padding-top: 20px;
@@ -98,6 +97,8 @@
 
 /* Force icon sizing */
 .icon {
+    width: 24px !important;   /* Set a specific width with !important */
+    height: 24px !important;  /* Set a specific height with !important */
     object-fit: contain;      /* Keeps image aspect ratio */
 }
 

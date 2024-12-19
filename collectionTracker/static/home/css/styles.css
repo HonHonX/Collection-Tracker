@@ -9,6 +9,9 @@
     --neutral0: #ffffff;
     --accent100: #6467fa;
     --accent90: #4e50de;
+    --activity: black;
+    --success: #03DAC5;
+    --danger: #FF0266;
   }
 
  @font-face {
