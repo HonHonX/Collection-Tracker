@@ -1,18 +1,20 @@
-<head> 
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
-    <link rel="icon" href="{% static 'home/favicon.ico' %}" type="image/x-icon">
-</head>
-
-{% block content %}
-    <h1>Welcome to {{ settings.APP_NAME }}</h1>
-    <p>
-    Hello everyone. 
-    </p>
-
-    <p> This is the start page for logged in users</p>
-
-          
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      {% include "sidebar.html" %}
+     {% load static %}
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+      <link rel="icon" href="{% static 'home/favicon.ico' %}" type="image/x-icon">
+    </head>
+    <body>
+        <div class="main">
+            {% block content %}
+            <h2>Overview</h2>
+            <p>Please insert Text here</p>
+            {% endblock content %}
+        </div>          
 {% endblock content %}
+</body>
+</html>
