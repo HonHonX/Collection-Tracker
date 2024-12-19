@@ -1,10 +1,7 @@
-<head> 
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
-    <link rel="icon" href="{% static 'home/favicon.ico' %}" type="image/x-icon">
-</head>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome{% endblock %}
 
 {% block content %}
     <h1>Welcome to {{ settings.APP_NAME }}</h1>
@@ -41,6 +38,7 @@
 {% else %}
 <p> <a href="{% url 'login' %}?next={{ request.get_full_path }}">Login</a> | 
     <a href="{% url 'register' %}?next={{ request.get_full_path }}">Register</a> </p>
-{% endif %}
+{% endif %} -->
 
 {% endblock content %}
+

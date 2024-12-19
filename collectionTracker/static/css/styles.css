@@ -41,6 +41,10 @@ body {
     border-radius: 0.5rem;
 }
 
+a {
+    color: var(--accent100);
+}
+
 h1, h2 {
     text-align: center;
     color: var(--accent100);
