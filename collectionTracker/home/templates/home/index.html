@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>      
-      {% load static %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="page">
       {% include "sidebar.html" %}
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-      <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-    </head>
-    <body>
-        <div class="main">
-            {% block content %}
-            <h2>Overview</h2>
-            <p>Please insert Text here</p>
-            {% endblock content %}
-        </div>          
-</body>
-</html>
+      <div class="maincontent">
+          <h2>Placeholder</h2>
+          <p>Please insert Text here</p>
+      </div>
+  </div>  
+{% endblock %}

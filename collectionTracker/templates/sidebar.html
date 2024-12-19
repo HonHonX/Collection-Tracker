@@ -1,0 +1,43 @@
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Desktop Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+        </div>
+        <div class="sidebar-item" onclick="togglePopup('popupHome')"><img class="icon" src="{% static 'icons/home.svg' %}">Home</div>
+        <div class="sidebar-item" onclick="togglePopup('popupSearch')"><img class="icon" src="{% static 'icons/search.svg' %}">Search</div>
+        <div class="sidebar-item" onclick="togglePopup('popupWishlist')"><img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist</div>
+        <div class="sidebar-item" onclick="togglePopup('popupSettings')"><img class="icon" src="{% static 'icons/settings.svg' %}">Settings</div>
+    </div>
+
+    <!-- Mobile -->
+        <!-- Top Bar -->
+        <div class="topbar">
+            <h1 class="pagetitle">Home</h1>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/home.svg' %}">
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/search.svg' %}">    
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/settings.svg' %}">
+            </div>
+        </div>
+
+        <script src="{% static 'js/togglePopup.js' %}"></script>
+{% endblock %}

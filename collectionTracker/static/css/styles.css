@@ -3,12 +3,20 @@
 
 /* Variables */
 :root {
-    --neutral100: #1f1f1f;
+    /* Colors */
+    --neutral100: #1f1f1f; /* Page Background */
     --neutral90: #292929;
     --neutral70: #525252;
-    --neutral0: #ffffff;
-    --accent100: #6467fa;
+    --neutral0: #ffffff; /* Regular Font */
+    --accent100: #6467fa; /* Highlight Color */
     --accent90: #4e50de;
+    --accentVariantA100: #C9C9EE;
+    --accentVariantB100: #62BBC1;
+    /* Color Variants: https://coolors.co/1f1f1f-525252-6467fa-c9c9ee-62bbc1 */
+
+    /* Design Sizes */
+    --borderRadius: 0.5rem; /* Box Roundness */
+    --iconSize: 2rem;
   }
 
   @font-face {
@@ -18,16 +26,37 @@
     font-style: normal;
 }
 
+/* Basic Body */
 body {
     font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
+    font-size: 16px; /* = 1rem */
     background-color: var(--neutral100);
     color: var(--neutral0);
     margin: 0;
-    padding: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* Links */
+a {
+    color: var(--accent100);
+}
+
+a:hover {
+    color: var(--accentC100);
+}
+
+a:visited {
+    color: var(--accentC100);
+}
+
+/* Headlines */
+h1, h2 {
+    text-align: left;
+    color: var(--accent100);
+    font-family: 'Bauhaus93', sans-serif;
+    font-size: 3rem;
 }
 
 .container {
@@ -38,18 +67,10 @@ body {
     justify-content: center;
     flex-direction: column;
     width: 50%;
-    border-radius: 0.5rem;
+    border-radius: var(--borderRadius);
 }
 
-a {
-    color: var(--accent100);
-}
 
-h1, h2 {
-    text-align: center;
-    color: var(--accent100);
-    font-family: 'Bauhaus93', sans-serif;
-}
 
 .logo {
     width: 50%;
