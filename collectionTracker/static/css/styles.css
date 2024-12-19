@@ -13,7 +13,7 @@
 
   @font-face {
     font-family: 'Bauhaus93';
-    src: url('static/tracker/fonts/BAUHS93.ttf') format('truetype');
+    src: url("../fonts/BAUHS93.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }

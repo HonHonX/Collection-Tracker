@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}">
-    <link rel="icon" href="{% static 'home/favicon.ico' %}" type="image/x-icon">
-    <title>Sidebar</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <title>Home</title>
 </head>
 <!-- Desktop Sidebar -->
 <div class="sidebar">
     <div class="sidebar-logo">
-        <img src="{% static 'home/home.svg' %}" alt="Logo" style="width: 50%; height: 50%" class="logo-img">
+        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
     </div>
     <div class="sidebar-item" onclick="togglePopup('popup1')">Home</div>
     <div class="sidebar-item" onclick="togglePopup('popup2')">Search</div>
@@ -28,15 +28,16 @@
 <!-- Navigation Bar -->
 <div class="navbar">
     <div class="nav-item">
-        <img class="icon" src="{% static 'home/home.svg' %}">
+        <img class="icon" src="{% static 'icons/home.svg' %}">
     </div>
     <div class="nav-item">
-        <img class="icon" src="{% static 'home/search.svg' %}">    </div>
-    <div class="nav-item">
-        <img class="icon" src="{% static 'home/wishlist.svg' %}">
+        <img class="icon" src="{% static 'icons/search.svg' %}">    
     </div>
     <div class="nav-item">
-        <img class="icon" src="{% static 'home/settings.svg' %}">
+        <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+    </div>
+    <div class="nav-item">
+        <img class="icon" src="{% static 'icons/settings.svg' %}">
     </div>
 </div>
 

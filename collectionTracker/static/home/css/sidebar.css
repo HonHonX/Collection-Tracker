@@ -1,5 +1,6 @@
 /* Regular Sidebar styling */
-@import "styles.css";
+@import url("../css/styles.css");
+
 .navbar {
    display: none;
 }
@@ -9,18 +10,17 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 350px;
+    width: 12rem;
     height: 100vh; /* Full viewport height */
-    background-color: black;
+    background-color: var(--neutral100);
     color: var(--neutral0);
-    font-size: 18px;
-    padding-top: 20px;
+    font-size: 1rem;
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    border-radius: 0 20px 20px 0;
+    border-radius: 0 0.5rem 0.5rem 0;
 }
 
 .sidebar-item {
@@ -43,9 +43,11 @@
 }
 
 .logo-img {
-    width: 100px; /* Adjust logo size as needed */
+    width: 10rem; 
     height: auto;
-    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Adjust main content to account for the sidebar */
@@ -77,7 +79,7 @@
     bottom: 5%;
     width: 80%;
     height: 6%;
-    background-color: var(--activity);
+    background-color: var(--neutral100);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -95,11 +97,10 @@
     align-items: center;
 }
 
-/* Force icon sizing */
 .icon {
-    width: 24px !important;   /* Set a specific width with !important */
-    height: 24px !important;  /* Set a specific height with !important */
     object-fit: contain;      /* Keeps image aspect ratio */
+    width: 2rem;
+    height: 2rem;
 }
 
 /* Hover effect */
