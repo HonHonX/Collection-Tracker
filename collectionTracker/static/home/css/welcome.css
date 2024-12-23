@@ -1,0 +1,33 @@
+@import url("../../../styles.css");
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.page {
+    width: min-content;
+    align-self: center;
+}
+
+p {
+    text-align: justify;
+}
+
+.login {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    margin-top: 3rem;
+}
+
+.logo {
+    width: calc(25vw);
+    min-width: 20rem;
+}
+
+
+

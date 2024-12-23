@@ -60,7 +60,7 @@ def artist_search(request):
     albums = []
     error = None
     artist_photo_url = None
-    artist_info = {} 
+    artist_info = {}  # Initialize artist_info as empty
     latest_album = None
 
     if request.method == 'POST':
@@ -118,10 +118,13 @@ def artist_search(request):
         except Exception as e:
             error = str(e)  # Capture error message
 
+        # Add a fallback if 'name' is not in artist_info
+        artist_name = artist_info.get('name', 'Unknown Artist')  # Fallback to 'Unknown Artist'
+
         # Pass albums, artist info, artist photo, and error message to the template
         return render(request, 'tracker/artist_overview.html', {
             'albums': albums,
-            'artist_name': artist_info['name'],
+            'artist_name': artist_name,
             'artist_photo_url': artist_photo_url,
             'error': error,
             'artist_info': artist_info,

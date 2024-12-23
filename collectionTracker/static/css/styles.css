@@ -1,34 +1,120 @@
 /* Add Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap'); */
 
 /* Variables */
 :root {
-    --neutral100: #1f1f1f;
+    /* Colors */
+    --neutral100: #1f1f1f; /* Page Background */
     --neutral90: #292929;
     --neutral70: #525252;
-    --neutral0: #ffffff;
-    --accent100: #6467fa;
+    --neutral0: #ffffff; /* Regular Font */
+    --accent100: #6467fa; /* Highlight Color */
     --accent90: #4e50de;
+    --accentVariantA100: #C9C9EE;
+    --accentVariantB100: #62BBC1;
+    /* Color Variants: https://coolors.co/1f1f1f-525252-6467fa-c9c9ee-62bbc1 */
+
+    /* Design Sizes */
+    --borderRadius: 0.5rem; /* Box Roundness */
+    --iconSize: 2rem;
+    --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
+    --gapDistance: 1rem;
+    --defaultFont: 'Verdana', sans-serif;
   }
 
-  @font-face {
+@font-face {
     font-family: 'Bauhaus93';
-    src: url('static/tracker/fonts/BAUHS93.ttf') format('truetype');
+    src: url("/static/fonts/BAUHS93.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
+/* Basic Body */
 body {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
+    font-family: var(--defaultFont);
+    font-size: 16px; /* = 1rem */
     background-color: var(--neutral100);
     color: var(--neutral0);
     margin: 0;
-    padding: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
+main {
+    width: 100%;
+}
+
+/* Links */
+a {
+    color: var(--accent100);
+}
+
+a:hover {
+    color: var(--accentVariantB100);
+}
+
+a:visited {
+    color: var(--accentVariantB100);
+}
+
+/* Headlines */
+h1, h2 {
+    text-align: left;
+    color: var(--accent100);
+    font-family: 'Bauhaus93', sans-serif;
+    font-size: 2rem;
+}
+
+h2 {
+    color: var(--accentVariantB100);
+    font-size: 1.5rem;
+}
+
+/* Main Page Container */
+.maincontent {
+    flex-grow: 1; /* Allow the main content to take up the remaining space */
+    padding: 2rem;
+    height: calc(100vh-2rem); /* Ensure it fills the full height of the viewport */
+    overflow-y: auto; /* Add scroll if the content overflows */
+}
+
+/* .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gapDistance);
+} */
+
+/* Buttons */
+.button {
+    width: 10rem;
+    background-color: var(--neutral70); 
+    font-family: var(--defaultFont);
+    color: white; 
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--borderRadius); /* Slightly rounded edges */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: var(--boxShadow); /* Subtle shadow for depth */
+  }
+  
+  .button:hover {
+    background-color: var(--accent100);
+    transform: translateY(-2px); /* Lift effect */
+  }
+  
+  .button:active {
+    transform: translateY(0); /* Reset lift effect */
+  }
+  
+  .button:disabled {
+    background-color: var(--neutral70); 
+    color: var(--neutral100);
+    cursor: not-allowed; /* Disable pointer events */
+    opacity: 0.6; /* Faded look */
+  }
 
 .container {
     margin: 0 auto;
@@ -38,14 +124,10 @@ body {
     justify-content: center;
     flex-direction: column;
     width: 50%;
-    border-radius: 0.5rem;
+    border-radius: var(--borderRadius);
 }
 
-h1, h2 {
-    text-align: center;
-    color: var(--accent100);
-    font-family: 'Bauhaus93', sans-serif;
-}
+
 
 .logo {
     width: 50%;
@@ -139,7 +221,7 @@ h1, h2 {
     color: var(--neutral0);
     display: flex;
     justify-content: flex-end; 
-    gap: 1rem;
+    gap: var(--gapDistance);
     width: 100%;
     margin-bottom: 2rem;
 }

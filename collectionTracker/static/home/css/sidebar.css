@@ -1,0 +1,182 @@
+/* Regular Sidebar styling */
+/* @import url("../../../styles.css"); */
+
+:root {
+    /* Design Sizes */
+    --sidebarWidth: 20rem; /* Box Roundness */
+    --sidebarIcons: calc(var(--iconSize)*0.75);
+}
+
+.navbar {
+   display: none;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: 100%;
+    gap: var(--gapDistance);
+}
+
+.sidebar {
+    display: flex;
+    width: var(--sidebarWidth);
+    height: 100vh; /* Full viewport height */
+    background-color: var(--neutral90);
+    color: var(--neutral0);
+    flex-shrink: 0; /* Prevent shrinking */
+    flex-grow: 0; /* Prevent growing */
+    flex-basis: var(--sidebarWidth); /* Set the initial width to sidebarWidth */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-radius: var(--borderRadius);
+    gap: var(--gapDistance);
+}
+
+.sidebar-item {
+    width: 80%; /* Makes item span the full sidebar width */
+    padding: 1rem 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-sizing: border-box; /* Includes padding within width */
+    border-radius: var(--borderRadius); 
+    gap: var(--gapDistance);
+}
+
+.sidebar-item:hover {
+    background-color: var(--neutral70);
+    box-shadow: var(--boxShadow);
+    transform: translateY(-2px);
+}
+
+.icon {
+    width: var(--sidebarIcons);
+    height: var(--sidebarIcons);
+}
+
+.sidebar-logo {
+    
+}
+
+.logo-img {
+    width: 90%; /* Makes item span the full sidebar width */
+    height: auto;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-group {
+    display: flex;
+    height: 3rem;
+    width: 100%;
+    margin: none;
+    flex-direction: row;
+    gap: var(--gapDistance);
+}
+
+.searchbar {
+    transition: opacity 0.3s ease-in-out;
+    display: none;
+    transform: scale(0.95); /* Slightly scaled down */
+    pointer-events: none; /* Prevent interactions when invisible */
+}
+
+.searchbar.visible {
+    display: flex;
+    transform: scale(1); /* Original size */
+    pointer-events: auto; /* Allow interactions */
+}
+
+.input-field {
+    box-shadow: var(--boxShadow);
+    height: 100%;
+}
+
+.input-group .button {
+    padding: 0% 0.5rem;
+    height: 100%;
+    width: min-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group .button .icon {
+    width: 1.5rem;
+}
+
+
+/* Top Bar Styling */
+.topbar {
+    display: none;
+}
+
+
+@media (max-width: 768px) {
+
+    .searchbar {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .navbar {
+        position: fixed;
+        left: 10%;
+        right: 10%;
+        bottom: 5%;
+        width: 80%;
+        background-color: var(--neutral90);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 5% 0;
+        z-index: 1000;
+        border-radius: var(--borderRadius);
+        box-shadow: var(--boxShadow);
+    }
+
+    .navbar .nav-item {
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Hover effect */
+    .nav-item:hover {
+        transform: scale(1.1);
+    }
+
+    /* Top Bar Styling */
+    .topbar {
+        /* top: 0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+        height: 5%;
+        display: flex;
+        justify-content: space-around;
+        align-items: left;
+        padding: 5%; */
+    }
+
+    .topbar .pagetitle {
+        /* width: 100%;
+        padding-left: 6%;
+        color: var(--accent100);
+        font-size: 20px;
+        font-weight: 500; */
+    }
+}

@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views    # for github login
 from django.views.generic import TemplateView    # for github login
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,7 +35,7 @@ urlpatterns = [
     #path('settings/', include("settings.urls")),
 
     path("tracker/", include("tracker.urls")),  # for testing
-]
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 # https://github.com/csev/dj4e-samples/blob/main/dj4e-samples/urls.py
 # for login with github

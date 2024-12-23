@@ -1,0 +1,71 @@
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <!-- Desktop Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+        </div>
+
+        <div class="sidebar-item" id="home-button" home-url="{% url 'index' %}">
+            <img class="icon" src="{% static 'icons/home.svg' %}">Home
+        </div>    
+
+        <div class="sidebar-item" id="search-button">
+            <img class="icon" src="{% static 'icons/search.svg' %}">Search
+        </div>
+        <div class="searchbar"  name="searchbar" >
+            <form method="POST" class="search-form" action="{% url 'artist_search' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="artist_name" id="artist-name" placeholder="Enter artist name" class="input-field" required>
+                    <button type="submit" class="button"> <img class="icon" src="{% static 'icons/search.svg' %}"> </button>
+                </div>
+            </form>    
+        </div>
+
+        <div class="sidebar-item" id="collection-button">
+            <img class="icon" src="{% static 'icons/collection.svg' %}">Collection
+        </div>
+
+        <div class="sidebar-item" id="wishlist-button">
+            <img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist
+        </div>
+
+        <div class="sidebar-item" id="setings-button">
+            <img class="icon" src="{% static 'icons/settings.svg' %}">Settings
+        </div>
+
+    </div>
+
+    <!-- Mobile -->
+        <!-- Top Bar -->
+        <div class="topbar">
+            <h1 class="pagetitle">Home</h1>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/home.svg' %}">
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/search.svg' %}">    
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+            </div>
+            <div class="nav-item">
+                <img class="icon" src="{% static 'icons/settings.svg' %}">
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/sidebar.js' %}"></script>
+{% endblock %} 
