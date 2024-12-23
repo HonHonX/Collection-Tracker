@@ -37,7 +37,7 @@
 }
 
 .sidebar-item {
-    width: 75%; /* Makes item span the full sidebar width */
+    width: 80%; /* Makes item span the full sidebar width */
     padding: 1rem 0.5rem;
     display: flex;
     flex-direction: row;
@@ -73,25 +73,30 @@
     margin-right: auto;
 }
 
-.maincontent {
-    flex-grow: 1; /* Allow the main content to take up the remaining space */
-    height: calc(100vh-2rem); /* Ensure it fills the full height of the viewport */
-    overflow-y: auto; /* Add scroll if the content overflows */
-    padding: 2rem;
-}
-
 .input-group {
     display: flex;
-    opacity: 1;
     height: 3rem;
     width: 100%;
     margin: none;
     flex-direction: row;
     gap: var(--gapDistance);
+}
+
+.searchbar {
     transition: opacity 0.3s ease-in-out;
+    display: none;
+    transform: scale(0.95); /* Slightly scaled down */
+    pointer-events: none; /* Prevent interactions when invisible */
+}
+
+.searchbar.visible {
+    display: flex;
+    transform: scale(1); /* Original size */
+    pointer-events: auto; /* Allow interactions */
 }
 
 .input-field {
+    box-shadow: var(--boxShadow);
     height: 100%;
 }
 
@@ -108,9 +113,6 @@
     width: 1.5rem;
 }
 
-#toggleElement {
-    display: none; /* Hidden by default */
-}
 
 /* Top Bar Styling */
 .topbar {

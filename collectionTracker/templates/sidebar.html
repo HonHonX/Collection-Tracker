@@ -1,8 +1,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/sidebar.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -11,8 +10,14 @@
         <div class="sidebar-logo">
             <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
         </div>
-        <div class="sidebar-item" onclick="window.location.href='{% url 'index' %}'"><img class="icon" src="{% static 'icons/home.svg' %}">Home</div>
-        <div class="sidebar-item"><img class="icon" src="{% static 'icons/search.svg' %}">Search</div>
+
+        <div class="sidebar-item" id="home-button" home-url="{% url 'index' %}">
+            <img class="icon" src="{% static 'icons/home.svg' %}">Home
+        </div>    
+
+        <div class="sidebar-item" id="search-button">
+            <img class="icon" src="{% static 'icons/search.svg' %}">Search
+        </div>
         <div class="searchbar"  name="searchbar" >
             <form method="POST" class="search-form" action="{% url 'artist_search' %}">
                 {% csrf_token %}
@@ -22,10 +27,19 @@
                 </div>
             </form>    
         </div>
-        <div class="sidebar-item" onclick="togglePopup('popupCollection')"><img class="icon" src="{% static 'icons/collection.svg' %}">Collection</div>
-        <div class="sidebar-item" onclick="togglePopup('popupWishlist')"><img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist</div>
-        <div class="sidebar-item" onclick="togglePopup('popupSettings')"><img class="icon" src="{% static 'icons/settings.svg' %}">Settings</div>
-        <!-- <div class="sidebar-item" onclick="togglePopup('popupSettings')"><img class="icon" src="{% static 'icons/settings.svg' %}">Settings</div> -->
+
+        <div class="sidebar-item" id="collection-button">
+            <img class="icon" src="{% static 'icons/collection.svg' %}">Collection
+        </div>
+
+        <div class="sidebar-item" id="wishlist-button">
+            <img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist
+        </div>
+
+        <div class="sidebar-item" id="setings-button">
+            <img class="icon" src="{% static 'icons/settings.svg' %}">Settings
+        </div>
+
     </div>
 
     <!-- Mobile -->
@@ -53,6 +67,5 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/togglePopup.js' %}"></script>
-    <!-- <script src="{% static 'js/toggleSearchbar.js' %}"></script> -->
+    <script src="{% static 'js/sidebar.js' %}"></script>
 {% endblock %} 

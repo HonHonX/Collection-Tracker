@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}
+    Welcome
+{% endblock %}
         
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'home/css/welcome.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/welcome.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -52,11 +54,18 @@
                 </form>
 
             {% else %}
-            <button class="button" onclick="location.href='{% url 'login' %}?next={{ request.get_full_path }}';">Login</button>
-            <button class="button" onclick="location.href='{% url 'register' %}?next={{ request.get_full_path }}';">Register</button>  
+                <button class="button" id="login-button">Login</button>
+                <button class="button" id="register-button" register-url="">Register</button>
+                <script src="{% static 'js/auth.js' %}"></script>
+            <!-- <button class="button" onclick="location.href='{% url 'login' %}?next={{ request.get_full_path }}'">Login</button>
+            <button class="button" onclick="location.href='{% url 'register' %}?next={{ request.get_full_path }}'">Register</button>   -->
             {% endif %}
         </div>
     </div>
 
 {% endblock content %}
+
+{% block js %}
+    <!-- <script src="{% static 'js/auth.js' %}"></script> -->
+{% endblock %} 
 

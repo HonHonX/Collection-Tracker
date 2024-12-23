@@ -1,5 +1,5 @@
 /* Add Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap'); */
 
 /* Variables */
 :root {
@@ -19,6 +19,7 @@
     --iconSize: 2rem;
     --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
+    --defaultFont: 'Verdana', sans-serif;
   }
 
 @font-face {
@@ -30,7 +31,7 @@
 
 /* Basic Body */
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--defaultFont);
     font-size: 16px; /* = 1rem */
     background-color: var(--neutral100);
     color: var(--neutral0);
@@ -71,18 +72,25 @@ h2 {
 }
 
 /* Main Page Container */
-.page {
+.maincontent {
+    flex-grow: 1; /* Allow the main content to take up the remaining space */
+    padding: 2rem;
+    height: calc(100vh-2rem); /* Ensure it fills the full height of the viewport */
+    overflow-y: auto; /* Add scroll if the content overflows */
+}
+
+/* .page {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--gapDistance);
-}
+} */
 
 /* Buttons */
 .button {
     width: 10rem;
     background-color: var(--neutral70); 
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--defaultFont);
     color: white; 
     padding: 0.75rem 1.5rem;
     border: none;
