@@ -24,7 +24,7 @@
 
 @font-face {
     font-family: 'Bauhaus93';
-    src: url("../fonts/BAUHS93.ttf") format('truetype');
+    src: url("/static/fonts/BAUHS93.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
