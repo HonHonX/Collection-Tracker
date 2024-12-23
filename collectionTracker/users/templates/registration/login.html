@@ -1,6 +1,7 @@
 <!-- from https://github.com/csev/dj4e-samples/blob/main/home/templates/registration/login_social.html -->
 
-{# {% extends "base_bootstrap.html" %} #}
+{% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -20,7 +21,7 @@
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 {{ form.as_p }}
-<input type="submit" value="Login" />
+<input type="submit" value="Login" class="button" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
     

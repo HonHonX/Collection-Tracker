@@ -11,10 +11,21 @@
         <div class="sidebar-logo">
             <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
         </div>
-        <div class="sidebar-item" onclick="togglePopup('popupHome')"><img class="icon" src="{% static 'icons/home.svg' %}">Home</div>
-        <div class="sidebar-item" onclick="togglePopup('popupSearch')"><img class="icon" src="{% static 'icons/search.svg' %}">Search</div>
+        <div class="sidebar-item" onclick="window.location.href='{% url 'index' %}'"><img class="icon" src="{% static 'icons/home.svg' %}">Home</div>
+        <div class="sidebar-item"><img class="icon" src="{% static 'icons/search.svg' %}">Search</div>
+        <div class="searchbar"  name="searchbar" >
+            <form method="POST" class="search-form" action="{% url 'artist_search' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="artist_name" id="artist-name" placeholder="Enter artist name" class="input-field" required>
+                    <button type="submit" class="button"> <img class="icon" src="{% static 'icons/search.svg' %}"> </button>
+                </div>
+            </form>    
+        </div>
+        <div class="sidebar-item" onclick="togglePopup('popupCollection')"><img class="icon" src="{% static 'icons/collection.svg' %}">Collection</div>
         <div class="sidebar-item" onclick="togglePopup('popupWishlist')"><img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist</div>
         <div class="sidebar-item" onclick="togglePopup('popupSettings')"><img class="icon" src="{% static 'icons/settings.svg' %}">Settings</div>
+        <!-- <div class="sidebar-item" onclick="togglePopup('popupSettings')"><img class="icon" src="{% static 'icons/settings.svg' %}">Settings</div> -->
     </div>
 
     <!-- Mobile -->
@@ -39,5 +50,9 @@
             </div>
         </div>
 
-        <script src="{% static 'js/togglePopup.js' %}"></script>
 {% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/togglePopup.js' %}"></script>
+    <!-- <script src="{% static 'js/toggleSearchbar.js' %}"></script> -->
+{% endblock %} 

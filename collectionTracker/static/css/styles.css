@@ -17,9 +17,11 @@
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
     --iconSize: 2rem;
+    --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
+    --gapDistance: 1rem;
   }
 
-  @font-face {
+@font-face {
     font-family: 'Bauhaus93';
     src: url("../fonts/BAUHS93.ttf") format('truetype');
     font-weight: normal;
@@ -38,17 +40,21 @@ body {
     align-items: center;
 }
 
+main {
+    width: 100%;
+}
+
 /* Links */
 a {
     color: var(--accent100);
 }
 
 a:hover {
-    color: var(--accentC100);
+    color: var(--accentVariantB100);
 }
 
 a:visited {
-    color: var(--accentC100);
+    color: var(--accentVariantB100);
 }
 
 /* Headlines */
@@ -56,8 +62,51 @@ h1, h2 {
     text-align: left;
     color: var(--accent100);
     font-family: 'Bauhaus93', sans-serif;
-    font-size: 3rem;
+    font-size: 2rem;
 }
+
+h2 {
+    color: var(--accentVariantB100);
+    font-size: 1.5rem;
+}
+
+/* Main Page Container */
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gapDistance);
+}
+
+/* Buttons */
+.button {
+    width: 10rem;
+    background-color: var(--neutral70); 
+    font-family: 'Montserrat', sans-serif;
+    color: white; 
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--borderRadius); /* Slightly rounded edges */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: var(--boxShadow); /* Subtle shadow for depth */
+  }
+  
+  .button:hover {
+    background-color: var(--accent100);
+    transform: translateY(-2px); /* Lift effect */
+  }
+  
+  .button:active {
+    transform: translateY(0); /* Reset lift effect */
+  }
+  
+  .button:disabled {
+    background-color: var(--neutral70); 
+    color: var(--neutral100);
+    cursor: not-allowed; /* Disable pointer events */
+    opacity: 0.6; /* Faded look */
+  }
 
 .container {
     margin: 0 auto;
@@ -164,7 +213,7 @@ h1, h2 {
     color: var(--neutral0);
     display: flex;
     justify-content: flex-end; 
-    gap: 1rem;
+    gap: var(--gapDistance);
     width: 100%;
     margin-bottom: 2rem;
 }
