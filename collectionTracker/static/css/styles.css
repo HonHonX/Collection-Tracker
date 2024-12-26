@@ -113,6 +113,10 @@ p  {
     align-self: center;
 }
 
+.icon:hover {
+    cursor: pointer;
+}
+
 /* Buttons */
 .button {
     width: 10rem;
@@ -209,12 +213,13 @@ p  {
     background-color: var(--neutral100);
 }
 
-.control-icon {
+.controls .icon {
     height: 1rem;
     width: auto;
 }
 
 /* Album Overview */
+
 .album-overview {
     display: column;
     flex-wrap: wrap;
@@ -251,6 +256,21 @@ p  {
     font-size: 0.8rem;
     display: block;
 }
+
+.album-controls {
+    height: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.album-controls .icon {
+    height: 1rem;
+    width: auto;
+}
+
 
 .album-grid {
     padding: 2rem 0;

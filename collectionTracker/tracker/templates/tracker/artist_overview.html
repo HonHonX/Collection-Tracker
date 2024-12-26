@@ -40,8 +40,8 @@
             </div>
 
             <div class="controls">
-                <img src="{% static 'icons/filter.svg' %}" alt="Filter" class="control-icon">
-                <img src="{% static 'icons/sort.svg' %}" alt="Sort" class="control-icon">   
+                <img src="{% static 'icons/filter.svg' %}" alt="Filter" class="icon">
+                <img src="{% static 'icons/sort.svg' %}" alt="Sort" class="icon">   
             </div>
 
             <div class="gradient-box"></div>
@@ -50,6 +50,10 @@
         <div class="album-grid">
         {% for album in albums %}
             <div class="album-item">
+                <div class="album-controls">
+                    <img class="icon" src="{% static 'icons/add.svg' %}">
+                </div>
+            
                 {% if album.image_url %}
                     <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
                 {% endif %}

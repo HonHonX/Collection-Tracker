@@ -1,3 +1,20 @@
-<p>
-    album_overview.html
-</p>
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+{{ user.first_name }}'s Collection
+{% endblock %}
+
+{% block site_specific_css %}
+    <!-- <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css">   -->
+{% endblock %}
+
+{% block maincontent %}
+    
+    {% if error %}
+    <p>{{ error }}</p>
+
+    {% else %}
+   
+    {% endif %}
+{% endblock %}
