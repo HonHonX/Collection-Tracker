@@ -1,9 +1,10 @@
 /* Regular Sidebar styling */
-/* @import url("../../../styles.css"); */
+@import url("../../css/styles.css");
+
 
 :root {
     /* Design Sizes */
-    --sidebarWidth: 20rem; /* Box Roundness */
+    --sidebarWidth: 15rem; /* Box Roundness */
     --sidebarIcons: calc(var(--iconSize)*0.75);
 }
 
@@ -20,6 +21,8 @@
 }
 
 .sidebar {
+    position: sticky; /* Ensures the sidebar stays fixed in place */
+    top: 0;
     display: flex;
     width: var(--sidebarWidth);
     height: 100vh; /* Full viewport height */
@@ -34,6 +37,8 @@
     z-index: 1000;
     border-radius: var(--borderRadius);
     gap: var(--gapDistance);
+    top: 0; /* Aligns the top of the sidebar with the viewport */
+    left: 0; /* Aligns the sidebar to the left of the viewport */
 }
 
 .sidebar-item {
@@ -61,10 +66,6 @@
     height: var(--sidebarIcons);
 }
 
-.sidebar-logo {
-    
-}
-
 .logo-img {
     width: 90%; /* Makes item span the full sidebar width */
     height: auto;
@@ -76,14 +77,14 @@
 .input-group {
     display: flex;
     height: 3rem;
-    width: 100%;
-    margin: none;
+    width: 80%;
+    margin: 0 auto;
     flex-direction: row;
     gap: var(--gapDistance);
 }
 
 .searchbar {
-    transition: opacity 0.3s ease-in-out;
+    transition: var(--transitionStyle);
     display: none;
     transform: scale(0.95); /* Slightly scaled down */
     pointer-events: none; /* Prevent interactions when invisible */

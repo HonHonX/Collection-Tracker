@@ -34,7 +34,7 @@ urlpatterns = [
     #path('users/', include("users.urls")),
     #path('settings/', include("settings.urls")),
 
-    path("tracker/", include("tracker.urls")),  # for testing
+    path("search/", include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 # https://github.com/csev/dj4e-samples/blob/main/dj4e-samples/urls.py

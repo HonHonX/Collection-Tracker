@@ -11,7 +11,7 @@
 
 {% block content %}
 
-    <div class="page">
+    <div class="maincontent">
         <!-- Logo -->
         <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
         <h1>Meet your ultimate companion for managing your physical music collection!</h1>
@@ -20,21 +20,24 @@
         <div class="introduction">
             <p>
                 With Beats & Bops, you can effortlessly track and organize your entire music library.
-                </br>
                 Discover new music, rediscover old favorites, and never buy the same album twice. 
                 </br>   
                 Start your musical journey with Beats & Bops today!
             </p>
         </div>
 
+        <div class="home-button" id="home-button" home-url="{% url 'index' %}">
+            <img class="icon" src="{% static 'icons/home.svg' %}">
+        </div>   
+
         <div class="linkblock">
-            <p>Available Links</p>
+            <!-- <p>Available Links</p> -->
             <ul>
-                <li><p><a href="/index">index.html</a></p></li>
+                <!-- <li><p><a href="/index">index.html</a></p></li>
                 <li><p><a href="/collection/album_overview">collection/album_overview.html</a></p></li>
-                <li><p><a href="/collection/album_detail">collection/album_detail.html</a></p></li>
+                <li><p><a href="/collection/album_detail">collection/album_detail.html</a></p></li> 
                 <li><p><a href="/tracker">tracker</a></p></li>
-                <li><p><a href="/tracker/search">tracker/search</a></p></li>
+                <li><p><a href="/tracker/search">tracker/search</a></p></li> -->
                 <!--<li><p><a href="/friends"></a>friends</p></li>--> <!-- coming soon -->
                 <!--<li><p>See your <a href="/stats"></a>stats</p></li>--> <!-- coming soon -->
                 <!--<li><p>See your <a href="/settings"></a>settings</p></li>--> <!-- coming soon -->
@@ -43,22 +46,18 @@
             </ul>
         </div>
 
-        <div class="login">
+        <div class="login {% if user.is_authenticated %}authenticated{% endif %}">
             {% if user.is_authenticated %}
-            Logged in as {{ user.username }}  
-                <form action="{% url 'logout' %}?next=/" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="button">
-                        Logout
-                    </button>
-                </form>
+            Logged in as {{ user.username }}
+            <form action="{% url 'logout' %}?next=/" method="post" id="logout">
+                {% csrf_token %}
+                <button type="submit" class="button" >Logout</button>
+            </form>
 
             {% else %}
                 <button class="button" id="login-button">Login</button>
                 <button class="button" id="register-button" register-url="">Register</button>
                 <script src="{% static 'js/auth.js' %}"></script>
-            <!-- <button class="button" onclick="location.href='{% url 'login' %}?next={{ request.get_full_path }}'">Login</button>
-            <button class="button" onclick="location.href='{% url 'register' %}?next={{ request.get_full_path }}'">Register</button>   -->
             {% endif %}
         </div>
     </div>
@@ -66,6 +65,6 @@
 {% endblock content %}
 
 {% block js %}
-    <!-- <script src="{% static 'js/auth.js' %}"></script> -->
+    <script src="{% static 'js/navigation.js' %}"></script>
 {% endblock %} 
 
