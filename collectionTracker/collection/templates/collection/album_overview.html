@@ -10,11 +10,34 @@
 {% endblock %}
 
 {% block maincontent %}
-    
-    {% if error %}
-    <p>{{ error }}</p>
 
-    {% else %}
-   
-    {% endif %}
+    <div class="collection-header">
+        <h1>My Album Collection</h1>
+        {% if user_collection %}
+            <p>You have added {{ user_collection.count }} albums to your collection.</p>
+        {% else %}
+            <p>Your collection is empty.</p>
+        {% endif %}
+    </div>
+
+    <div class="album-grid">
+        {% for collection_entry in user_collection %}
+            <div class="album-item">
+                <div class="album-controls">
+                    <img class="icon" src="{% static 'icons/remove.svg' %}" alt="Remove from collection">
+                </div>
+
+                {% if collection_entry.album.image_url %}
+                    <img src="{{ collection_entry.album.image_url }}" alt="Album cover" class="album-cover">
+                {% endif %}
+                
+                <div class="album-info">
+                    <strong>{{ collection_entry.album.name }}</strong><br>
+                    {{ collection_entry.album.album_type }}<br>
+                    {{ collection_entry.album.release_date }}<br>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}
