@@ -21,36 +21,6 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Create your views here.
 
-#view which is connected to the Webhook to auto-pull at PythonAnywhere from GitHub
-@csrf_exempt  # Disable CSRF validation for this view
-def update_repo(request):
-    if request.method == 'POST':
-        # Setting GitHub username and personal access token
-        github_username = 'HonHonX'
-        github_token = config('GITHUB_TOKEN')
-
-        # Change to repo
-        repo_path = '/home/WTCollectionTracker/Collection-Tracker/collectionTracker/'
-        logger.info("Changing directory to: %s", repo_path)
-        os.chdir(repo_path)
-
-        # Select branch to pull from
-        branch_name = 'TestAlbumSeite'
-
-        # Pull the latest changes using the token
-        result = subprocess.call(['git', 'pull', f'https://{github_username}:{github_token}@github.com/HonHonX/Collection-Tracker.git', branch_name])
-        
-        if result != 0:
-            logger.error("Git pull failed with status: %d", result)
-            return JsonResponse({'status': 'error', 'message': 'Git pull failed'}, status=500)
-
-        logger.info("Git pull result: %d", result)
-
-        return JsonResponse({'status': 'success'})
-    
-    logger.warning("Request method not allowed: %s", request.method)
-    return JsonResponse({'status': 'error'}, status=400)
-
 # View for the landing page
 def index(request):
     return HttpResponse("Neue Testseite unter /search 👩‍💻✨ woo")

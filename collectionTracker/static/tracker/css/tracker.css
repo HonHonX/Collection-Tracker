@@ -1,0 +1,10 @@
+/* @import url("../../../styles.css"); */
+@import url("../../css/styles.css");
+
+.maincontent{
+    display: flex;
+    flex-direction: wrap;
+    gap: 3rem;
+    height: 100%;
+    padding: 0 2rem;
+}

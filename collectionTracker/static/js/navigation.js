@@ -1,6 +1,3 @@
-console.log('Sidebar JS is loaded');
-
-
 document.addEventListener('DOMContentLoaded', function() {
     // Home Button
     var homeUrl = document.getElementById('home-button').getAttribute('home-url');

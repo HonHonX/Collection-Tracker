@@ -12,15 +12,15 @@
     --accent90: #4e50de;
     --accentVariantA100: #C9C9EE;
     --accentVariantB100: #62BBC1;
-    /* Color Variants: https://coolors.co/1f1f1f-525252-6467fa-c9c9ee-62bbc1 */
 
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
     --iconSize: 2rem;
     --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
-    --defaultFont: 'Verdana', sans-serif;
-  }
+    --defaultFont: 'Tahoma', sans-serif;
+    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;;
+}
 
 @font-face {
     font-family: 'Bauhaus93';
@@ -29,31 +29,29 @@
     font-style: normal;
 }
 
-/* Basic Body */
+/* Global Styles */
 body {
     font-family: var(--defaultFont);
-    font-size: 16px; /* = 1rem */
+    font-size: 1rem; /* 16px */
     background-color: var(--neutral100);
     color: var(--neutral0);
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    line-height: 1.5;
 }
 
 main {
     width: 100%;
 }
 
-/* Links */
 a {
     color: var(--accent100);
+    text-decoration: none;
 }
 
-a:hover {
-    color: var(--accentVariantB100);
-}
-
+a:hover,
 a:visited {
     color: var(--accentVariantB100);
 }
@@ -61,73 +59,53 @@ a:visited {
 /* Headlines */
 h1, h2 {
     text-align: left;
-    color: var(--accent100);
     font-family: 'Bauhaus93', sans-serif;
+    color: var(--accent100);
+}
+
+h1 {
     font-size: 2rem;
 }
 
 h2 {
-    color: var(--accentVariantB100);
     font-size: 1.5rem;
+    color: var(--accentVariantB100);
 }
 
-/* Main Page Container */
+p  {
+    font-weight: 100;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.page {
+    display: flex; /* Create a flex container */
+    flex-direction: row; /* Place items (sidebar and main content) in a row */
+    width: 100%; /* Full width of the viewport */
+    min-height: 100vh; /* Ensure it spans the full height of the viewport */
+    gap: var(--gapDistance); /* Add spacing between sidebar and main content */
+    box-sizing: border-box; /* Include padding and border in dimensions */
+}
+
 .maincontent {
-    flex-grow: 1; /* Allow the main content to take up the remaining space */
+    flex-grow: 1;
     padding: 2rem;
-    height: calc(100vh-2rem); /* Ensure it fills the full height of the viewport */
-    overflow-y: auto; /* Add scroll if the content overflows */
-}
-
-/* .page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    box-sizing: border-box;
     gap: var(--gapDistance);
-} */
-
-/* Buttons */
-.button {
-    width: 10rem;
-    background-color: var(--neutral70); 
-    font-family: var(--defaultFont);
-    color: white; 
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: var(--borderRadius); /* Slightly rounded edges */
-    cursor: pointer;
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
-    box-shadow: var(--boxShadow); /* Subtle shadow for depth */
-  }
-  
-  .button:hover {
-    background-color: var(--accent100);
-    transform: translateY(-2px); /* Lift effect */
-  }
-  
-  .button:active {
-    transform: translateY(0); /* Reset lift effect */
-  }
-  
-  .button:disabled {
-    background-color: var(--neutral70); 
-    color: var(--neutral100);
-    cursor: not-allowed; /* Disable pointer events */
-    opacity: 0.6; /* Faded look */
-  }
+    height: 100vr;
+    box-sizing: border-box;
+}
 
 .container {
     margin: 0 auto;
     padding: 1rem;
-    background-color: var(--neutral90); /* Slightly lighter dark shade */
+    background-color: var(--neutral90);
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
     width: 50%;
     border-radius: var(--borderRadius);
 }
-
-
 
 .logo {
     width: 50%;
@@ -135,77 +113,78 @@ h2 {
     align-self: center;
 }
 
-/* Search */
-.search-form {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-}
-
-.input-field, .btn {
-    width: 80%; /* Same width for both */
-    margin: 0 auto 1rem auto; /* Center align both */
-    border-radius: 0.5rem;
-    padding: 1rem;
-    box-sizing: border-box; /* Include padding in width calculation */
-}
-
-.input-field {
+/* Buttons */
+.button {
+    width: 10rem;
+    height: 3rem;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--defaultFont);
+    font-size: 1rem;
+    color: var(--neutral0);
     background-color: var(--neutral70);
     border: none;
-    color: var(--neutral0);
-    text-align: center;
-}
-
-.btn {
-    background-color: var(--accent100);
-    color: var(--neutral0);
-    border: none;
+    border-radius: var(--borderRadius);
     cursor: pointer;
-    text-align: center;
+    box-shadow: var(--boxShadow);
+    transition: var(--transitionStyle);
 }
 
-.btn:hover {
-    background-color: var(--accent90);
+.button:hover {
+    background-color: var(--accent100);
+    transform: translateY(-2px);
 }
 
-/* Main Container */
-.main {
-    width: 75%;
-    display: flex;
+.button:active {
+    transform: translateY(0);
 }
 
-/* Left Column */
+.button:disabled {
+    background-color: var(--neutral70);
+    color: var(--neutral100);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Content Sections */
+
 .artist-detail {
+    position: sticky;
+    top: 0;
+    height: 100%;
+    flex: 0 0 20%;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    text-align: center;
-    flex: 1;
 }
 
 .artist-detail p {
     line-height: 1rem;
     font-size: 0.75rem;
+    text-align: left;
 }
 
 .artist-detail img {
-    border-radius: 50%;
-    object-fit: cover;
     width: 100%;
     height: auto;
     margin-bottom: 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1; 
+    margin: 2rem 0 2rem 0;
 }
 
-/* Right Column */
+.sticky-top {
+    position: sticky;
+    top: 0;
+}
 
-/* Latest Release */
 .latest-release {
-    display: flex;
-    justify-content: flex-end;
     width: 100%;
-    height: auto;
+    display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     padding: 0;
+    background-color: var(--neutral100);
 }
 
 .latest-release h2 {
@@ -214,16 +193,20 @@ h2 {
 
 .spotify-player {
     width: 100%;
+    height: 5rem;
+    padding: 2rem 0 1rem 0;
 }
 
-/* Controls like sort */
+/* Controls */
 .controls {
-    color: var(--neutral0);
-    display: flex;
-    justify-content: flex-end; 
-    gap: var(--gapDistance);
     width: 100%;
-    margin-bottom: 2rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--gapDistance);
+    color: var(--neutral0);
+    background-color: var(--neutral100);
 }
 
 .control-icon {
@@ -232,42 +215,157 @@ h2 {
 }
 
 /* Album Overview */
-.album-grid {
-    display: flex;
-    padding: 0 4rem;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
+.album-overview {
+    display: column;
+    flex-wrap: wrap;
     justify-content: space-between;
-    flex: 3;
+    gap: 1rem;
+    flex: 1;
 }
 
 .album-item {
-    flex: 0 1 calc(25% - 1rem); /* Set flex basis to 25% for 4 columns */
-    margin-bottom: 2rem; /* Space between rows */
+    flex: 0 1 calc(20% - 1rem);
     display: flex;
     flex-direction: column;
-    border: var(--neutral0);
     width: 20rem;
+    margin-bottom: 2rem;
 }
 
 .album-cover {
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 1/1;
-    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--borderRadius);
 }
 
 .album-info {
-    flex-grow: 1; /* Take remaining space */
-    margin: 1rem 0 0 0; /* Margin around info */
-    text-align: left; /* Align text to the left */
-    color: var(--neutral0); 
+    flex-grow: 1;
+    margin-top: 1rem;
+    text-align: left;
+    color: var(--neutral0);
     font-size: 0.6rem;
     line-height: 1.25rem;
     text-transform: capitalize;
 }
 
 .album-info strong {
-    font-size: 0.8rem; /* Set font size */
-    display: block; /* Ensure it behaves like a block element */
+    font-size: 0.8rem;
+    display: block;
+}
 
+.album-grid {
+    padding: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: 1;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer */
+}
+
+.album-grid::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+}
+
+/* Forms */
+form {
+    width: 100%;
+    margin: 0 auto;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    color: var(--neutral0);
+}
+
+/* Label styling */
+form label {
+    display: block;
+    color: var(--neutral0);
+}
+
+/* Input fields styling */
+form input, form textarea {
+    width: 100%;
+    padding: 1rem;
+    border-radius: var(--borderRadius);
+    box-sizing: border-box;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
+}
+
+/* Input/textarea focus styles */
+form input:focus, form textarea:focus {
+    border-color: var(--accent100); /* Highlight color when focused */
+    outline: none; /* Removes default focus outline */
+}
+
+/* Textarea specific styling */
+form textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+/* Submit button styling */
+form input[type="submit"] {
+    background-color: var(--accent100);
+    color: var(--neutral0);
+    border: none;
+    height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    transition: var(--transitionStyle);
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--accent90); /* Darken on hover */
+    transform: translateY(-2px);
+}
+
+form input[type="submit"]:active {
+    transform: translateY(0); /* Button press effect */
+}
+
+form input[type="submit"]:disabled {
+    background-color: var(--neutral70);
+    color: var(--neutral100);
+    cursor: not-allowed;
+    opacity: 0.6; /* Disabled button appearance */
+}
+
+/* Error message styling */
+form .errorlist {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    padding: 0;
+    list-style-type: none;
+}
+
+form .errorlist li {
+    margin-bottom: 0.5rem; /* Spacing between error messages */
+}
+
+/* Optional: Highlight fields with errors */
+form input.error, form textarea.error {
+    border-color: red; /* Red border for error fields */
+}
+
+/* Gradient Overlay */
+.gradient-box {
+    width: 100%; 
+    height: 1rem; 
+    background: linear-gradient(to bottom, rgba(31, 31, 31, 1), rgba(31, 31, 31, 0));
+}
+
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+
+    form input, form textarea {
+        padding: 0.75rem; /* Adjust padding for smaller screens */
+    }
+
+    form input[type="submit"] {
+        padding: 0.75rem 1.5rem; /* Adjust padding for the submit button */
+    }
 }
