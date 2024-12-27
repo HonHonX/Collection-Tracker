@@ -20,9 +20,27 @@
         {% endif %}
     </div>
 
+    <div class="sorting-controls">
+        <label for="sort-criteria">Sort by:</label>
+        <select id="sort-criteria">
+            <option value="artist">Artist</option>
+            <option value="album_type">Album Type</option>
+            <option value="release_date">Release Date</option>
+        </select>
+    
+        <label for="sort-order">Order:</label>
+        <select id="sort-order">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+    </div> 
+
     <div class="album-grid">
         {% for collection_entry in user_collection %}
-            <div class="album-item" data-album-id="{{ collection_entry.album.id }}">
+            <div class="album-item" 
+                 data-artist="{{ collection_entry.album.artist }}"
+                 data-album-type="{{ collection_entry.album.album_type }}"
+                 data-release-date="{{ collection_entry.album.release_date }}">
                 <div class="album-controls">
                     <img class="icon" src="{% static 'icons/remove.svg' %}" alt="Remove from collection">
                 </div>
@@ -30,7 +48,7 @@
                 {% if collection_entry.album.image_url %}
                     <img src="{{ collection_entry.album.image_url }}" alt="Album cover" class="album-cover">
                 {% endif %}
-                
+    
                 <div class="album-info">
                     <strong>{{ collection_entry.album.name }}</strong><br>
                     {{ collection_entry.album.album_type }}<br>
@@ -38,10 +56,11 @@
                 </div>
             </div>
         {% endfor %}
-    </div>    
+    </div>        
 
 {% endblock %}
 
 {% block js %}
     <script src="{% static 'js/removeAlbum.js' %}"></script>
+    <script src="{% static 'js/sortAlbums.js' %}"></script>
 {% endblock %}
