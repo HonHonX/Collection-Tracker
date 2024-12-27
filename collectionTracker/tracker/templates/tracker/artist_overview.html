@@ -1,5 +1,4 @@
 <!-- artist_overview.html -->
-
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
@@ -8,21 +7,25 @@
 {% endblock %}
 
 {% block site_specific_css %}
-    <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css">  
+    <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css">
 {% endblock %}
 
 {% block maincontent %}
+
     {% if error %}
         <p>{{ error }}</p>
     {% else %}
+
         <div class="artist-detail">
             {% if artist_photo_url %}
                 <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
             {% endif %}
+
             <h1>{{ artist_name }}</h1>
             {% if artist_info.genres %}
-                <p>Genres: {{ artist_info.genres | join:", " }}</p>
+                <p>Genres: {{ artist_info.genres|join:", " }}</p>
             {% endif %}
+
             <p>Popularity: {{ artist_info.popularity }}</p>
             <p>Total Albums: {{ artist_info.total_albums }}</p>
         </div>
@@ -30,43 +33,42 @@
         <div class="album-overview">
             <div class="sticky-top">
                 <div class="latest-release">
-                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}?theme=0&view=coverart" class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}?theme=0&view=coverart"
+                        class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
                 <div class="controls">
                     <img src="{% static 'icons/filter.svg' %}" alt="Filter" class="icon">
-                    <img src="{% static 'icons/sort.svg' %}" alt="Sort" class="icon">   
+                    <img src="{% static 'icons/sort.svg' %}" alt="Sort" class="icon">
                 </div>
                 <div class="gradient-box"></div>
             </div>
-
             <div class="album-grid">
                 {% for album in albums %}
-                    <div class="album-item"
-                        data-album-id="{{ album.spotify_id }}"
-                        data-album-name="{{ album.name }}"
-                        data-album-type="{{ album.album_type }}"
-                        data-release-date="{{ album.release_date }}"
-                        data-image-url="{{ album.image_url }}"
-                        data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}">
-                        <div class="album-controls">
-                            {% if album.id in user_album_ids %}
-                                <img class="icon disabled" src="{% static 'icons/check.svg' %}" alt="Already added">
-                            {% else %}
-                                <img class="icon" src="{% static 'icons/add.svg' %}" alt="Add to collection">
-                            {% endif %}
-                        </div>
-                        {% if album.image_url %}
-                            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                <div class="album-item" 
+                    data-album-id="{{ album.spotify_id }}" 
+                    data-album-name="{{ album.name }}"
+                    data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
+                    data-image-url="{{ album.image_url }}"
+                    data-artist-name="{{ artist_name }}"
+                    data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}">
+                    <div class="album-controls">
+                        {% if album.id in user_album_ids %}
+                        <img class="icon disabled" src="{% static 'icons/check.svg' %}" alt="Already added">
+                        {% else %}
+                        <img class="icon" src="{% static 'icons/add.svg' %}" alt="Add to collection">
                         {% endif %}
-                        <div class="album-info">
-                            {{ album.album_type }} <br>
-                            <strong>{{ album.name }} <br></strong>
-                            {{ album.release_date }} <br>
-                        </div>
                     </div>
+                    {% if album.image_url %}
+                    <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                    {% endif %}
+                    <div class="album-info">
+                        {{ album.album_type }} <br>
+                        <strong>{{ album.name }} <br></strong>
+                        {{ album.release_date }} <br>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-
         </div>
     {% endif %}
 {% endblock %}

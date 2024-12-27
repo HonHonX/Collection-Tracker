@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
+from django.views import View
+import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.views import View
-import json
-from .models import Artist, Album, UserAlbumCollection
+from .models import Album, Artist, UserAlbumCollection
 
 # View for rendering the artist overview page
 @login_required
@@ -30,32 +30,31 @@ def artist_overview(request, artist_id):
     
     return render(request, 'artist_overview.html', context)
 
-# View for rendering the user's album collection overview page
-@login_required
-def album_overview(request):
-    # Get all albums in the user's collection
-    user_collection = UserAlbumCollection.objects.filter(user=request.user)
-    
-    # Extract album IDs for quick lookup in templates
-    user_album_ids = list(user_collection.values_list('album__id', flat=True))
-    
-    return render(request, 'album_overview.html', {
-        'user_collection': user_collection,
-        'user_album_ids': user_album_ids,
-    })
+class AlbumDetail(View):
+    """Zeigt die Details eines Albums."""
+    def get(self, request, album_id):
+        album = get_object_or_404(Album, id=album_id)
+        context = {
+            'album': album,
+            'artist': album.artist,
+        }
+        return render(request, 'collection/album_detail.html', context)
 
-# API endpoint to add an album to the user's collection (AJAX request)
 @csrf_exempt
 def add_album_to_collection(request):
     if request.method == 'POST':
-        data = json.loads(request.body)  # Parse JSON request body
+        data = json.loads(request.body)
         album_id = data.get('album_id')
+        artist_name = data.get('artist_name')
         user = request.user
 
         if not user.is_authenticated:
             return JsonResponse({'success': False, 'error': 'User not authenticated'})
 
-        # Get or create the album instance
+        # Artist erstellen oder laden
+        artist, _ = Artist.objects.get_or_create(name=artist_name)
+
+        # Album erstellen oder laden
         album, _ = Album.objects.get_or_create(
             id=album_id,
             defaults={
@@ -63,21 +62,38 @@ def add_album_to_collection(request):
                 'album_type': data.get('album_type'),
                 'release_date': data.get('release_date'),
                 'image_url': data.get('image_url'),
+                'artist': artist,
             }
         )
 
-        # Check if the album is already in the user's collection
-        if UserAlbumCollection.objects.filter(user=user, album=album).exists():
-            return JsonResponse({
-                'success': False,
-                'message': f'Album "{album.name}" is already in your collection.'
-            })
-
-        # Add the album to the user's collection
-        UserAlbumCollection.objects.create(user=user, album=album)
-        return JsonResponse({'success': True, 'message': f'Album "{album.name}" added to your collection!'})
+        try:
+            UserAlbumCollection.objects.get(user=user, album=album)
+            return JsonResponse({'success': False, 'message': f'Album "{album.name}" is already in your collection.'})
+        except UserAlbumCollection.DoesNotExist:
+            UserAlbumCollection.objects.create(user=user, album=album)
+            return JsonResponse({'success': True, 'message': f'Album "{album.name}" added to your collection!'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+
+@login_required
+def album_overview(request):
+    user_collection = UserAlbumCollection.objects.filter(user=request.user)
+    user_album_ids = list(user_collection.values_list('album__id', flat=True))
+    artist_data = [
+        {
+            "name": entry.album.artist.name,
+            "photo_url": entry.album.artist.photo_url,
+            "genres": entry.album.artist.genres,
+            "popularity": entry.album.artist.popularity,
+        }
+        for entry in user_collection
+    ]
+    return render(request, 'collection/album_overview.html', {
+        'user_collection': user_collection,
+        'user_album_ids': user_album_ids,
+        'artist_data': artist_data,
+    })
 
 # API endpoint to remove an album from the user's collection (AJAX request)
 @csrf_exempt
@@ -98,7 +114,4 @@ def remove_album_from_collection(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-# Example view for rendering a detailed page for a single album (optional)
-class AlbumDetailView(View):
-    def get(self, request):
-        return render(request, 'collection/album_detail.html')
+

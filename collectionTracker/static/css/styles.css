@@ -61,6 +61,7 @@ h1, h2 {
     text-align: left;
     font-family: 'Bauhaus93', sans-serif;
     color: var(--accent100);
+    width:100%;
 }
 
 h1 {
@@ -276,7 +277,7 @@ p  {
     padding: 2rem 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start;
     gap: 1rem;
     flex: 1;
     overflow-y: scroll;
@@ -377,6 +378,52 @@ form input.error, form textarea.error {
     background: linear-gradient(to bottom, rgba(31, 31, 31, 1), rgba(31, 31, 31, 0));
 }
 
+/* Sorting Controls Styling */
+.sorting-controls {
+    display: flex;
+    flex-direction: row; /* Aligns label and select elements in a row */
+    align-items: center;
+    justify-content: flex-end; /* Pushes the controls to the right */
+    gap: var(--gapDistance); /* Adds spacing between elements */
+    padding: 1rem;
+    background-color: var(--neutral90); /* Matches background */
+    color: var(--neutral0); /* Matches text color */
+    border-radius: var(--borderRadius);
+    box-shadow: var(--boxShadow); /* Optional: Adds a shadow */
+}
+
+.sorting-controls label {
+    font-size: 1rem;
+    color: var(--neutral0);
+}
+
+.sorting-controls select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
+    border: none;
+    border-radius: var(--borderRadius);
+    box-shadow: var(--boxShadow); /* Matches existing styles */
+    transition: var(--transitionStyle);
+}
+
+.sorting-controls select:hover {
+    background-color: var(--accent100); /* Changes color on hover */
+}
+
+.sorting-controls select:focus {
+    outline: none;
+    border: 1px solid var(--accent100); /* Highlight border on focus */
+}
+
+.sort-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 8px;
+}
 
 /* Responsive design adjustments */
 @media (max-width: 768px) {

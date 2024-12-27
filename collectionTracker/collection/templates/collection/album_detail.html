@@ -1,3 +1,9 @@
-<p>
-    album_detail.html
-</p>
+{% extends 'base.html' %}
+{% block title %}{{ album.name }}{% endblock %}
+{% block content %}
+<h1>{{ album.name }}</h1>
+<p><strong>Artist:</strong> {{ album.artist.name }}</p>
+<p><strong>Release Date:</strong> {{ album.release_date }}</p>
+<img src="{{ album.image_url }}" alt="{{ album.name }}">
+<p><strong>Album Type:</strong> {{ album.album_type }}</p>
+{% endblock %}

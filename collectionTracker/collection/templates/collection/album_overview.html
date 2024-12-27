@@ -1,23 +1,23 @@
 <!-- album_overview.html -->
-
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
 {% block title %}
-{{ user.first_name }}'s Collection
+    {{ user.first_name }}'s Collection
 {% endblock %}
 
 {% block site_specific_css %}
-    <!-- <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css">   -->
+    <!-- <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css"> -->
 {% endblock %}
 
 {% block maincontent %}
+
     <div class="collection-header">
         <h1>My Album Collection</h1>
         {% if user_collection %}
-            <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
+        <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
         {% else %}
-            <p>Your collection is empty.</p>
+        <p>Your collection is empty.</p>
         {% endif %}
     </div>
 
@@ -28,49 +28,41 @@
             <option value="album_type">Album Type</option>
             <option value="release_date">Release Date</option>
         </select>
-    
-        <label for="sort-order">Order:</label>
-        <select id="sort-order">
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
-    </div> 
+        <img id="sort-toggle" class="sort-icon" 
+            src="{% static 'icons/sort-asc.svg' %}" 
+            alt="Sort toggle" 
+            data-sort-order="asc">
+    </div>
 
     <div class="album-grid">
         {% for collection_entry in user_collection %}
-            <div class="album-item" 
-                 data-artist="{{ collection_entry.album.artist.name }}"
-                 data-album-type="{{ collection_entry.album.album_type }}"
-                 data-release-date="{{ collection_entry.album.release_date }}">
-                <div class="album-controls">
-                    <img class="icon" src="{% static 'icons/remove.svg' %}" alt="Remove from collection">
-                </div>
+        <div class="album-item" 
+            data-artist="{{ collection_entry.album.artist.name }}"
+            data-album-type="{{ collection_entry.album.album_type }}" 
+            data-release-date="{{ collection_entry.album.release_date }}" 
+            data-album-id="{{ collection_entry.album.id }}">
     
-                {% if collection_entry.album.image_url %}
-                    <img src="{{ collection_entry.album.image_url }}" alt="Album cover" class="album-cover">
-                {% endif %}
-    
-                <div class="album-info">
-                    <strong>{{ collection_entry.album.name }}</strong><br>
-                    {{ collection_entry.album.artist.name }}<br>
-                    {{ collection_entry.album.album_type }}<br>
-                    {{ collection_entry.album.release_date }}<br>
-                    <!-- <div class="artist-info">
-                        <strong>Artist: </strong> -->
-                        <!-- {% if collection_entry.album.artist.photo_url %}
-                            <img src="{{ collection_entry.album.artist.photo_url }}" alt="{{ collection_entry.album.artist.name }}" class="artist-photo">
-                        {% endif %} -->
-                        <!-- <em>Genres: </em>{{ collection_entry.album.artist.genres | join:", " }}<br>
-                        <em>Popularity: </em>{{ collection_entry.album.artist.popularity }} -->
-                    <!-- </div> -->
-                </div>
+            <div class="album-controls">
+                <img class="icon" src="{% static 'icons/remove.svg' %}" alt="Remove from collection">
             </div>
+    
+            {% if collection_entry.album.image_url %}
+                <img src="{{ collection_entry.album.image_url }}" alt="Album cover" class="album-cover">
+            {% endif %}
+    
+            <div class="album-info">
+                <strong>{{ collection_entry.album.name }}</strong><br>
+                <em>Artist: {{ collection_entry.album.artist.name }}</em><br>
+                <em>Release Date: {{ collection_entry.album.release_date }}</em><br>
+                <em>Type: {{ collection_entry.album.album_type }}</em>
+            </div>
+        </div>
         {% endfor %}
-    </div>        
+    </div>
+    
 
 {% endblock %}
-
 {% block js %}
-    <script src="{% static 'js/removeAlbum.js' %}"></script>
-    <script src="{% static 'js/sortAlbums.js' %}"></script>
+<script src="{% static 'js/removeAlbum.js' %}"></script>
+<script src="{% static 'js/sortAlbums.js' %}"></script>
 {% endblock %}
