@@ -1,12 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# models.py
+
+class Artist(models.Model):
+    name = models.CharField(max_length=100)
+    photo_url = models.URLField(blank=True, null=True)
+    genres = models.JSONField(default=list)  # Stores genres as a list of strings
+    popularity = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.name
+
 class Album(models.Model):
     id = models.CharField(max_length=50, primary_key=True)  # Spotify ID
     name = models.CharField(max_length=200)
     album_type = models.CharField(max_length=50)  # e.g., 'album', 'single', etc.
     release_date = models.DateField()
     image_url = models.URLField(blank=True, null=True)
+    artist = models.ForeignKey(Artist, on_delete=models.SET_DEFAULT, default=1)  # Replace 1 with a valid artist ID
 
     def __str__(self):
         return self.name

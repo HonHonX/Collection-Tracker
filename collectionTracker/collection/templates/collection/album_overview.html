@@ -1,3 +1,5 @@
+<!-- album_overview.html -->
+
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
@@ -10,11 +12,10 @@
 {% endblock %}
 
 {% block maincontent %}
-
     <div class="collection-header">
         <h1>My Album Collection</h1>
         {% if user_collection %}
-            <p>You have added {{ user_collection.count }} album(s)  	 to your collection.</p>
+            <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
         {% else %}
             <p>Your collection is empty.</p>
         {% endif %}
@@ -38,7 +39,7 @@
     <div class="album-grid">
         {% for collection_entry in user_collection %}
             <div class="album-item" 
-                 data-artist="{{ collection_entry.album.artist }}"
+                 data-artist="{{ collection_entry.album.artist.name }}"
                  data-album-type="{{ collection_entry.album.album_type }}"
                  data-release-date="{{ collection_entry.album.release_date }}">
                 <div class="album-controls">
@@ -51,8 +52,17 @@
     
                 <div class="album-info">
                     <strong>{{ collection_entry.album.name }}</strong><br>
+                    {{ collection_entry.album.artist.name }}<br>
                     {{ collection_entry.album.album_type }}<br>
                     {{ collection_entry.album.release_date }}<br>
+                    <!-- <div class="artist-info">
+                        <strong>Artist: </strong> -->
+                        <!-- {% if collection_entry.album.artist.photo_url %}
+                            <img src="{{ collection_entry.album.artist.photo_url }}" alt="{{ collection_entry.album.artist.name }}" class="artist-photo">
+                        {% endif %} -->
+                        <!-- <em>Genres: </em>{{ collection_entry.album.artist.genres | join:", " }}<br>
+                        <em>Popularity: </em>{{ collection_entry.album.artist.popularity }} -->
+                    <!-- </div> -->
                 </div>
             </div>
         {% endfor %}
