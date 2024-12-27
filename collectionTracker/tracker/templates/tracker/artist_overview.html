@@ -40,15 +40,19 @@
             <div class="album-grid">
                 {% for album in albums %}
                     <div class="album-item"
-                        data-album-id="{{ album.id }}"
+                        data-album-id="{{ album.spotify_id }}"
                         data-album-name="{{ album.name }}"
                         data-album-type="{{ album.album_type }}"
                         data-release-date="{{ album.release_date }}"
-                        data-image-url="{{ album.image_url }}">
+                        data-image-url="{{ album.image_url }}"
+                        data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}">
                         <div class="album-controls">
-                            <img class="icon" src="{% static 'icons/add.svg' %}">
+                            {% if album.id in user_album_ids %}
+                                <img class="icon disabled" src="{% static 'icons/check.svg' %}" alt="Already added">
+                            {% else %}
+                                <img class="icon" src="{% static 'icons/add.svg' %}" alt="Add to collection">
+                            {% endif %}
                         </div>
-
                         {% if album.image_url %}
                             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
                         {% endif %}
@@ -59,11 +63,12 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>  
+            </div>
+
         </div>
     {% endif %}
 {% endblock %}
 
-{% block site_specific_js %}
-    <script src="{% static 'js/add_album.js' %}"></script> <!-- Include the JavaScript file -->
+{% block js %}
+    <script src="{% static 'js/addAlbum.js' %}"></script>
 {% endblock %}
