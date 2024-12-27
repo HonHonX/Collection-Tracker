@@ -19,6 +19,7 @@ class Album(models.Model):
     release_date = models.DateField()
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name

@@ -1,9 +1,50 @@
-{% extends 'base.html' %}
-{% block title %}{{ album.name }}{% endblock %}
-{% block content %}
-<h1>{{ album.name }}</h1>
-<p><strong>Artist:</strong> {{ album.artist.name }}</p>
-<p><strong>Release Date:</strong> {{ album.release_date }}</p>
-<img src="{{ album.image_url }}" alt="{{ album.name }}">
-<p><strong>Album Type:</strong> {{ album.album_type }}</p>
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+    {{ album.name }} - Details
+{% endblock %}
+
+{% block site_specific_css %}
+    <link rel="stylesheet" href="{% static 'collection/css/collection.css' %}" type="text/css">
+{% endblock %}
+
+{% block maincontent %}
+    <div class="album-detail">
+        {% if album.image_url %}
+            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+        {% endif %}
+
+        <h1>{{ album.name }}</h1>
+        <p><strong>Artist:</strong> {{ album.artist.name }}</p>
+        <p><strong>Release Date:</strong> {{ album.release_date }}</p>
+        <p><strong>Type:</strong> {{ album.album_type }}</p>
+    </div>
+
+    <div class="custom-detail">
+        <!-- Collection Status Section -->
+        <div class="album-status">
+            <div class="collection-status">
+                {% if in_collection %}
+                    <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;">
+                    <p>Album in collection.</p><br>
+                {% else %}
+                    <img src="{% static 'icons/collection.svg' %}" alt="Not in collection" style="opacity: 0.2;">
+                    <p>Album not in collection.</p><br>
+                {% endif %}
+            </div>
+
+            <div class="wishlist-status">
+                <!-- add the same logic for the wishlist later -->
+                <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;">
+                <p>Album not in wishlist.</p><br>
+            </div>
+        </div>
+        
+        <!-- Album Description Section -->
+        <div class="description">
+            <p><strong>Description:</strong><br>
+                {{ album.description }}</p>
+        </div>
+    </div>
 {% endblock %}

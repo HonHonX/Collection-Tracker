@@ -15,7 +15,6 @@
     {% if error %}
         <p>{{ error }}</p>
     {% else %}
-
         <div class="artist-detail">
             {% if artist_photo_url %}
                 <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
@@ -33,13 +32,28 @@
         <div class="album-overview">
             <div class="sticky-top">
                 <div class="latest-release">
-                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}?theme=0&view=coverart"
-                        class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}"
+                    class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                 </div>
-                <div class="controls">
-                    <img src="{% static 'icons/filter.svg' %}" alt="Filter" class="icon">
-                    <img src="{% static 'icons/sort.svg' %}" alt="Sort" class="icon">
+
+                <div class="sorting-controls">
+                    <label for="album-type-filter">Filter by Album Type:</label>
+                    <select id="album-type-filter">
+                        <option value="">All Types</option>
+                        <option value="Album">Album</option>
+                        <option value="Single">Single</option>
+                    </select>
+                    
+                    <label for="sort-criteria">Sort by:</label>
+                    <select id="sort-criteria">
+                        <option value="release_date">Release Date</option>
+                    </select>
+                    <img id="sort-toggle" class="sort-icon" 
+                        src="{% static 'icons/sort-asc.svg' %}" 
+                        alt="Sort toggle" 
+                        data-sort-order="asc">
                 </div>
+
                 <div class="gradient-box"></div>
             </div>
             <div class="album-grid">
@@ -75,4 +89,6 @@
 
 {% block js %}
     <script src="{% static 'js/addAlbum.js' %}"></script>
+    <script src="{% static 'js/sortAlbums.js' %}"></script>
+    <script src="{% static 'js/filterByAlbumType.js' %}"></script>
 {% endblock %}

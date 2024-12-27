@@ -31,13 +31,21 @@ def artist_overview(request, artist_id):
     return render(request, 'artist_overview.html', context)
 
 class AlbumDetail(View):
-    """Zeigt die Details eines Albums."""
+    """Displays the details of an album."""
     def get(self, request, album_id):
         album = get_object_or_404(Album, id=album_id)
+        
+        # Check if the user is authenticated and if the album is in their collection
+        in_collection = False
+        if request.user.is_authenticated:
+            in_collection = UserAlbumCollection.objects.filter(user=request.user, album=album).exists()
+
         context = {
             'album': album,
             'artist': album.artist,
+            'in_collection': in_collection,  # Pass the collection status
         }
+
         return render(request, 'collection/album_detail.html', context)
 
 @csrf_exempt
@@ -78,21 +86,24 @@ def add_album_to_collection(request):
 
 @login_required
 def album_overview(request):
+    # Get the user's album collection
     user_collection = UserAlbumCollection.objects.filter(user=request.user)
+    
+    # Extract album IDs for the user's collection
     user_album_ids = list(user_collection.values_list('album__id', flat=True))
-    artist_data = [
-        {
-            "name": entry.album.artist.name,
-            "photo_url": entry.album.artist.photo_url,
-            "genres": entry.album.artist.genres,
-            "popularity": entry.album.artist.popularity,
-        }
-        for entry in user_collection
-    ]
+    
+    # Get the list of artists from the user's collection (unique artists)
+    artist_list = Artist.objects.filter(album__useralbumcollection__user=request.user).distinct()
+
+    # If there's an artist filter in the request, apply it
+    artist_filter = request.GET.get('artist', '')
+    if artist_filter:
+        user_collection = user_collection.filter(album__artist__name=artist_filter)
+
     return render(request, 'collection/album_overview.html', {
         'user_collection': user_collection,
         'user_album_ids': user_album_ids,
-        'artist_data': artist_data,
+        'artist_list': artist_list,
     })
 
 # API endpoint to remove an album from the user's collection (AJAX request)
@@ -113,5 +124,3 @@ def remove_album_from_collection(request):
             return JsonResponse({'success': False, 'error': 'Album not found in your collection.'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-

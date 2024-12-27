@@ -1,0 +1,60 @@
+@import url("../../css/styles.css");
+
+.maincontent {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem; /* Ensure there is space between columns */
+    flex-wrap: wrap; /* Allow the content to wrap in smaller screen sizes */
+}
+
+.album-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    padding: 1rem;
+    align-self: start;
+    width: 25rem; /* Fixed width for album detail */
+}
+
+.album-detail img.album-cover {
+    width: 100%; /* Ensure the image takes up the full width of the parent */
+    aspect-ratio: 1 / 1;
+    border-radius: var(--borderRadius);
+    object-fit: cover;
+    margin: 0 auto;
+}
+
+.album-detail h1 {
+    text-align: left;
+    margin: 1rem 0;
+    color: var(--accent100);
+}
+
+.album-detail p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: var(--neutral0);
+}
+
+.custom-detail {
+    background-color: var(--neutral90);
+    padding: 2rem;
+    flex: 1; /* Ensure it takes the remaining space */
+    border-radius: var(--borderRadius);
+    gap: 1rem;
+    max-width: 50rem; /* Limit the maximum width */
+}
+
+.album-status {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    margin: 0 0 2rem 0;
+}
+
+.collection-status, .wishlist-status {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: var(--gapDistance);
+}
