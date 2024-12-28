@@ -47,9 +47,9 @@
 
 .album-status {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: var(--gapDistance);
-    margin: 0 0 2rem 0;
+    margin: 0 0 3.75rem 0;
 }
 
 .collection-status, .wishlist-status {
@@ -57,4 +57,14 @@
     flex-direction: row;
     width: 100%;
     gap: var(--gapDistance);
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.icon {
+    margin: auto 0;
+}
+
+textarea {
+    margin: 0.5rem 0;
 }

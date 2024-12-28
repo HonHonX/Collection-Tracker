@@ -79,6 +79,10 @@ p  {
     -webkit-font-smoothing: antialiased;
 }
 
+textarea {
+    font-family: var(--defaultFont);
+}
+
 /* Layout */
 .page {
     display: flex; 

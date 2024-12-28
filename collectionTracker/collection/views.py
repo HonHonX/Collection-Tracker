@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Album, Artist, UserAlbumCollection
@@ -32,9 +32,10 @@ def artist_overview(request, artist_id):
 
 class AlbumDetail(View):
     """Displays the details of an album."""
+
     def get(self, request, album_id):
         album = get_object_or_404(Album, id=album_id)
-        
+
         # Check if the user is authenticated and if the album is in their collection
         in_collection = False
         if request.user.is_authenticated:
@@ -47,6 +48,23 @@ class AlbumDetail(View):
         }
 
         return render(request, 'collection/album_detail.html', context)
+
+    def post(self, request, album_id):
+        """Handles updating the album description."""
+        album = get_object_or_404(Album, id=album_id)
+
+        # Only allow updates for authenticated users
+        if not request.user.is_authenticated:
+            return HttpResponse(status=403)  # Forbidden: No permission for non-authenticated users
+
+        # Update the description
+        description = request.POST.get('description')
+        if description is not None:
+            album.description = description
+            album.save()
+            return HttpResponse(status=204)  # No content response (successful update with no message)
+
+        return HttpResponse(status=400)  # Bad request if description is not provided
 
 @csrf_exempt
 def add_album_to_collection(request):
