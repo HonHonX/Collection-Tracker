@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator
 
 # models.py
 
@@ -19,10 +20,10 @@ class Album(models.Model):
     release_date = models.DateField()
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.SET_NULL, null=True)
-    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
 
 class UserAlbumCollection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,3 +35,16 @@ class UserAlbumCollection(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.album.name}"
+
+class UserAlbumDescription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    description = models.TextField(
+        blank=True,
+        validators=[MinLengthValidator(1)]  # Optional: enforce minimum length
+    )
+
+    def save(self, *args, **kwargs):
+        # Strip whitespace before saving
+        self.description = self.description.strip()
+        super().save(*args, **kwargs)

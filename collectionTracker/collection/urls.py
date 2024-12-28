@@ -8,4 +8,5 @@ urlpatterns = [
     path('album/<str:album_id>/', views.AlbumDetail.as_view(), name='album_detail'),
     path("add_album/", views.add_album_to_collection, name="add_album"),
     path("remove_album/", views.remove_album_from_collection, name="remove_album"),
+    path('album/<str:album_id>/save_description/', views.save_description, name='save_description'),
 ]

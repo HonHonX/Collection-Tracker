@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.album-item').forEach(albumItem => {
         const inCollection = albumItem.dataset.inCollection === 'true';
-        const addIcon = albumItem.querySelector('.album-controls .icon');
+        const addIcon = albumItem.querySelector('#add-icon');
+
         if (inCollection) {
-            addIcon.classList.add('disabled');
-            addIcon.alt = "Already added";
+            updateAlbumState(albumItem, true);
         } else {
             addIcon.addEventListener('click', function () {
                 const albumId = albumItem.dataset.albumId;
@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.success) {
                         alert(data.message);
+                        // Update the UI to reflect the album is now in the collection
+                        updateAlbumState(albumItem, true);
                     } else {
                         alert(data.error || data.message);
                     }
@@ -43,4 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+    function updateAlbumState(albumItem, inCollection) {
+        const addIcon = albumItem.querySelector('#add-icon');
+        if (inCollection) {
+            albumItem.dataset.inCollection = 'true';
+            addIcon.classList.add('disabled');
+            
+            addIcon.alt = "Already added";
+            addIcon.src = "/static/icons/remove.svg"; // Optionally, change icon
+        } else {
+            albumItem.dataset.inCollection = 'false';
+            addIcon.classList.remove('disabled');
+            addIcon.alt = "Add to collection";
+            addIcon.src = "/static/icons/add.svg"; // Optionally, reset icon
+        }
+    }
 });

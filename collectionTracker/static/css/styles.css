@@ -242,6 +242,15 @@ textarea {
     flex-direction: column;
     width: var(--coverSize);
     margin-bottom: var(--gapDistance);
+    background-color: var(--neutral100);
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border-radius: var(--borderRadius);
+}
+
+.album-item.in-collection {
+    background-color: var(--accentVariantB100);
+    border-radius: var(--borderRadius);
 }
 
 .album-cover {
@@ -284,8 +293,8 @@ textarea {
     padding: 2rem 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: center;
+    gap: 1.75rem;
     flex: 1;
     max-height: 60vh; /* Limit the height of the grid to 60% of the viewport height */
     overflow-y: auto; /* Enable vertical scrolling */
@@ -295,6 +304,13 @@ textarea {
 
 .album-grid::-webkit-scrollbar {
     display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+}
+
+#save-button:disabled {
+    background-color: #d3d3d3;  /* Light gray background */
+    color: #a1a1a1;  /* Light gray text */
+    cursor: not-allowed;  /* Change the cursor to indicate the button is disabled */
+    opacity: 0.5;  /* Dim the button */
 }
 
 /* Forms */

@@ -4,31 +4,49 @@ import json
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import Album, Artist, UserAlbumCollection
+from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription
+import logging
 
-# View for rendering the artist overview page
-@login_required
-def artist_overview(request, artist_id):
-    # Fetch the artist by ID or return a 404 if not found
-    artist = get_object_or_404(Artist, id=artist_id)
-    
-    # Fetch all albums for this artist
-    albums = Album.objects.filter(artist=artist)
-    
-    # Prepare context data for the template
-    context = {
-        'artist_name': artist.name,
-        'artist_photo_url': artist.photo_url,
-        'artist_info': {
-            'genres': artist.genres,
-            'popularity': artist.popularity,
-            'total_albums': albums.count(),
-        },
-        'albums': albums,
-        'latest_album': albums.order_by('-release_date').first(),  # Latest album by release date
-    }
-    
-    return render(request, 'artist_overview.html', context)
+# Set up a logger
+logger = logging.getLogger(__name__)
+
+def save_description(request, album_id):
+    logger.debug(f"save_description called with album_id={album_id}")
+
+    if request.method == "POST" and request.user.is_authenticated:
+        description = request.POST.get('description')
+        logger.debug(f"Received description: {description}")
+
+        try:
+            album = Album.objects.get(id=album_id)
+            logger.debug(f"Found album with id={album_id}")
+
+            # Get or create the UserAlbumDescription for the current user and album
+            user_description, created = UserAlbumDescription.objects.get_or_create(
+                user=request.user,
+                album=album,
+            )
+            logger.debug(f"UserAlbumDescription {'created' if created else 'retrieved'} for user={request.user.id}, album={album.id}")
+
+            # Update the description
+            user_description.description = description
+            user_description.save()
+            logger.debug(f"Description for album {album_id} updated successfully.")
+
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True})
+
+        except Album.DoesNotExist:
+            logger.error(f"Album with id={album_id} does not exist.")
+            # Handle the case where the album doesn't exist
+            return JsonResponse({'success': False, 'error': 'Album not found'})
+        except Exception as e:
+            logger.exception(f"An unexpected error occurred: {str(e)}")
+            # Handle other errors
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    logger.warning("Invalid request method or user not authenticated.")
+    return JsonResponse({'success': False, 'error': 'Invalid request method or user not authenticated'})
 
 class AlbumDetail(View):
     """Displays the details of an album."""
@@ -41,30 +59,41 @@ class AlbumDetail(View):
         if request.user.is_authenticated:
             in_collection = UserAlbumCollection.objects.filter(user=request.user, album=album).exists()
 
+            # Get the user's description for the album, if it exists
+            user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
+        else:
+            user_description = None
+
         context = {
             'album': album,
             'artist': album.artist,
             'in_collection': in_collection,  # Pass the collection status
+            'user_description': user_description,  # Pass user's description (if any)
         }
 
         return render(request, 'collection/album_detail.html', context)
 
     def post(self, request, album_id):
-        """Handles updating the album description."""
+        """Handles updating the album description for the current user."""
         album = get_object_or_404(Album, id=album_id)
 
-        # Only allow updates for authenticated users
         if not request.user.is_authenticated:
-            return HttpResponse(status=403)  # Forbidden: No permission for non-authenticated users
+            return JsonResponse({'success': False, 'error': 'User not authenticated'}, status=403)  # Forbidden for unauthenticated users
 
-        # Update the description
-        description = request.POST.get('description')
-        if description is not None:
-            album.description = description
-            album.save()
-            return HttpResponse(status=204)  # No content response (successful update with no message)
+        user_description, created = UserAlbumDescription.objects.get_or_create(
+            user=request.user,
+            album=album
+        )
 
-        return HttpResponse(status=400)  # Bad request if description is not provided
+        description = request.POST.get('description', '').strip()  # Ensure stripping whitespace
+        if description:
+            user_description.description = description
+            user_description.save()
+            # Return a JSON response indicating success with status 200
+            return JsonResponse({'success': True, 'message': 'Description updated successfully'}, status=200)
+
+        # If no description is provided, return an error with status 400
+        return JsonResponse({'success': False, 'error': 'Description cannot be empty'}, status=400)
 
 @csrf_exempt
 def add_album_to_collection(request):

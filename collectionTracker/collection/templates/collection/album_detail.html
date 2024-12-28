@@ -40,14 +40,13 @@
             </div>
 
             <div class="wishlist-status">
-                <!-- add the same logic for the wishlist later -->
+                <!-- Wishlist logic can be added here later -->
                 <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
                 <p>Album not in wishlist.</p><br>
             </div>
         </div>
         
         <!-- Album Description Section -->
-
         {% if in_collection %}
             <!-- Allow editing description if the album is in the user's collection -->
             <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
@@ -55,14 +54,18 @@
                 <label for="description">
                     <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon">
                 </label>
-                <textarea name="description" id="description" rows="4" cols="50">{{ album.description }}</textarea><br>
-                <button type="submit" class="button">Save Note</button>
+
+                <!-- Display the user's description if it exists -->
+                {% csrf_token %}
+                <textarea name="description" id="description">{{ user_description.description }}</textarea>           
+
+                <button type="submit" id="save-button" class="button">Save Note</button>
             </form>
         {% endif %}
     </div>
 
 {% endblock %}
 
-{% block extra_js %}
+{% block js %}
     <script src="{% static 'js/albumDetail.js' %}"></script>
 {% endblock %}
