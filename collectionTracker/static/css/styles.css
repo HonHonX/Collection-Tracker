@@ -293,7 +293,7 @@ textarea {
     padding: 2rem 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: start;
+    justify-content: center;
     gap: 1.75rem;
     flex: 1;
     max-height: 60vh; /* Limit the height of the grid to 60% of the viewport height */
