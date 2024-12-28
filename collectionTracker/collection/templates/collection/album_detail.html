@@ -50,19 +50,19 @@
 
         {% if in_collection %}
             <!-- Allow editing description if the album is in the user's collection -->
-            <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
+            <form method="post" id="edit-description-form" action="{% url 'save_description' album.id %}">
                 {% csrf_token %}
                 <label for="description">
                     <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon">
                 </label>
                 <textarea name="description" id="description" rows="4" cols="50">{{ album.description }}</textarea><br>
-                <button type="submit" class="button">Save Note</button>
+                <button type="submit" id="save-button" class="button">Save Note</button>
             </form>
         {% endif %}
     </div>
 
 {% endblock %}
 
-{% block extra_js %}
+{% block js %}
     <script src="{% static 'js/albumDetail.js' %}"></script>
 {% endblock %}

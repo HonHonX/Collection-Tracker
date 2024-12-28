@@ -13,7 +13,7 @@
 {% block maincontent %}
 
     <div class="collection-header">
-        <h1>My Album Collection</h1>
+        <h1>{{ user.first_name }}'s Collection</h1>
         {% if user_collection %}
         <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
         {% else %}
@@ -48,10 +48,10 @@
             data-artist="{{ collection_entry.album.artist.name }}"
             data-album-type="{{ collection_entry.album.album_type }}" 
             data-release-date="{{ collection_entry.album.release_date }}" 
-            data-album-id="{{ collection_entry.album.id }}">
-    
+            data-album-id="{{ collection_entry.album.id }}"
+            data-in-collection="true">
             <div class="album-controls">
-                <img class="icon" src="{% static 'icons/remove.svg' %}" alt="Remove from collection">
+                <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Remove from collection">
             </div>
     
             <a href="{% url 'album_detail' collection_entry.album.id %}">
@@ -72,7 +72,7 @@
 
 {% endblock %}
 {% block js %}
-<script src="{% static 'js/removeAlbum.js' %}"></script>
+<script src="{% static 'js/manageAlbum.js' %}"></script>
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
 {% endblock %}

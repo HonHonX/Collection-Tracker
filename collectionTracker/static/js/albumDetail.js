@@ -1,50 +1,64 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('edit-description-form');
-    const descriptionInput = document.getElementById('description');  // Textarea element to hold the description
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("edit-description-form");
+    const descriptionInput = document.getElementById("description"); // Textarea element
+    const saveButton = document.getElementById("save-button"); // Save button
 
-    // Function to show browser notification
-    function showNotification(message) {
-        // Check if the browser supports notifications and if permission is granted
-        if (Notification.permission === 'granted') {
-            new Notification(message);  // Show notification with the message
-        } else if (Notification.permission !== 'denied') {
-            // Ask for permission to show notifications if not already denied
-            Notification.requestPermission().then(function(permission) {
-                if (permission === 'granted') {
-                    new Notification(message);  // Show notification if permission is granted
-                }
-            });
-        }
-    }
+    if (form && descriptionInput && saveButton) {
+        // Initially disable the Save button
+        saveButton.disabled = true;
 
-    if (form) {
-        form.onsubmit = function(e) {
-            e.preventDefault();  // Prevent the default form submission (which causes page reload)
+        // Keep track of the original description value
+        let originalDescription = descriptionInput.value.trim();
 
-            let description = descriptionInput.value;  // Get the value from the textarea
+        // Enable/disable the Save button based on changes
+        descriptionInput.addEventListener("input", function () {
+            const currentDescription = descriptionInput.value.trim();
+            if (currentDescription !== originalDescription) {
+                saveButton.disabled = false; // Enable the button if there's a change
+            } else {
+                saveButton.disabled = true; // Disable the button if unchanged
+            }
+        });
+
+        // Handle form submission
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent the default form submission (which causes page reload)
+
+            const description = descriptionInput.value.trim(); // Get the trimmed value from the textarea
 
             fetch(form.action, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
                 },
-                body: `description=${description}`
+                body: `description=${encodeURIComponent(description)}`,
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success notification
-                    showNotification('Note saved successfully!');
-                } else {
-                    // Show error notification
-                    showNotification('Error saving the note. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('There was an error saving the note.');
-            });
-        };
+                .then((response) => {
+                    // Check if the response is OK (status 200) and if it's JSON
+                    if (!response.ok) {
+                        throw new Error("Server responded with an error: " + response.status);
+                    }
+
+                    return response.json(); // Parse the response as JSON
+                })
+                .then((data) => {
+                    if (data.success) {
+                        // Show a success alert
+                        alert("Note saved successfully!");
+                        // Update the original description and disable the Save button
+                        originalDescription = description;
+                        saveButton.disabled = true;
+                    } else {
+                        alert("Error saving the note: " + (data.error || "Please try again."));
+                    }
+                })
+                .catch((error) => {
+                    console.error("There was an error saving the note:", error);
+                    alert("Error saving the note. Please try again.");
+                });
+        });
+    } else {
+        console.error("Form, description input, or save button is missing from the DOM.");
     }
 });

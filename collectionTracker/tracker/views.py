@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import subprocess
 import logging
+from django.contrib.auth.decorators import login_required
+from collection.models import UserAlbumCollection
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -21,17 +23,14 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 
 # Create your views here.
 
-# View for the landing page
-def index(request):
-    return HttpResponse("Neue Testseite unter /search 👩‍💻✨ woo")
-
 # View for searching artist and displaying albums
 def artist_search(request):
     albums = []
     error = None
     artist_photo_url = None
-    artist_info = {}  # Initialize artist_info as empty
+    artist_info = {}
     latest_album = None
+    user_album_ids = []  # Initialize the variable for user album IDs
 
     if request.method == 'POST':
         artist_name = request.POST.get('artist_name')
@@ -61,8 +60,8 @@ def artist_search(request):
                 # Count total number of albums
                 total_albums = len(sorted_albums)
 
+                # Add album details to the albums list
                 for album in sorted_albums:
-                    # Fetch album details including the cover image
                     albums.append({
                         'name': album['name'],
                         'release_date': album['release_date'],
@@ -73,7 +72,7 @@ def artist_search(request):
                         'spotify_id': album['id'],
                     })
 
-                # Add artist info to the context (you can choose which fields to include)
+                # Add artist info to the context
                 artist_info = {
                     'name': artist_info['name'],
                     'genres': artist_info['genres'],  # List of genres
@@ -85,8 +84,15 @@ def artist_search(request):
                 if sorted_albums:
                     latest_album = sorted_albums[0]
 
+                # Get the list of user albums (user_album_ids) - this will only work if the user is logged in
+                if request.user.is_authenticated:
+                    user_album_ids = list(
+                        UserAlbumCollection.objects.filter(user=request.user)
+                        .values_list('album__id', flat=True)
+                    )
+
         except Exception as e:
-            error = str(e)  # Capture error message
+            error = str(e)
 
         # Add a fallback if 'name' is not in artist_info
         artist_name = artist_info.get('name', 'Unknown Artist')  # Fallback to 'Unknown Artist'
@@ -99,6 +105,7 @@ def artist_search(request):
             'error': error,
             'artist_info': artist_info,
             'latest_album': latest_album,
+            'user_album_ids': user_album_ids,  # Include user_album_ids in the context
         })
     
     return render(request, 'tracker/artist_search.html', {

@@ -6,29 +6,25 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Album, Artist, UserAlbumCollection
 
-# View for rendering the artist overview page
-@login_required
-def artist_overview(request, artist_id):
-    # Fetch the artist by ID or return a 404 if not found
-    artist = get_object_or_404(Artist, id=artist_id)
-    
-    # Fetch all albums for this artist
-    albums = Album.objects.filter(artist=artist)
-    
-    # Prepare context data for the template
-    context = {
-        'artist_name': artist.name,
-        'artist_photo_url': artist.photo_url,
-        'artist_info': {
-            'genres': artist.genres,
-            'popularity': artist.popularity,
-            'total_albums': albums.count(),
-        },
-        'albums': albums,
-        'latest_album': albums.order_by('-release_date').first(),  # Latest album by release date
-    }
-    
-    return render(request, 'artist_overview.html', context)
+def save_description(request, album_id):
+    if request.method == "POST":
+        description = request.POST.get('description')
+
+        # Perform the save logic here
+        try:
+            album = Album.objects.get(id=album_id)
+            album.description = description
+            album.save()
+
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True})
+        except Album.DoesNotExist:
+            # Handle the case where the album doesn't exist
+            return JsonResponse({'success': False, 'error': 'Album not found'})
+        except Exception as e:
+            # Handle other errors
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 class AlbumDetail(View):
     """Displays the details of an album."""

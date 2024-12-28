@@ -27,6 +27,7 @@
 
             <p>Popularity: {{ artist_info.popularity }}</p>
             <p>Total Albums: {{ artist_info.total_albums }}</p>
+
         </div>
 
         <div class="album-overview">
@@ -64,14 +65,12 @@
                     data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
                     data-image-url="{{ album.image_url }}"
                     data-artist-name="{{ artist_name }}"
-                    data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}">
+                    data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}">
+
                     <div class="album-controls">
-                        {% if album.id in user_album_ids %}
-                        <img class="icon disabled" src="{% static 'icons/check.svg' %}" alt="Already added">
-                        {% else %}
-                        <img class="icon" src="{% static 'icons/add.svg' %}" alt="Add to collection">
-                        {% endif %}
+                        <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Add/Remove">
                     </div>
+
                     {% if album.image_url %}
                     <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
                     {% endif %}
@@ -88,7 +87,8 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/addAlbum.js' %}"></script>
+    <script src="{% static 'js/manageAlbum.js' %}"></script>
+    <!-- <script src="{% static 'js/addAlbum.js' %}"></script> -->
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
 {% endblock %}
