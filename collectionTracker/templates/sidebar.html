@@ -28,7 +28,7 @@
             </form>    
         </div>
 
-        <div class="sidebar-item" id="collection-button">
+        <div class="sidebar-item" id="collection-button" data-collection-url="{% url 'album_overview' %}">
             <img class="icon" src="{% static 'icons/collection.svg' %}">Collection
         </div>
 
@@ -36,7 +36,7 @@
             <img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist
         </div>
 
-        <div class="sidebar-item" id="setings-button">
+        <div class="sidebar-item" id="settings-button">
             <img class="icon" src="{% static 'icons/settings.svg' %}">Settings
         </div>
 

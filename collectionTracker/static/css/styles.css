@@ -19,7 +19,8 @@
     --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
     --defaultFont: 'Tahoma', sans-serif;
-    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;;
+    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;
+    --coverSize: 8vw;
 }
 
 @font-face {
@@ -61,6 +62,7 @@ h1, h2 {
     text-align: left;
     font-family: 'Bauhaus93', sans-serif;
     color: var(--accent100);
+    width:100%;
 }
 
 h1 {
@@ -77,13 +79,15 @@ p  {
     -webkit-font-smoothing: antialiased;
 }
 
+textarea {
+    font-family: var(--defaultFont);
+}
+
 /* Layout */
 .page {
-    display: flex; /* Create a flex container */
-    flex-direction: row; /* Place items (sidebar and main content) in a row */
-    width: 100%; /* Full width of the viewport */
-    min-height: 100vh; /* Ensure it spans the full height of the viewport */
-    gap: var(--gapDistance); /* Add spacing between sidebar and main content */
+    display: flex; 
+    width: 100%; 
+    min-height: 100%; 
     box-sizing: border-box; /* Include padding and border in dimensions */
 }
 
@@ -111,6 +115,10 @@ p  {
     width: 50%;
     height: auto;
     align-self: center;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 /* Buttons */
@@ -176,6 +184,7 @@ p  {
 .sticky-top {
     position: sticky;
     top: 0;
+    z-index: 10; /* Ensure the sticky content stays on top */
 }
 
 .latest-release {
@@ -185,6 +194,7 @@ p  {
     justify-content: flex-end;
     padding: 0;
     background-color: var(--neutral100);
+    z-index: 10; /* Ensures they stay on top when scrolling */
 }
 
 .latest-release h2 {
@@ -195,6 +205,7 @@ p  {
     width: 100%;
     height: 5rem;
     padding: 2rem 0 1rem 0;
+    border-radius: var(--borderRadius);
 }
 
 /* Controls */
@@ -209,26 +220,28 @@ p  {
     background-color: var(--neutral100);
 }
 
-.control-icon {
+.controls .icon {
     height: 1rem;
     width: auto;
 }
 
 /* Album Overview */
+
 .album-overview {
-    display: column;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    margin: 0 0 0 4rem;
+    display: flex; 
+    flex-direction: column;
     gap: 1rem;
     flex: 1;
+    position: relative; /* Prevent album-overview from overflowing */
 }
 
 .album-item {
-    flex: 0 1 calc(20% - 1rem);
+    /* flex: 0 1 calc(20% - 1rem); */
     display: flex;
     flex-direction: column;
-    width: 20rem;
-    margin-bottom: 2rem;
+    width: var(--coverSize);
+    margin-bottom: var(--gapDistance);
 }
 
 .album-cover {
@@ -252,6 +265,21 @@ p  {
     display: block;
 }
 
+.album-controls {
+    height: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.album-controls .icon {
+    height: 1rem;
+    width: auto;
+}
+
+
 .album-grid {
     padding: 2rem 0;
     display: flex;
@@ -259,7 +287,8 @@ p  {
     justify-content: space-between;
     gap: 1rem;
     flex: 1;
-    overflow-y: scroll;
+    max-height: 60vh; /* Limit the height of the grid to 60% of the viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: none; /* Hide scrollbar for Firefox */
     -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer */
 }
@@ -357,6 +386,52 @@ form input.error, form textarea.error {
     background: linear-gradient(to bottom, rgba(31, 31, 31, 1), rgba(31, 31, 31, 0));
 }
 
+/* Sorting Controls Styling */
+.sorting-controls {
+    background-color: var(--neutral100);
+    display: flex;
+    flex-direction: row; /* Aligns label and select elements in a row */
+    align-items: center;
+    justify-content: flex-end; /* Pushes the controls to the right */
+    gap: var(--gapDistance); /* Adds spacing between elements */
+    padding: 1rem 0;
+    color: var(--neutral0); /* Matches text color */
+    box-shadow: var(--boxShadow); /* Optional: Adds a shadow */
+    z-index: 10; /* Ensures they stay on top when scrolling */
+}
+
+.sorting-controls label {
+    font-size: 1rem;
+    color: var(--neutral0);
+}
+
+.sorting-controls select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
+    border: none;
+    border-radius: var(--borderRadius);
+    box-shadow: var(--boxShadow); /* Matches existing styles */
+    transition: var(--transitionStyle);
+}
+
+.sorting-controls select:hover {
+    background-color: var(--accent100); /* Changes color on hover */
+}
+
+.sorting-controls select:focus {
+    outline: none;
+    border: 1px solid var(--accent100); /* Highlight border on focus */
+}
+
+.sort-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 8px;
+}
 
 /* Responsive design adjustments */
 @media (max-width: 768px) {

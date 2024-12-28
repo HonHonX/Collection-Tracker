@@ -2,8 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Home Button
     var homeUrl = document.getElementById('home-button').getAttribute('home-url');
     document.getElementById('home-button').addEventListener('click', function() {
-        // window.location.href = homeUrl;
-        window.location.href = "/index/"
+        window.location.href = "/index";
     });
 
     // Search Button
@@ -18,9 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Collection Button (Placeholder)
+    // Collection Button
+    var collectionUrl = document.getElementById('collection-button').getAttribute('data-collection-url');
     document.getElementById('collection-button').addEventListener('click', function() {
-        console.log("Collection clicked!");
+        window.location.href = collectionUrl;
     });
 
     // Wishlist Button (Placeholder)
