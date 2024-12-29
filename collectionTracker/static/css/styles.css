@@ -10,8 +10,8 @@
     --neutral0: #ffffff; /* Regular Font */
     --accent100: #6467fa; /* Highlight Color */
     --accent90: #4e50de;
-    --accentVariantA100: #C9C9EE;
-    --accentVariantB100: #62BBC1;
+    --accentVariantA100: #9C8185;
+    --accentVariantB100: #E5A4CB;
 
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
@@ -281,6 +281,7 @@ textarea {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .album-controls .icon {

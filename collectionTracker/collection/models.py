@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 
 # models.py
-
 class Artist(models.Model):
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
@@ -23,7 +22,6 @@ class Album(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class UserAlbumCollection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -48,3 +46,14 @@ class UserAlbumDescription(models.Model):
         # Strip whitespace before saving
         self.description = self.description.strip()
         super().save(*args, **kwargs)
+
+class UserAlbumWishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'album')
+
+    def __str__(self):
+        return f"{self.user.username} - Wishlist: {self.album.name}"

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const inCollection = albumItem.dataset.inCollection === 'true'; // Check initial state of the album
         const controlIcon = albumItem.querySelector('#control-icon');
 
-        console.log("Initial inCollection state:", inCollection); // Debugging line
+        // console.log("Initial inCollection state:", inCollection); 
 
         // Initialize the state based on whether the album is in the collection or not
         updateAlbumState(albumItem, inCollection);
@@ -12,26 +12,42 @@ document.addEventListener('DOMContentLoaded', function () {
         setControlIconClickListener(albumItem, controlIcon, inCollection);
     });
 
+    // Funktion, um die UI zu aktualisieren, wenn das Album in beiden (Wishlist und Collection) ist
+    function updateAlbumBackgroundColor(albumItem) {
+        const inWishlist = albumItem.dataset.inWishlist === 'true';
+        const inCollection = albumItem.dataset.inCollection === 'true';
+
+        if (inWishlist && inCollection) {
+            albumItem.style.backgroundColor = 'var(--accentVariantA100)'; // Hintergrund, wenn in beiden
+        } else if (inWishlist) {
+            albumItem.style.backgroundColor = 'var(--accentVariantB100)'; // Wishlist-Hintergrund
+        } else if (inCollection) {
+            albumItem.style.backgroundColor = 'var(--accent100)'; // Collection-Hintergrund
+        } else {
+            albumItem.style.backgroundColor = 'var(--neutral100)'; // Standard-Hintergrund
+        }
+    }
+
     // Function to update the UI based on whether the album is in the collection
     function updateAlbumState(albumItem, inCollection) {
         const controlIcon = albumItem.querySelector('#control-icon');
 
         // Debugging log
-        console.log(`Updating state for album: ${albumItem.dataset.albumId}, In collection: ${inCollection}`);
+        // console.log(`Updating state for album: ${albumItem.dataset.albumId}, In collection: ${inCollection}`);
 
         if (inCollection) {
             albumItem.dataset.inCollection = 'true';
             controlIcon.classList.add('collected');
             controlIcon.alt = "Already added";
             controlIcon.src = "/static/icons/remove.svg"; // Change the icon to 'remove'
-            albumItem.style.backgroundColor = 'var(--accent100)';
         } else {
             albumItem.dataset.inCollection = 'false';
             controlIcon.classList.remove('collected');
             controlIcon.alt = "Add to collection";
             controlIcon.src = "/static/icons/add.svg"; // Reset to 'add' icon
-            albumItem.style.backgroundColor = 'var(--neutral100)';
         }
+
+        updateAlbumBackgroundColor(albumItem); // Hintergrundfarbe aktualisieren
     }
 
     // Function to set the appropriate event listener for the control icon
@@ -51,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Dynamically fetch the current state
             const currentInCollection = albumItem.dataset.inCollection === 'true';
         
-            console.log(`Clicked on album: ${albumId}. Current in collection: ${currentInCollection}`);
+            // console.log(`Clicked on album: ${albumId}. Current in collection: ${currentInCollection}`);
         
             if (currentInCollection) {
                 // If the album is already in the collection, remove it
@@ -70,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        // alert(data.message);
 
                         const collectionHeader = document.querySelector('.collection-header p');
                         if (collectionHeader) {
@@ -116,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        // alert(data.message);
                         updateAlbumState(albumItem, true); // Update the state to reflect addition
                     } else {
                         alert(data.error || data.message);

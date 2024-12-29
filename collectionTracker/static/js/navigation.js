@@ -23,9 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = collectionUrl;
     });
 
-    // Wishlist Button (Placeholder)
+    // Wishlist Butto
+    var wishlistUrl = document.getElementById('wishlist-button').getAttribute('data-wishlist-url');
     document.getElementById('wishlist-button').addEventListener('click', function() {
-        console.log("Wishlist clicked!");
+        window.location.href = wishlistUrl;
     });
 
     // Settings Button (Placeholder)

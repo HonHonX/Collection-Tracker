@@ -1,8 +1,9 @@
+<!-- wishlist_overview.html -->
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
 {% block title %}
-    {{ user.first_name }}'s Collection
+    {{ user.first_name }}'s Wishlist
 {% endblock %}
 
 {% block site_specific_css %}
@@ -11,12 +12,12 @@
 
 {% block maincontent %}
 
-    <div class="collection-header">
-        <h1>{{ user.first_name }}'s Collection</h1>
-        {% if user_collection %}
-        <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
+    <div class="wishlist-header">
+        <h1>{{ user.first_name }}'s Wishlist</h1>
+        {% if user_wishlist %}
+        <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
         {% else %}
-        <p>Your collection is empty.</p>
+        <p>Your wishlist is empty.</p>
         {% endif %}
     </div>
 
@@ -42,29 +43,29 @@
     </div>
 
     <div class="album-grid">
-        {% for collection_entry in user_collection %}
+        {% for wishlist_entry in user_wishlist %}
         <div class="album-item" 
-            data-artist-name="{{ collection_entry.album.artist.name }}"
-            data-album-type="{{ collection_entry.album.album_type }}" 
-            data-release-date="{{ collection_entry.album.release_date }}" 
-            data-album-id="{{ collection_entry.album.id }}"
-            data-in-collection="{% if collection_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
+            data-artist="{{ wishlist_entry.album.artist.name }}"
+            data-album-type="{{ wishlist_entry.album.album_type }}" 
+            data-release-date="{{ wishlist_entry.album.release_date }}" 
+            data-album-id="{{ wishlist_entry.album.id }}"
+            data-in-collection="{% if wishlist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
+            data-in-wishlist="{% if wishlist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
             <div class="album-controls">
                 <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status" data-action="add_to_wishlist">
                 <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">
             </div>
     
-            <a href="{% url 'album_detail' collection_entry.album.id %}">
-                {% if collection_entry.album.image_url %}
-                    <img src="{{ collection_entry.album.image_url }}" alt="Album cover" class="album-cover">
+            <a href="{% url 'album_detail' wishlist_entry.album.id %}">
+                {% if wishlist_entry.album.image_url %}
+                    <img src="{{ wishlist_entry.album.image_url }}" alt="Album cover" class="album-cover">
                 {% endif %}
     
                 <div class="album-info">
-                    <strong>{{ collection_entry.album.name }}</strong><br>
-                    <em>Artist: {{ collection_entry.album.artist.name }}</em><br>
-                    <em>Release Date: {{ collection_entry.album.release_date }}</em><br>
-                    <em>Type: {{ collection_entry.album.album_type }}</em>
+                    <strong>{{ wishlist_entry.album.name }}</strong><br>
+                    <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
+                    <em>Release Date: {{ wishlist_entry.album.release_date }}</em><br>
+                    <em>Type: {{ wishlist_entry.album.album_type }}</em>
                 </div>
             </a>
         </div>
@@ -72,8 +73,8 @@
     </div>
 
 {% endblock %}
+
 {% block js %}
-<script src="{% static 'js/manageCollection.js' %}"></script>
 <script src="{% static 'js/manageWishlist.js' %}"></script>
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
