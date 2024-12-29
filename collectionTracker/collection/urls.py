@@ -9,4 +9,7 @@ urlpatterns = [
     path("add_album/", views.add_album_to_collection, name="add_album"),
     path("remove_album/", views.remove_album_from_collection, name="remove_album"),
     path('album/<str:album_id>/save_description/', views.save_description, name='save_description'),
+    path("add_album_to_wishlist/", views.add_album_to_wishlist, name="add_album_to_wishlist"),
+    path("remove_album_from_wishlist/", views.remove_album_from_wishlist, name="remove_album_from_wishlist"),
+    path('wishlist/', views.wishlist_overview, name='wishlist_overview'),
 ]

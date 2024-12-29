@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
@@ -26,3 +26,9 @@ class UserAlbumDescriptionAdmin(admin.ModelAdmin):
     list_display = ('user', 'album', 'description')  # Display user, album, and description
     search_fields = ('user__username', 'album__name')  # Allow searching by username or album name
     list_filter = ('user',)  # Optionally, filter by user
+
+# Register the UserAlbumWishlist model with custom configuration
+@admin.register(UserAlbumWishlist)
+class UserAlbumWishlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'album', 'added_on')
+    list_filter = ('added_on',)  # Filter by the date the album was added
