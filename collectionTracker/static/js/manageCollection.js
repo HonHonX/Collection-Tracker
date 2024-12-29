@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const inCollection = albumItem.dataset.inCollection === 'true'; // Check initial state of the album
         const controlIcon = albumItem.querySelector('#control-icon');
 
-        console.log("Initial inCollection state:", inCollection); // Debugging line
+        // console.log("Initial inCollection state:", inCollection); 
 
         // Initialize the state based on whether the album is in the collection or not
         updateAlbumState(albumItem, inCollection);
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const controlIcon = albumItem.querySelector('#control-icon');
 
         // Debugging log
-        console.log(`Updating state for album: ${albumItem.dataset.albumId}, In collection: ${inCollection}`);
+        // console.log(`Updating state for album: ${albumItem.dataset.albumId}, In collection: ${inCollection}`);
 
         if (inCollection) {
             albumItem.dataset.inCollection = 'true';
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Dynamically fetch the current state
             const currentInCollection = albumItem.dataset.inCollection === 'true';
         
-            console.log(`Clicked on album: ${albumId}. Current in collection: ${currentInCollection}`);
+            // console.log(`Clicked on album: ${albumId}. Current in collection: ${currentInCollection}`);
         
             if (currentInCollection) {
                 // If the album is already in the collection, remove it
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        // alert(data.message);
                         updateAlbumState(albumItem, true); // Update the state to reflect addition
                     } else {
                         alert(data.error || data.message);

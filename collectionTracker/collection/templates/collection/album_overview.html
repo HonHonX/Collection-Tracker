@@ -48,8 +48,8 @@
             data-album-type="{{ collection_entry.album.album_type }}" 
             data-release-date="{{ collection_entry.album.release_date }}" 
             data-album-id="{{ collection_entry.album.id }}"
-            data-in-collection="true"
-            data-in-wishlist="false">
+            data-in-collection="{% if collection_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
+            data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
             <div class="album-controls">
                 <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status" data-action="add_to_wishlist">
                 <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">

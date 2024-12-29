@@ -29,7 +29,8 @@
             data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
             data-image-url="{{ album.image_url }}"
             data-artist-name="{{ artist_name }}"
-            data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}">
+            data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}"
+            data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
                 {% if in_collection %}
                     <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;" class="icon">
                     <p>Album in collection.</p><br>
@@ -40,28 +41,29 @@
             </div>
 
             <div class="wishlist-status">
-                <!-- Wishlist logic can be added here later -->
-                <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
-                <p>Album not in wishlist.</p><br>
+                {% if in_wishlist %}
+                    <img src="{% static 'icons/wishlist.svg' %}" alt="In wishlist" style="opacity: 1;" class="icon">
+                    <p>Album in wishlist.</p><br>
+                {% else %}
+                    <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
+                    <p>Album not in wishlist.</p><br>
+                {% endif %}
             </div>
         </div>
         
         <!-- Album Description Section -->
-        {% if in_collection %}
-            <!-- Allow editing description if the album is in the user's collection -->
-            <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
-                {% csrf_token %}
-                <label for="description">
-                    <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon">
-                </label>
+        <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
+            {% csrf_token %}
+            <label for="description">
+                <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon">
+            </label>
 
-                <!-- Display the user's description if it exists -->
-                {% csrf_token %}
-                <textarea name="description" id="description">{{ user_description.description }}</textarea>           
+            <!-- Display the user's description if it exists -->
+            {% csrf_token %}
+            <textarea name="description" id="description">{{ user_description.description }}</textarea>           
 
-                <button type="submit" id="save-button" class="button">Save Note</button>
-            </form>
-        {% endif %}
+            <button type="submit" id="save-button" class="button">Save Note</button>
+        </form>
     </div>
 
 {% endblock %}

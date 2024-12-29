@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const inWishlist = albumItem.dataset.inWishlist === 'true'; // Check initial state of the album
         const controlIcon = albumItem.querySelector('#wishlist-control-icon');
 
-        console.log("Initial inWishlist state:", inWishlist); // Debugging line
+        // console.log("Initial inWishlist state:", inWishlist);
 
         // Initialize the state based on whether the album is in the wishlist or not
         updateAlbumState(albumItem, inWishlist);
@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateAlbumState(albumItem, inWishlist) {
         const controlIcon = albumItem.querySelector('#wishlist-control-icon');
 
-        // Debugging log
-        console.log(`Updating state for album: ${albumItem.dataset.albumId}, In wishlist: ${inWishlist}`);
+        // // Debugging log
+        // console.log(`Updating state for album: ${albumItem.dataset.albumId}, In wishlist: ${inWishlist}`);
 
         if (inWishlist) {
             albumItem.dataset.inWishlist = 'true';
@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const inWishlist = albumItem.dataset.inWishlist === 'true';
         const inCollection = albumItem.dataset.inCollection === 'true';
 
-        console.log("About to update the album bg - in Wishlist:", inWishlist)
-        console.log("About to update the album bg - in Collection:", inCollection)
+        // console.log("About to update the album bg - in Wishlist:", inWishlist)
+        // console.log("About to update the album bg - in Collection:", inCollection)
 
         if (inWishlist && inCollection) {
             albumItem.style.backgroundColor = 'var(--accentVariantA100)'; // Background if in both
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Dynamically fetch the current state
             const currentInWishlist= albumItem.dataset.inWishlist === 'true';
         
-            console.log(`Clicked on album: ${albumId}. Current in wishlist: ${currentInWishlist}`);
+            // console.log(`Clicked on album: ${albumId}. Current in wishlist: ${currentInWishlist}`);
         
             if (currentInWishlist) {
                 // If the album is already in the wishlist, remove it
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        // alert(data.message);
 
                         const wishlistHeader = document.querySelector('.wishlist-header p');
                         if (wishlistHeader) {

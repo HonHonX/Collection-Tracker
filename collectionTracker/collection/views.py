@@ -19,6 +19,7 @@ def album_overview(request):
     
     # Extract album IDs for the user's wishlist
     user_wishlist_ids = list(user_wishlist.values_list('album__id', flat=True))
+    print(user_wishlist_ids)
     
     # Get the list of artists from the user's collection (unique artists)
     artist_list = Artist.objects.filter(album__useralbumcollection__user=request.user).distinct()
@@ -31,7 +32,7 @@ def album_overview(request):
     return render(request, 'collection/album_overview.html', {
         'user_collection': user_collection,
         'user_album_ids': user_album_ids,
-        'user_wishlist_ids': user_wishlist_ids,  # Pass the wishlist IDs
+        'user_wishlist_ids': user_wishlist_ids,  
         'artist_list': artist_list,
     })
 
@@ -127,8 +128,10 @@ class AlbumDetail(View):
 
         # Check if the user is authenticated and if the album is in their collection
         in_collection = False
+        in_wishlist = False
         if request.user.is_authenticated:
             in_collection = UserAlbumCollection.objects.filter(user=request.user, album=album).exists()
+            in_wishlist = UserAlbumWishlist.objects.filter(user=request.user, album=album).exists()
 
             # Get the user's description for the album, if it exists
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
@@ -139,6 +142,7 @@ class AlbumDetail(View):
             'album': album,
             'artist': album.artist,
             'in_collection': in_collection,  # Pass the collection status
+            'in_wishlist': in_wishlist,  # Pass the collection status
             'user_description': user_description,  # Pass user's description (if any)
         }
 
@@ -247,6 +251,7 @@ def wishlist_overview(request):
 
     return render(request, 'collection/wishlist_overview.html', {
         'user_wishlist': user_wishlist,
+        'user_wishlist_ids': user_wishlist_ids,
         'user_album_ids': user_album_ids,
         'artist_list': artist_list,
     })
