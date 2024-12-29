@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
+                        // alert(data.message);
 
                         const collectionHeader = document.querySelector('.collection-header p');
                         if (collectionHeader) {
