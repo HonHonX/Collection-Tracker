@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Loop through each album and update its state (in wishlist)
     document.querySelectorAll('.album-item').forEach(albumItem => {
         const inWishlist = albumItem.dataset.inWishlist === 'true'; // Check initial state of the album
         const controlIcon = albumItem.querySelector('#wishlist-control-icon');
@@ -24,13 +25,33 @@ document.addEventListener('DOMContentLoaded', function () {
             controlIcon.classList.add('wanted');
             controlIcon.alt = "Already added";
             controlIcon.src = "/static/icons/wishlist_remove.svg"; // Change the icon to 'remove'
-            albumItem.style.backgroundColor = 'var(--accentVariantB100)';
         } else {
             albumItem.dataset.inWishlist = 'false';
             controlIcon.classList.remove('wanted');
             controlIcon.alt = "Add to wishlist";
             controlIcon.src = "/static/icons/wishlist_add.svg"; // Reset to 'add' icon
-            albumItem.style.backgroundColor = 'var(--neutral100)';
+        }
+
+        // Update the background color based on the current state
+        updateAlbumBackgroundColor(albumItem); 
+    }
+
+    // Function to update the background color
+    function updateAlbumBackgroundColor(albumItem) {
+        const inWishlist = albumItem.dataset.inWishlist === 'true';
+        const inCollection = albumItem.dataset.inCollection === 'true';
+
+        console.log("About to update the album bg - in Wishlist:", inWishlist)
+        console.log("About to update the album bg - in Collection:", inCollection)
+
+        if (inWishlist && inCollection) {
+            albumItem.style.backgroundColor = 'var(--accentVariantA100)'; // Background if in both
+        } else if (inWishlist) {
+            albumItem.style.backgroundColor = 'var(--accentVariantB100)'; // Wishlist background
+        } else if (inCollection) {
+            albumItem.style.backgroundColor = 'var(--accent100)'; // Collection background
+        } else {
+            albumItem.style.backgroundColor = 'var(--neutral100)'; // Default background
         }
     }
 
@@ -130,7 +151,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(error => console.error('Error:', error));                
             }
         }
-        
     }
-
 });

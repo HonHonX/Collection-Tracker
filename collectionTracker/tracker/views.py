@@ -8,7 +8,7 @@ import os
 import subprocess
 import logging
 from django.contrib.auth.decorators import login_required
-from collection.models import UserAlbumCollection
+from collection.models import UserAlbumCollection, UserAlbumWishlist
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -31,6 +31,7 @@ def artist_search(request):
     artist_info = {}
     latest_album = None
     user_album_ids = []  # Initialize the variable for user album IDs
+    user_wishlist_ids = []  # Initialize the variable for user wishlist IDs
 
     if request.method == 'POST':
         artist_name = request.POST.get('artist_name')
@@ -84,10 +85,17 @@ def artist_search(request):
                 if sorted_albums:
                     latest_album = sorted_albums[0]
 
-                # Get the list of user albums (user_album_ids) - this will only work if the user is logged in
+                # Get the list of user albums (user_album_ids) and wishlist (user_wishlist_ids)
                 if request.user.is_authenticated:
+                    # Get albums in the user's collection
                     user_album_ids = list(
                         UserAlbumCollection.objects.filter(user=request.user)
+                        .values_list('album__id', flat=True)
+                    )
+
+                    # Get albums in the user's wishlist
+                    user_wishlist_ids = list(
+                        UserAlbumWishlist.objects.filter(user=request.user)
                         .values_list('album__id', flat=True)
                     )
 
@@ -97,7 +105,7 @@ def artist_search(request):
         # Add a fallback if 'name' is not in artist_info
         artist_name = artist_info.get('name', 'Unknown Artist')  # Fallback to 'Unknown Artist'
 
-        # Pass albums, artist info, artist photo, and error message to the template
+        # Pass albums, artist info, artist photo, error message, user_album_ids, and user_wishlist_ids to the template
         return render(request, 'tracker/artist_overview.html', {
             'albums': albums,
             'artist_name': artist_name,
@@ -106,6 +114,7 @@ def artist_search(request):
             'artist_info': artist_info,
             'latest_album': latest_album,
             'user_album_ids': user_album_ids,  # Include user_album_ids in the context
+            'user_wishlist_ids': user_wishlist_ids,  # Include user_wishlist_ids in the context
         })
     
     return render(request, 'tracker/artist_search.html', {

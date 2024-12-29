@@ -14,6 +14,12 @@ def album_overview(request):
     # Extract album IDs for the user's collection
     user_album_ids = list(user_collection.values_list('album__id', flat=True))
     
+    # Get the user's album wishlist
+    user_wishlist = UserAlbumWishlist.objects.filter(user=request.user)
+    
+    # Extract album IDs for the user's wishlist
+    user_wishlist_ids = list(user_wishlist.values_list('album__id', flat=True))
+    
     # Get the list of artists from the user's collection (unique artists)
     artist_list = Artist.objects.filter(album__useralbumcollection__user=request.user).distinct()
 
@@ -25,6 +31,7 @@ def album_overview(request):
     return render(request, 'collection/album_overview.html', {
         'user_collection': user_collection,
         'user_album_ids': user_album_ids,
+        'user_wishlist_ids': user_wishlist_ids,  # Pass the wishlist IDs
         'artist_list': artist_list,
     })
 
@@ -218,14 +225,20 @@ def remove_album_from_wishlist(request):
 # views.py
 @login_required
 def wishlist_overview(request):
+    # Get the user's album collection
+    user_collection = UserAlbumCollection.objects.filter(user=request.user)
+    
+    # Extract album IDs for the user's collection
+    user_album_ids = list(user_collection.values_list('album__id', flat=True))
+    
     # Get the user's album wishlist
     user_wishlist = UserAlbumWishlist.objects.filter(user=request.user)
     
     # Extract album IDs for the user's wishlist
-    user_album_ids = list(user_wishlist.values_list('album__id', flat=True))
+    user_wishlist_ids = list(user_wishlist.values_list('album__id', flat=True))
     
-    # Get the list of artists from the user's wishlist (unique artists)
-    artist_list = Artist.objects.filter(album__useralbumwishlist__user=request.user).distinct()
+    # Get the list of artists from the user's collection (unique artists)
+    artist_list = Artist.objects.filter(album__useralbumcollection__user=request.user).distinct()
 
     # If there's an artist filter in the request, apply it
     artist_filter = request.GET.get('artist', '')
@@ -237,3 +250,5 @@ def wishlist_overview(request):
         'user_album_ids': user_album_ids,
         'artist_list': artist_list,
     })
+
+    

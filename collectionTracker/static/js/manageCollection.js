@@ -12,6 +12,22 @@ document.addEventListener('DOMContentLoaded', function () {
         setControlIconClickListener(albumItem, controlIcon, inCollection);
     });
 
+    // Funktion, um die UI zu aktualisieren, wenn das Album in beiden (Wishlist und Collection) ist
+    function updateAlbumBackgroundColor(albumItem) {
+        const inWishlist = albumItem.dataset.inWishlist === 'true';
+        const inCollection = albumItem.dataset.inCollection === 'true';
+
+        if (inWishlist && inCollection) {
+            albumItem.style.backgroundColor = 'var(--accentVariantA100)'; // Hintergrund, wenn in beiden
+        } else if (inWishlist) {
+            albumItem.style.backgroundColor = 'var(--accentVariantB100)'; // Wishlist-Hintergrund
+        } else if (inCollection) {
+            albumItem.style.backgroundColor = 'var(--accent100)'; // Collection-Hintergrund
+        } else {
+            albumItem.style.backgroundColor = 'var(--neutral100)'; // Standard-Hintergrund
+        }
+    }
+
     // Function to update the UI based on whether the album is in the collection
     function updateAlbumState(albumItem, inCollection) {
         const controlIcon = albumItem.querySelector('#control-icon');
@@ -24,14 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
             controlIcon.classList.add('collected');
             controlIcon.alt = "Already added";
             controlIcon.src = "/static/icons/remove.svg"; // Change the icon to 'remove'
-            albumItem.style.backgroundColor = 'var(--accent100)';
         } else {
             albumItem.dataset.inCollection = 'false';
             controlIcon.classList.remove('collected');
             controlIcon.alt = "Add to collection";
             controlIcon.src = "/static/icons/add.svg"; // Reset to 'add' icon
-            albumItem.style.backgroundColor = 'var(--neutral100)';
         }
+
+        updateAlbumBackgroundColor(albumItem); // Hintergrundfarbe aktualisieren
     }
 
     // Function to set the appropriate event listener for the control icon
