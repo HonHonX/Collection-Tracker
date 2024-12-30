@@ -1,135 +1,103 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Loop through each album and update its state (in wishlist)
     document.querySelectorAll('.album-item').forEach(albumItem => {
-        const inWishlist = albumItem.dataset.inWishlist === 'true'; // Check initial state of the album
-        const controlIcon = albumItem.querySelector('#wishlist-control-icon');
+        // Collection control icon & state
+        const controlIconCollection = albumItem.querySelector('#control-icon');
+        const controlIconWishlist = albumItem.querySelector('#wishlist-control-icon');
+        const controlIconBlacklist = albumItem.querySelector('#blacklist-control-icon');
 
-        // Initialize the state based on whether the album is in the wishlist or not
-        updateAlbumState(albumItem, inWishlist);
+        // Initialize the album state based on list status
+        updateAlbumState(albumItem.dataset.inCollection === 'true', controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection");
+        updateAlbumState(albumItem.dataset.inWishlist === 'true', controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist");
+        updateAlbumState(albumItem.dataset.inBlacklist === 'true', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist");
 
-        // Attach the correct event listener based on the album's state
-        setControlIconClickListener(albumItem, controlIcon, inWishlist);
+        // Update background color based on the album's state
+        updateAlbumBackgroundColor(albumItem);
+
+        // Set event listeners for control icons
+        controlIconCollection.addEventListener('click', () => handleAlbumClick(albumItem, 'collection', controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection"));
+        controlIconWishlist.addEventListener('click', () => handleAlbumClick(albumItem, 'wishlist', controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist"));
+        controlIconBlacklist.addEventListener('click', () => handleAlbumClick(albumItem, 'blacklist', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist"));
     });
 
-    // Function to update the UI based on whether the album is in the wishlist
-    function updateAlbumState(albumItem, inWishlist) {
-        const controlIcon = albumItem.querySelector('#wishlist-control-icon');
-
-        if (inWishlist) {
-            albumItem.dataset.inWishlist = 'true';
-            controlIcon.classList.add('wanted');
-            controlIcon.alt = "Already added";
-            controlIcon.src = "/static/icons/wishlist_remove.svg"; // Change the icon to 'remove'
+    function updateAlbumState(isInList, controlIcon, addIcon, removeIcon, altAdd, altRemove) {
+        if (isInList) {
+            controlIcon.alt = altRemove;
+            controlIcon.src = removeIcon;
         } else {
-            albumItem.dataset.inWishlist = 'false';
-            controlIcon.classList.remove('wanted');
-            controlIcon.alt = "Add to wishlist";
-            controlIcon.src = "/static/icons/wishlist_add.svg"; // Reset to 'add' icon
+            controlIcon.alt = altAdd;
+            controlIcon.src = addIcon;
         }
-
-        // Update the background color based on the current state
-        updateAlbumBackgroundColor(albumItem); 
     }
 
-    // Function to update the background color
     function updateAlbumBackgroundColor(albumItem) {
-        const inWishlist = albumItem.dataset.inWishlist === 'true';
         const inCollection = albumItem.dataset.inCollection === 'true';
+        const inWishlist = albumItem.dataset.inWishlist === 'true';
+        const inBlacklist = albumItem.dataset.inBlacklist === 'true';
 
         if (inWishlist && inCollection) {
-            albumItem.style.backgroundColor = 'var(--accentVariantA100)'; // Background if in both
+            albumItem.style.backgroundColor = 'var(--accentVariantA100)';
         } else if (inWishlist) {
-            albumItem.style.backgroundColor = 'var(--accentVariantB100)'; // Wishlist background
+            albumItem.style.backgroundColor = 'var(--accentVariantB100)';
         } else if (inCollection) {
-            albumItem.style.backgroundColor = 'var(--accent100)'; // Collection background
+            albumItem.style.backgroundColor = 'var(--accent100)';
+        } else if (inBlacklist) {
+            albumItem.style.backgroundColor = 'var(--neutral70)';
         } else {
-            albumItem.style.backgroundColor = 'var(--neutral100)'; // Default background
+            albumItem.style.backgroundColor = 'var(--neutral100)';
         }
     }
 
-    // Function to set the appropriate event listener for the control icon
-    function setControlIconClickListener(albumItem, controlIcon, inWishlist) {
-        // Remove any existing event listener to avoid duplicates
-        controlIcon.removeEventListener('click', handleAlbumClick);
+    function handleAlbumClick(albumItem, listType, iconElement, addIcon, removeIcon, altAdd, altRemove) {
+        const isInList = albumItem.dataset[`in${capitalize(listType)}`] === 'true';
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-        // Attach the correct event listener based on the album's current inWishlist state
-        controlIcon.addEventListener('click', handleAlbumClick);
+        const albumId = albumItem.dataset.albumId;
+        const albumName = albumItem.dataset.albumName;
+        const albumType = albumItem.dataset.albumType;
+        const releaseDate = albumItem.dataset.releaseDate;
+        const imageUrl = albumItem.dataset.imageUrl;
+        const artistName = albumItem.dataset.artistName;
 
-        function handleAlbumClick() {
-            const albumId = albumItem.dataset.albumId;
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const action = isInList ? 'remove' : 'add';
+        const url = `/collection/manage_album/${listType}/${action}/`;
 
-            // Dynamically fetch the current state
-            const currentInWishlist = albumItem.dataset.inWishlist === 'true';
-
-            if (currentInWishlist) {
-                // If the album is already in the wishlist, remove it
-                if (!confirm('Are you sure you want to remove this album from your wishlist?')) {
-                    return;
-                }
-
-                fetch('/collection/remove_album_from_wishlist/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    body: JSON.stringify({ album_id: albumId }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const wishlistHeader = document.querySelector('.wishlist-header p');
-                        if (wishlistHeader) {
-                            albumItem.remove();
-                            const currentCount = parseInt(wishlistHeader.textContent.match(/\d+/)[0], 10);
-                            if (currentCount > 1) {
-                                wishlistHeader.textContent = `You have added ${currentCount - 1} album(s) to your wishlist.`;
-                            } else {
-                                wishlistHeader.textContent = 'Your wishlist is empty.';
-                            }
-                        }
-
-                        updateAlbumState(albumItem, false); // Update the state to reflect removal
-                    } else {
-                        alert(data.error || data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            } else {
-                // If the album is not in the wishlist, add it
-                const albumName = albumItem.dataset.albumName;
-                const albumType = albumItem.dataset.albumType;
-                const releaseDate = albumItem.dataset.releaseDate;
-                const imageUrl = albumItem.dataset.imageUrl;
-                const artistName = albumItem.dataset.artistName;
-
-                fetch('/collection/add_album_to_wishlist/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken,
-                    },
-                    body: JSON.stringify({
-                        album_id: albumId,
-                        album_name: albumName,
-                        album_type: albumType,
-                        release_date: releaseDate,
-                        image_url: imageUrl,
-                        artist_name: artistName,
-                    }),
-                })
-                .then(response => response.json()) // Expecting JSON response
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        updateAlbumState(albumItem, true); // Update the state to reflect addition
-                    } else {
-                        alert(data.error || data.message);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
+        if (isInList && !confirm(`Are you sure you want to remove this album from your ${listType}?`)) {
+            return;
         }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+                album_id: albumId,
+                album_name: albumName,
+                album_type: albumType,
+                release_date: releaseDate,
+                image_url: imageUrl,
+                artist_name: artistName,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const newState = action === 'add';
+                albumItem.dataset[`in${capitalize(listType)}`] = newState.toString();
+                updateAlbumState(newState, iconElement, addIcon, removeIcon, altAdd, altRemove);
+                updateAlbumBackgroundColor(albumItem);
+            } else {
+                alert(data.error || data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 });

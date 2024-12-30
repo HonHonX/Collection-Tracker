@@ -101,7 +101,7 @@ def artist_search(request):
                     )
 
                     # Get albums in the user's blacklist
-                    user_blackhlist_ids = list(
+                    user_blacklist_ids = list(
                         UserAlbumBlacklist.objects.filter(user=request.user)
                         .values_list('album__id', flat=True)
                     )

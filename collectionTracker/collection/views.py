@@ -7,20 +7,21 @@ from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, Us
 import json
 from django.db import IntegrityError
 
-
 # Helper functions
 def get_user_album_ids(user):
-    """Returns album IDs for the user's collection and wishlist."""
+    """Returns album IDs for the user's collection, wishlist, and blacklist."""
     user_collection = UserAlbumCollection.objects.filter(user=user)
     user_wishlist = UserAlbumWishlist.objects.filter(user=user)
     user_blacklist = UserAlbumBlacklist.objects.filter(user=user)
 
-    user_album_ids = list(user_collection.values_list('album__id', flat=True))
-    user_wishlist_ids = list(user_wishlist.values_list('album__id', flat=True))
-    user_blacklist_ids = list(user_blacklist.values_list('album__id', flat=True))
-
-    return user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist
-
+    return (
+        list(user_collection.values_list('album__id', flat=True)),
+        list(user_wishlist.values_list('album__id', flat=True)),
+        list(user_blacklist.values_list('album__id', flat=True)),
+        user_collection,
+        user_wishlist,
+        user_blacklist,
+    )
 
 def get_artist_list(user):
     """Returns a list of unique artists from the user's collection."""
@@ -28,42 +29,74 @@ def get_artist_list(user):
 
 def manage_album_in_list(user, album, list_type, action):
     """
-    Add or remove an album to/from the specified list (collection/wishlist) for the given user.
-    :param user: User instance
-    :param album: Album instance
-    :param list_type: Type of the list ('collection', 'wishlist')
-    :param action: Action to perform ('add' or 'remove')
-    :return: JsonResponse indicating success or failure
+    Add or remove an album to/from the specified list (collection/wishlist/blacklist) for the given user.
     """
-    if list_type == 'collection':
-        model = UserAlbumCollection
-    elif list_type == 'wishlist':
-        model = UserAlbumWishlist
-    elif list_type == 'blacklist':
-        model = UserAlbumBlacklist
-    else:
+
+    print(f"List Type: {list_type}, Action: {action}")
+
+    model_map = {
+        'collection': UserAlbumCollection,
+        'wishlist': UserAlbumWishlist,
+        'blacklist': UserAlbumBlacklist,
+    }
+
+    model = model_map.get(list_type)
+    if not model:
         return JsonResponse({'success': False, 'error': 'Invalid list type.'})
-    
+
     if action == 'add':
         try:
             model.objects.create(user=user, album=album)
             return JsonResponse({'success': True, 'message': f'Album "{album.name}" added to your {list_type}.'})
         except IntegrityError:
             return JsonResponse({'success': False, 'message': f'Album "{album.name}" is already in your {list_type}.'})
-    
+
     elif action == 'remove':
         try:
             entry = model.objects.get(user=user, album=album)
+            entry_exists = model.objects.filter(user=user, album=album).exists()
+            print(f"Entry exists before deletion: {entry_exists}")
             entry.delete()
             return JsonResponse({'success': True, 'message': f'Album "{album.name}" removed from your {list_type}.'})
         except model.DoesNotExist:
             return JsonResponse({'success': False, 'error': f'Album not found in your {list_type}.'})
-    else:
-        return JsonResponse({'success': False, 'error': 'Invalid action.'})
 
-# Views
+    return JsonResponse({'success': False, 'error': 'Invalid action.'})
 
-# Sammlung
+# Generic album management view
+@csrf_exempt
+@login_required
+def manage_album(request, list_type, action):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        album_id = data.get('album_id')
+        artist_name = data.get('artist_name', '').strip()  # Add strip to avoid leading/trailing whitespace
+
+        print(f"Album ID: {album_id}")
+        print(f"Artist name: {artist_name}")
+
+        if not artist_name:
+            return JsonResponse({'success': False, 'error': 'Artist name is required.'}, status=400)
+
+        user = request.user
+
+        artist, _ = Artist.objects.get_or_create(name=artist_name)
+        album, _ = Album.objects.get_or_create(
+            id=album_id,
+            defaults={
+                'name': data.get('album_name'),
+                'album_type': data.get('album_type'),
+                'release_date': data.get('release_date'),
+                'image_url': data.get('image_url'),
+                'artist': artist,
+            }
+        )
+
+        return manage_album_in_list(user, album, list_type, action)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+# Collection Overview
 @login_required
 def album_overview(request):
     user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
@@ -83,54 +116,7 @@ def album_overview(request):
         'artist_list': artist_list,
     })
 
-@csrf_exempt
-@login_required
-def add_album_to_collection(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        artist_name = data.get('artist_name')
-        user = request.user
-
-        if not user.is_authenticated:
-            return JsonResponse({'success': False, 'error': 'User not authenticated'})
-
-        artist, _ = Artist.objects.get_or_create(name=artist_name)
-        album, _ = Album.objects.get_or_create(
-            id=album_id,
-            defaults={
-                'name': data.get('album_name'),
-                'album_type': data.get('album_type'),
-                'release_date': data.get('release_date'),
-                'image_url': data.get('image_url'),
-                'artist': artist,
-            }
-        )
-
-        # Use the generic function to handle album addition to the collection
-        return manage_album_in_list(user, album, 'collection', 'add')
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-
-@csrf_exempt
-@login_required
-def remove_album_from_collection(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        user = request.user
-        
-        try:
-            album = Album.objects.get(id=album_id)
-            # Use the generic function to handle album removal from the collection
-            return manage_album_in_list(user, album, 'collection', 'remove')
-        except Album.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Album not found.'})
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-# Wishlist
+# Wishlist Overview
 @login_required
 def wishlist_overview(request):
     user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
@@ -150,54 +136,7 @@ def wishlist_overview(request):
         'artist_list': artist_list,
     })
 
-@csrf_exempt
-@login_required
-def add_album_to_wishlist(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        artist_name = data.get('artist_name')
-        user = request.user
-
-        if not user.is_authenticated:
-            return JsonResponse({'success': False, 'error': 'User not authenticated'})
-
-        artist, _ = Artist.objects.get_or_create(name=artist_name)
-        album, _ = Album.objects.get_or_create(
-            id=album_id,
-            defaults={
-                'name': data.get('album_name'),
-                'album_type': data.get('album_type'),
-                'release_date': data.get('release_date'),
-                'image_url': data.get('image_url'),
-                'artist': artist,
-            }
-        )
-
-        # Use the generic function to handle album addition to the wishlist
-        return manage_album_in_list(user, album, 'wishlist', 'add')
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-
-@csrf_exempt
-@login_required
-def remove_album_from_wishlist(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        user = request.user
-        
-        try:
-            album = Album.objects.get(id=album_id)
-            # Use the generic function to handle album removal from the wishlist
-            return manage_album_in_list(user, album, 'wishlist', 'remove')
-        except Album.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Album not found.'})
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-# Blacklist
+# Blacklist Overview
 @login_required
 def blacklist_overview(request):
     user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
@@ -217,54 +156,7 @@ def blacklist_overview(request):
         'artist_list': artist_list,
     })
 
-@csrf_exempt
-@login_required
-def add_album_to_blacklist(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        artist_name = data.get('artist_name')
-        user = request.user
-
-        if not user.is_authenticated:
-            return JsonResponse({'success': False, 'error': 'User not authenticated'})
-
-        artist, _ = Artist.objects.get_or_create(name=artist_name)
-        album, _ = Album.objects.get_or_create(
-            id=album_id,
-            defaults={
-                'name': data.get('album_name'),
-                'album_type': data.get('album_type'),
-                'release_date': data.get('release_date'),
-                'image_url': data.get('image_url'),
-                'artist': artist,
-            }
-        )
-
-        # Use the generic function to handle album addition to the wishlist
-        return manage_album_in_list(user, album, 'blacklist', 'add')
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-@csrf_exempt
-@login_required
-def remove_album_from_blacklist(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        user = request.user
-        
-        try:
-            album = Album.objects.get(id=album_id)
-            # Use the generic function to handle album removal from the blacklist
-            return manage_album_in_list(user, album, 'blacklist', 'remove')
-        except Album.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Album not found.'})
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-
-# Album Detail
+# Album Detail View
 class AlbumDetail(View):
     def get(self, request, album_id):
         album = get_object_or_404(Album, id=album_id)
@@ -286,9 +178,6 @@ class AlbumDetail(View):
     def post(self, request, album_id):
         album = get_object_or_404(Album, id=album_id)
 
-        if not request.user.is_authenticated:
-            return JsonResponse({'success': False, 'error': 'User not authenticated'}, status=403)
-
         description = request.POST.get('description', '').strip()
         if not description:
             return JsonResponse({'success': False, 'error': 'Description cannot be empty'}, status=400)
@@ -298,11 +187,11 @@ class AlbumDetail(View):
         user_description.save()
 
         return JsonResponse({'success': True, 'message': 'Description updated successfully'}, status=200)
-    
-# Add/Edit Description
+
+# Save Description
 @login_required
 def save_description(request, album_id):
-    if request.method == "POST" and request.user.is_authenticated:
+    if request.method == "POST":
         description = request.POST.get('description')
 
         try:
@@ -322,4 +211,4 @@ def save_description(request, album_id):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method or user not authenticated'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
