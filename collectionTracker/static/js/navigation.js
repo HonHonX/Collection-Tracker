@@ -29,6 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = wishlistUrl;
     });
 
+    // Blacklist Butto
+    var blacklistUrl = document.getElementById('blacklist-button').getAttribute('data-blacklist-url');
+    document.getElementById('blacklist-button').addEventListener('click', function() {
+        window.location.href = blacklistUrl;
+    });
+
     // Settings Button (Placeholder)
     document.getElementById('settings-button').addEventListener('click', function() {
         console.log("Settings clicked!");

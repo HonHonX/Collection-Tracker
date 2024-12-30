@@ -57,3 +57,14 @@ class UserAlbumWishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Wishlist: {self.album.name}"
+    
+class UserAlbumBlacklist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'album')
+
+    def __str__(self):
+        return f"{self.user.username} - Blacklist: {self.album.name}"

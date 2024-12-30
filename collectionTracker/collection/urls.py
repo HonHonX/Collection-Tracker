@@ -12,4 +12,7 @@ urlpatterns = [
     path("add_album_to_wishlist/", views.add_album_to_wishlist, name="add_album_to_wishlist"),
     path("remove_album_from_wishlist/", views.remove_album_from_wishlist, name="remove_album_from_wishlist"),
     path('wishlist/', views.wishlist_overview, name='wishlist_overview'),
+    path('blacklist/', views.blacklist_overview, name='blacklist_overview'),
+    path("add_album_to_blacklist/", views.add_album_to_blacklist, name="add_album_to_blacklist"),
+    path("remove_album_from_blacklist/", views.remove_album_from_blacklist, name="remove_album_from_blacklist"),
 ]
