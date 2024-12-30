@@ -32,7 +32,7 @@ def manage_album_in_list(user, album, list_type, action):
     Add or remove an album to/from the specified list (collection/wishlist/blacklist) for the given user.
     """
 
-    print(f"List Type: {list_type}, Action: {action}")
+    # print(f"List Type: {list_type}, Action: {action}")
 
     model_map = {
         'collection': UserAlbumCollection,
@@ -55,7 +55,7 @@ def manage_album_in_list(user, album, list_type, action):
         try:
             entry = model.objects.get(user=user, album=album)
             entry_exists = model.objects.filter(user=user, album=album).exists()
-            print(f"Entry exists before deletion: {entry_exists}")
+            # print(f"Entry exists before deletion: {entry_exists}")
             entry.delete()
             return JsonResponse({'success': True, 'message': f'Album "{album.name}" removed from your {list_type}.'})
         except model.DoesNotExist:
@@ -72,8 +72,8 @@ def manage_album(request, list_type, action):
         album_id = data.get('album_id')
         artist_name = data.get('artist_name', '').strip()  # Add strip to avoid leading/trailing whitespace
 
-        print(f"Album ID: {album_id}")
-        print(f"Artist name: {artist_name}")
+        # print(f"Album ID: {album_id}")
+        # print(f"Artist name: {artist_name}")
 
         if not artist_name:
             return JsonResponse({'success': False, 'error': 'Artist name is required.'}, status=400)
@@ -101,6 +101,8 @@ def manage_album(request, list_type, action):
 def album_overview(request):
     user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
 
+    # print(f"Collection: {user_collection}, {user_album_ids}")
+
     artist_filter = request.GET.get('artist', '')
     if artist_filter:
         user_collection = user_collection.filter(album__artist__name=artist_filter)
@@ -112,6 +114,7 @@ def album_overview(request):
         'user_blacklist_ids': user_blacklist_ids,
         'user_wishlist': user_wishlist,
         'user_wishlist_ids': user_wishlist_ids,
+        'user_collection' : user_collection,
         'user_album_ids': user_album_ids,
         'artist_list': artist_list,
     })

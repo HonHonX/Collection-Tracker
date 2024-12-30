@@ -13,11 +13,7 @@
 
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
-        {% if user_collection %}
-        <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
-        {% else %}
-        <p>Your collection is empty.</p>
-        {% endif %}
+        <p>You have {{ user_collection.count }} album(s) in your collection.</p>
     </div>
 
     <div class="sorting-controls">
@@ -75,9 +71,7 @@
 
 {% endblock %}
 {% block js %}
-<script src="{% static 'js/manageCollection.js' %}"></script>
-<script src="{% static 'js/manageWishlist.js' %}"></script>
-<script src="{% static 'js/manageBlacklist.js' %}"></script>
+<script src="{% static 'js/manageAlbumState.js' %}"></script>
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
 {% endblock %}

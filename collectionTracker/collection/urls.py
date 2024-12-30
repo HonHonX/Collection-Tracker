@@ -3,11 +3,9 @@ from . import views
 
 urlpatterns = [
     # Overview routes
-    path("", views.album_overview, name="user_album_collection"),
-    path("my_collection/", views.album_overview, name="user_album_collection"),
-    path("album_overview/", views.album_overview, name="album_overview"),
-    path("wishlist/", views.wishlist_overview, name="wishlist_overview"),
-    path("blacklist/", views.blacklist_overview, name="blacklist_overview"),
+    path("collection-overview/", views.album_overview, name="collection_overview"),
+    path("wishlist-overview/", views.wishlist_overview, name="wishlist_overview"),
+    path("blacklist-overview/", views.blacklist_overview, name="blacklist_overview"),
 
     # Album detail
     path("album/<str:album_id>/", views.AlbumDetail.as_view(), name="album_detail"),
