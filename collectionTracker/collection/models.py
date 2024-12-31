@@ -1,6 +1,9 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.db.models import JSONField
 
 # models.py
 class Artist(models.Model):
@@ -68,3 +71,87 @@ class UserAlbumBlacklist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Blacklist: {self.album.name}"
+
+class UserArtistProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    total_albums = models.IntegerField(default=0)  # Total albums of the artist
+    collection = JSONField(default=list)  # Albums only in the user's collection
+    wishlist = JSONField(default=list)  # Albums only in the user's wishlist
+    blacklist = JSONField(default=list)  # Albums in the user's blacklist
+    collection_and_wishlist = JSONField(default=list)  # Albums in both collection and wishlist
+    collection_count = models.IntegerField(default=0)  # Albums only in the user's collection
+    wishlist_count = models.IntegerField(default=0)  # Albums only in the user's wishlist
+    blacklist_count = models.IntegerField(default=0)  # Albums in the user's blacklist
+    collection_and_wishlist_count = models.IntegerField(default=0)  # Albums in both collection and wishlist
+
+    class Meta:
+        unique_together = ('user', 'artist')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.artist.name} Progress"
+
+
+# Signals to update UserArtistProgress when collection/wishlist/blacklist changes
+
+@receiver([post_save, post_delete], sender=UserAlbumCollection)
+@receiver([post_save, post_delete], sender=UserAlbumWishlist)
+@receiver([post_save, post_delete], sender=UserAlbumBlacklist)
+def update_user_artist_progress(sender, instance, **kwargs):
+    """
+    Update the UserArtistProgress model whenever the UserAlbumCollection,
+    UserAlbumWishlist, or UserAlbumBlacklist model changes.
+    """
+    user = instance.user
+    album = instance.album
+    artist = album.artist
+
+    try:
+        with transaction.atomic():
+            # Get or create the UserArtistProgress object for the user and artist
+            progress, created = UserArtistProgress.objects.get_or_create(user=user, artist=artist)
+
+            # Query all albums related to this artist
+            artist_albums = Album.objects.filter(artist=artist)
+
+            # Calculate the total albums
+            progress.total_albums = artist_albums.count()
+
+            # Albums in the user's collection (convert to list)
+            progress.collection = list(
+                UserAlbumCollection.objects.filter(user=user, album__artist=artist)
+                .values_list('album__id', flat=True)
+            )
+
+            # Albums in the user's wishlist (convert to list)
+            progress.wishlist = list(
+                UserAlbumWishlist.objects.filter(user=user, album__artist=artist)
+                .values_list('album__id', flat=True)
+            )
+
+            # Albums in the user's blacklist (convert to list)
+            progress.blacklist = list(
+                UserAlbumBlacklist.objects.filter(user=user, album__artist=artist)
+                .values_list('album__id', flat=True)
+            )
+
+            # Convert lists to sets before performing intersection
+            collection_set = set(progress.collection)
+            wishlist_set = set(progress.wishlist)
+
+            # Albums in both collection and wishlist (convert to list)
+            progress.collection_and_wishlist = list(collection_set.intersection(wishlist_set))
+
+            # Update the counts
+            progress.collection_and_wishlist_count = len(progress.collection_and_wishlist)
+            progress.collection_count = len(collection_set - wishlist_set)  # Only in collection
+            progress.wishlist_count = len(wishlist_set - collection_set)  # Only in wishlist
+            progress.blacklist_count = len(progress.blacklist)
+
+            # Save the progress
+            progress.save()
+
+    except Exception as e:
+        # Optionally log the error or handle it in some way
+        print(f"Error updating user artist progress: {e}")
+

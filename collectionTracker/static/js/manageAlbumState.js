@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         controlIconBlacklist.addEventListener('click', () => handleAlbumClick(albumItem, 'blacklist', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist", controlIconCollection, controlIconWishlist));
     });
 
+    // Update the state of album icons based on its list status (in collection, wishlist, or blacklist)
     function updateAlbumState(isInList, controlIcon, addIcon, removeIcon, altAdd, altRemove) {
         if (isInList) {
             controlIcon.alt = altRemove;
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Update the background color of an album item based on the state of the album
     function updateAlbumBackgroundColor(albumItem) {
         const inCollection = albumItem.dataset.inCollection === 'true';
         const inWishlist = albumItem.dataset.inWishlist === 'true';
@@ -50,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Handle the click event for adding/removing albums from collection, wishlist, or blacklist
     function handleAlbumClick(albumItem, listType, iconElement, addIcon, removeIcon, altAdd, altRemove, controlIconCollection, controlIconWishlist) {
         const isInList = albumItem.dataset[`in${capitalize(listType)}`] === 'true';
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -66,8 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Get the current page URL path
         const currentPage = window.location.pathname;
-        const collectionType = (currentPage.match(/\/collection\/([^\/]+)-overview/))?.[1];
-
+        
         // Check, what site is
         const isCollectionPage = currentPage.includes('overview');
         const isWishlistPage = currentPage.includes('wishlist');
@@ -157,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Update the background color after modifications
                     updateAlbumBackgroundColor(albumItem);
                 }
-
+                
+                // Update album state
                 updateAlbumState(newState, iconElement, addIcon, removeIcon, altAdd, altRemove);
                 updateAlbumBackgroundColor(albumItem);
 
@@ -192,6 +195,44 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Update progress bars and counters after changes
+    function updateProgressBars() {
+        const totalAlbums = parseInt(document.getElementById("total-albums").textContent, 10);
+        let collectionCount = 0;
+        let wishlistCount = 0;
+        let blacklistCount = 0;
+        let collectionAndWishlistCount = 0;
+
+        // Count albums based on data attributes
+        document.querySelectorAll('.album-item').forEach(albumItem => {
+            if (albumItem.dataset.inCollection === 'true') {
+                collectionCount++;
+            }
+            if (albumItem.dataset.inWishlist === 'true') {
+                wishlistCount++;
+            }
+            if (albumItem.dataset.inBlacklist === 'true') {
+                blacklistCount++;
+            }
+            if (albumItem.dataset.inCollectionAndWishlist === 'true') {
+                collectionAndWishlistCount++;
+            }
+        });
+
+        // Update counters
+        document.getElementById("collection-counter").textContent = collectionCount;
+        document.getElementById("collection-and-wishlist-counter").textContent = collectionAndWishlistCount;
+        document.getElementById("wishlist-counter").textContent = wishlistCount;
+        document.getElementById("blacklist-counter").textContent = blacklistCount;
+
+        // Update progress bars
+        document.getElementById("collection-progress").style.width = `${(collectionCount / totalAlbums) * 100}%`;
+        document.getElementById("collection-and-wishlist-progress").style.width = `${(collectionAndWishlistCount / totalAlbums) * 100}%`;
+        document.getElementById("wishlist-progress").style.width = `${(wishlistCount / totalAlbums) * 100}%`;
+        document.getElementById("blacklist-progress").style.width = `${(blacklistCount / totalAlbums) * 100}%`;
+    }
+    
+    // Capitalize the first letter of a string (e.g., 'collection' -> 'Collection')
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }

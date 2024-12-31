@@ -106,6 +106,11 @@ def artist_search(request):
                         .values_list('album__id', flat=True)
                     )
 
+                    # Calculate counts for collection, wishlist, and blacklist
+                    collection_count = sum(1 for album in sorted_albums if album['id'] in user_album_ids)
+                    wishlist_count = sum(1 for album in sorted_albums if album['id'] in user_wishlist_ids)
+                    blacklist_count = sum(1 for album in sorted_albums if album['id'] in user_blacklist_ids)
+
         except Exception as e:
             error = str(e)
 
@@ -123,9 +128,45 @@ def artist_search(request):
             'user_album_ids': user_album_ids,  # Include user_album_ids in the context
             'user_wishlist_ids': user_wishlist_ids,  # Include user_wishlist_ids in the context
             'user_blacklist_ids': user_blacklist_ids,  # Include user_wishlist_ids in the context
+            'collection_count': collection_count,  # Include collection_count
+            'wishlist_count': wishlist_count,  # Include wishlist_count
+            'blacklist_count': blacklist_count,  # Include blacklist_count
         })
     
     return render(request, 'tracker/artist_search.html', {
         'artist_name': request.POST.get('artist_name', ''),
         'error': error,
     })
+
+@login_required
+@csrf_exempt
+def update_album_status(request):
+    if request.method == "POST":
+        album_id = request.POST.get("album_id")
+        action = request.POST.get("action")
+        album = get_object_or_404(Album, id=album_id)
+
+        if action == "add_to_collection":
+            UserAlbumCollection.objects.get_or_create(user=request.user, album=album)
+        elif action == "remove_from_collection":
+            UserAlbumCollection.objects.filter(user=request.user, album=album).delete()
+        elif action == "add_to_wishlist":
+            UserAlbumWishlist.objects.get_or_create(user=request.user, album=album)
+        elif action == "remove_from_wishlist":
+            UserAlbumWishlist.objects.filter(user=request.user, album=album).delete()
+        elif action == "add_to_blacklist":
+            UserAlbumBlacklist.objects.get_or_create(user=request.user, album=album)
+        elif action == "remove_from_blacklist":
+            UserAlbumBlacklist.objects.filter(user=request.user, album=album).delete()
+
+        # Fetch updated progress
+        progress = UserArtistProgress.objects.get(user=request.user, artist=album.artist)
+
+        return JsonResponse({
+            "collection_count": progress.collection_count,
+            "wishlist_count": progress.wishlist_count,
+            "collection_and_wishlist_count": progress.collection_and_wishlist_count,
+            "blacklist_count": progress.blacklist_count,
+        })
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

@@ -355,6 +355,63 @@ textarea {
     opacity: 0.5;  /* Dim the button */
 }
 
+/* Counter */
+.album-counters {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.counter-item {
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--neutral90);
+}
+
+.progress {
+    height: 100%;
+    width: 0%;  /* Set to 0 by default and updated dynamically via JS */
+    transition: width 0.3s ease; /* Smooth transition for width change */
+}
+
+#collection-progress {
+    background-color: var(--accent100);
+}
+
+#collection-and-wishlist-progress {
+    background-color: var(--accentVariantA100);
+}
+
+#wishlist-progress {
+    background-color: var(--accentVariantB100);
+}
+
+#blacklist-progress {
+    background-color: var(--neutral70);
+}
+
+
+.counter {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 /* Forms */
 form {
     width: 100%;

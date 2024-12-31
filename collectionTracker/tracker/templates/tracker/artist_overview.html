@@ -26,7 +26,26 @@
             {% endif %}
 
             <p>Popularity: {{ artist_info.popularity }}</p>
-            <p>Total Albums: {{ artist_info.total_albums }}</p>
+            <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
+
+            <!-- Add counters for Collection, Wishlist, and Blacklist -->
+            <div class="album-counters">
+                <div class="counter-item">
+                    Albums in Collection, Wishlist, and Blacklist:
+                    <div class="progress-bar">
+                        <div id="collection-progress" class="progress"></div>
+                        <div id="collection-and-wishlist-progress" class="progress"></div>
+                        <div id="wishlist-progress" class="progress"></div>
+                        <div id="blacklist-progress" class="progress"></div>
+                    </div>
+                    <span id="progress-counter" class="counter">
+                        <span id="collection-counter">{{ collection_count }}</span> (Collection) / 
+                        <span id="collection-and-wishlist-counter">0</span> (Collection & Wishlist) / 
+                        <span id="wishlist-counter">{{ wishlist_count }}</span> (Wishlist) / 
+                        <span id="blacklist-counter">{{ blacklist_count }}</span> (Blacklist) / {{ artist_info.total_albums }} Total
+                    </span>
+                </div>
+            </div>                     
 
         </div>
 
@@ -67,7 +86,8 @@
                     data-artist-name="{{ artist_name }}"
                     data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
                     data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
-                    data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}">
+                    data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
+                    data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
                     <div class="album-controls">
                         <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
                         <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">

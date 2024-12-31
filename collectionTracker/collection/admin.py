@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
@@ -38,3 +38,14 @@ class UserAlbumWishlistAdmin(admin.ModelAdmin):
 class UserAlbumBlacklistAdmin(admin.ModelAdmin):
     list_display = ('user', 'album', 'added_on')
     list_filter = ('added_on',)  # Filter by the date the album was added
+
+# Register the UserArtistProgress model with custom configuration
+@admin.register(UserArtistProgress)
+class UserArtistProgressAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'artist', 'total_albums', 'collection_count', 'wishlist_count', 
+        'blacklist_count', 'collection_and_wishlist_count'
+    )  # Display relevant fields
+    search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
+    list_filter = ('user', 'artist')  # Filter by user and artist
+    readonly_fields = ('collection', 'wishlist', 'blacklist', 'collection_and_wishlist')  # Make the collection fields readonly 
