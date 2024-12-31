@@ -13,11 +13,7 @@
 
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
-        {% if user_collection %}
-        <p>You have added {{ user_collection.count }} album(s) to your collection.</p>
-        {% else %}
-        <p>Your collection is empty.</p>
-        {% endif %}
+        <p>You have {{ user_collection.count }} album(s) in your collection.</p>
     </div>
 
     <div class="sorting-controls">
@@ -49,8 +45,10 @@
             data-release-date="{{ collection_entry.album.release_date }}" 
             data-album-id="{{ collection_entry.album.id }}"
             data-in-collection="{% if collection_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
+            data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
+            data-in-blacklist="{% if collection_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
             <div class="album-controls">
+                <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status" data-action="add_to_blacklist">
                 <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status" data-action="add_to_wishlist">
                 <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">
             </div>
@@ -73,8 +71,7 @@
 
 {% endblock %}
 {% block js %}
-<script src="{% static 'js/manageCollection.js' %}"></script>
-<script src="{% static 'js/manageWishlist.js' %}"></script>
+<script src="{% static 'js/manageAlbumState.js' %}"></script>
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
 {% endblock %}

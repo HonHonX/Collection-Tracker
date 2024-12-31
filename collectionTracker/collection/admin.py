@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
@@ -32,3 +32,35 @@ class UserAlbumDescriptionAdmin(admin.ModelAdmin):
 class UserAlbumWishlistAdmin(admin.ModelAdmin):
     list_display = ('user', 'album', 'added_on')
     list_filter = ('added_on',)  # Filter by the date the album was added
+
+# Register the UserAlbumBlacklist model with custom configuration
+@admin.register(UserAlbumBlacklist)
+class UserAlbumBlacklistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'album', 'added_on')
+    list_filter = ('added_on',)  # Filter by the date the album was added
+
+# Register the UserArtistProgress model with custom configuration
+@admin.register(UserArtistProgress)
+class UserArtistProgressAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'artist', 'total_albums', 'collection_count', 'wishlist_count', 
+        'blacklist_count', 'collection_and_wishlist_count'
+    )  # Display relevant fields
+    search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
+    list_filter = ('user', 'artist')  # Filter by user and artist
+    readonly_fields = ('collection', 'wishlist', 'blacklist', 'collection_and_wishlist')  # Make the collection fields readonly 
+
+# Register the UserProgress model with custom configuration
+@admin.register(UserProgress)
+class UserProgressAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'total_artists', 'total_albums', 'total_collection_count', 
+        'total_wishlist_count', 'total_blacklist_count', 
+        'total_collection_and_wishlist_count'
+    )  # Display the user's overall progress
+    search_fields = ('user__username',)  # Allow searching by username
+    readonly_fields = (
+        'total_artists', 'total_albums', 'total_collection_count', 
+        'total_wishlist_count', 'total_blacklist_count', 
+        'total_collection_and_wishlist_count'
+    )  # Make the aggregated fields readonly

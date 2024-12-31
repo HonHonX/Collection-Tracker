@@ -26,7 +26,43 @@
             {% endif %}
 
             <p>Popularity: {{ artist_info.popularity }}</p>
-            <p>Total Albums: {{ artist_info.total_albums }}</p>
+            <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
+
+            <!-- Add counters for Collection, Wishlist, and Blacklist -->
+            <div class="album-counters">
+                <h2>{{ artist_name }} collection progress</h2>
+                <div class="counter-item">
+                    <div id="progress-bar">
+                        <div id="collection-progress" class="progress"></div>
+                        <div id="collection-and-wishlist-progress" class="progress"></div>
+                        <div id="wishlist-progress" class="progress"></div>
+                        <div id="blacklist-progress" class="progress"></div>
+                    </div>
+                    <span id="collection-percentage"></span>
+                </div>
+                <div id="progress-counter">
+                    <div class="progress-item">
+                        <div id="legend-collection" class="legend"></div>
+                        <span id="collection-counter" class="counter">{{ collection_count }}</br></span> 
+                        <span>Collection</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-collection-and-wishlist" class="legend"></div>
+                        <span id="collection-and-wishlist-counter" class="counter">{{ collection_and_wishlist_count }}</br></span> 
+                        <span>Collection & Wishlist</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-wishlist" class="legend"></div>
+                        <span id="wishlist-counter" class="counter">{{ wishlist_count }}</br></span> 
+                        <span>Wishlist</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-blacklist" class="legend"></div>
+                        <span id="blacklist-counter" class="counter">{{ blacklist_count }}</br></span> 
+                        <span>Blacklist</span>
+                    </div>
+                </div>
+            </div>                                         
 
         </div>
 
@@ -66,9 +102,12 @@
                     data-image-url="{{ album.image_url }}"
                     data-artist-name="{{ artist_name }}"
                     data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
-                    data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
+                    data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
+                    data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
+                    data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
                     <div class="album-controls">
-                        <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status" data-action="add_to_wishlist">
+                        <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
+                        <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
                         <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Add/Remove">
                     </div>
 
@@ -88,8 +127,7 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/manageCollection.js' %}"></script>
-    <script src="{% static 'js/manageWishlist.js' %}"></script>
+    <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
 {% endblock %}

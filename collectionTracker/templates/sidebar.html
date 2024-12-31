@@ -28,12 +28,16 @@
             </form>    
         </div>
 
-        <div class="sidebar-item" id="collection-button" data-collection-url="{% url 'album_overview' %}">
+        <div class="sidebar-item" id="collection-button" data-collection-url="{% url 'collection_overview' %}">
             <img class="icon" src="{% static 'icons/collection.svg' %}">Collection
         </div>
 
         <div class="sidebar-item" id="wishlist-button" data-wishlist-url="{% url 'wishlist_overview' %}">
             <img class="icon" src="{% static 'icons/wishlist.svg' %}">Wishlist
+        </div>
+
+        <div class="sidebar-item" id="blacklist-button" data-blacklist-url="{% url 'blacklist_overview' %}">
+            <img class="icon" src="{% static 'icons/blacklist.svg' %}">Blacklist
         </div>
 
         <div class="sidebar-item" id="settings-button">

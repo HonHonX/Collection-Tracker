@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    {{ user.first_name }}'s Wishlist
+    {{ user.first_name }}'s Blacklist
 {% endblock %}
 
 {% block site_specific_css %}
@@ -13,8 +13,8 @@
 {% block maincontent %}
 
     <div class="collection-header">
-        <h1>{{ user.first_name }}'s Wishlist</h1>
-        <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
+        <h1>{{ user.first_name }}'s Blacklist</h1>
+        <p>You have {{ user_blacklist.count }} album(s) in your blacklist.</p>
     </div>
 
     <div class="sorting-controls">
@@ -39,31 +39,31 @@
     </div>
 
     <div class="album-grid">
-        {% for wishlist_entry in user_wishlist %}
+        {% for blacklist_entry in user_blacklist %}
         <div class="album-item" 
-            data-artist-name="{{ wishlist_entry.album.artist.name }}"
-            data-album-type="{{ wishlist_entry.album.album_type }}" 
-            data-release-date="{{ wishlist_entry.album.release_date }}" 
-            data-album-id="{{ wishlist_entry.album.id }}"
-            data-in-collection="{% if wishlist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if wishlist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
-            data-in-blacklist="{% if wishlist_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
+            data-artist-name="{{ blacklist_entry.album.artist.name }}"
+            data-album-type="{{ blacklist_entry.album.album_type }}" 
+            data-release-date="{{ blacklist_entry.album.release_date }}" 
+            data-album-id="{{ blacklist_entry.album.id }}"
+            data-in-collection="{% if blacklist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
+            data-in-wishlist="{% if blacklist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
+            data-in-blacklist="{% if blacklist_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
             <div class="album-controls">
                 <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
                 <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
                 <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">
             </div>
     
-            <a href="{% url 'album_detail' wishlist_entry.album.id %}">
-                {% if wishlist_entry.album.image_url %}
-                    <img src="{{ wishlist_entry.album.image_url }}" alt="Album cover" class="album-cover">
+            <a href="{% url 'album_detail' blacklist_entry.album.id %}">
+                {% if blacklist_entry.album.image_url %}
+                    <img src="{{ blacklist_entry.album.image_url }}" alt="Album cover" class="album-cover">
                 {% endif %}
     
                 <div class="album-info">
-                    <strong>{{ wishlist_entry.album.name }}</strong><br>
-                    <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
-                    <em>Release Date: {{ wishlist_entry.album.release_date }}</em><br>
-                    <em>Type: {{ wishlist_entry.album.album_type }}</em>
+                    <strong>{{ blacklist_entry.album.name }}</strong><br>
+                    <em>Artist: {{ blacklist_entry.album.artist.name }}</em><br>
+                    <em>Release Date: {{ blacklist_entry.album.release_date }}</em><br>
+                    <em>Type: {{ blacklist_entry.album.album_type }}</em>
                 </div>
             </a>
         </div>
