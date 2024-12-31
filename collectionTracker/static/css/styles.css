@@ -83,6 +83,17 @@ textarea {
     font-family: var(--defaultFont);
 }
 
+select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
+    border: none;
+    border-radius: var(--borderRadius);
+    box-shadow: var(--boxShadow); /* Matches existing styles */
+    transition: var(--transitionStyle);
+}
+
 /* Layout */
 .page {
     display: flex; 
@@ -547,17 +558,6 @@ form input.error, form textarea.error {
 .sorting-controls label {
     font-size: 1rem;
     color: var(--neutral0);
-}
-
-.sorting-controls select {
-    padding: 0.5rem;
-    font-size: 1rem;
-    background-color: var(--neutral70);
-    color: var(--neutral0);
-    border: none;
-    border-radius: var(--borderRadius);
-    box-shadow: var(--boxShadow); /* Matches existing styles */
-    transition: var(--transitionStyle);
 }
 
 .sorting-controls select:hover {
