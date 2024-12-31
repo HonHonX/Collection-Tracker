@@ -129,32 +129,32 @@ def update_user_progress(sender, instance, **kwargs):
             progress.total_albums = artist_albums.count()
 
             # Albums in the user's collection
-            progress.collection = list(
+            collection_set = set(
                 UserAlbumCollection.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
 
             # Albums in the user's wishlist
-            progress.wishlist = list(
+            wishlist_set = set(
                 UserAlbumWishlist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
 
-            # Albums in the user's blacklist
+            # Update progress fields
+            progress.collection = list(collection_set)
+            progress.wishlist = list(wishlist_set)
             progress.blacklist = list(
                 UserAlbumBlacklist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
-
-            # Albums in both collection and wishlist
             progress.collection_and_wishlist = list(collection_set.intersection(wishlist_set))
 
             # Update the counts
             progress.collection_and_wishlist_count = len(progress.collection_and_wishlist)
             progress.collection_count_total = len(progress.collection)
-            progress.collection_count = (progress.collection_count_total-progress.collection_and_wishlist_count)
+            progress.collection_count = progress.collection_count_total - progress.collection_and_wishlist_count
             progress.wishlist_count_total = len(progress.wishlist)
-            progress.wishlist_count = (progress.wishlist_count_total-progress.collection_and_wishlist_count)
+            progress.wishlist_count = progress.wishlist_count_total - progress.collection_and_wishlist_count
             progress.blacklist_count = len(progress.blacklist)
 
             progress.save()
