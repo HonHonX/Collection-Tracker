@@ -30,22 +30,39 @@
 
             <!-- Add counters for Collection, Wishlist, and Blacklist -->
             <div class="album-counters">
+                <h2>{{ artist_name }} collection progress</h2>
                 <div class="counter-item">
-                    Albums in Collection, Wishlist, and Blacklist:
-                    <div class="progress-bar">
+                    <div id="progress-bar">
                         <div id="collection-progress" class="progress"></div>
                         <div id="collection-and-wishlist-progress" class="progress"></div>
                         <div id="wishlist-progress" class="progress"></div>
                         <div id="blacklist-progress" class="progress"></div>
                     </div>
-                    <span id="progress-counter" class="counter">
-                        <span id="collection-counter">{{ collection_count }}</span> (Collection) / 
-                        <span id="collection-and-wishlist-counter">0</span> (Collection & Wishlist) / 
-                        <span id="wishlist-counter">{{ wishlist_count }}</span> (Wishlist) / 
-                        <span id="blacklist-counter">{{ blacklist_count }}</span> (Blacklist) / {{ artist_info.total_albums }} Total
-                    </span>
+                    <span id="collection-percentage"></span>
                 </div>
-            </div>                     
+                <div id="progress-counter">
+                    <div class="progress-item">
+                        <div id="legend-collection" class="legend"></div>
+                        <span id="collection-counter" class="counter">{{ collection_count }}</br></span> 
+                        <span>Collection</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-collection-and-wishlist" class="legend"></div>
+                        <span id="collection-and-wishlist-counter" class="counter">{{ collection_and_wishlist_count }}</br></span> 
+                        <span>Collection & Wishlist</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-wishlist" class="legend"></div>
+                        <span id="wishlist-counter" class="counter">{{ wishlist_count }}</br></span> 
+                        <span>Wishlist</span> 
+                    </div>
+                    <div class="progress-item">
+                        <div id="legend-blacklist" class="legend"></div>
+                        <span id="blacklist-counter" class="counter">{{ blacklist_count }}</br></span> 
+                        <span>Blacklist</span>
+                    </div>
+                </div>
+            </div>                                         
 
         </div>
 

@@ -8,7 +8,7 @@ import os
 import subprocess
 import logging
 from django.contrib.auth.decorators import login_required
-from collection.models import UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist
+from collection.models import UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserProgress, UserArtistProgress
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -138,35 +138,33 @@ def artist_search(request):
         'error': error,
     })
 
-@login_required
-@csrf_exempt
-def update_album_status(request):
-    if request.method == "POST":
-        album_id = request.POST.get("album_id")
-        action = request.POST.get("action")
-        album = get_object_or_404(Album, id=album_id)
-
-        if action == "add_to_collection":
-            UserAlbumCollection.objects.get_or_create(user=request.user, album=album)
-        elif action == "remove_from_collection":
-            UserAlbumCollection.objects.filter(user=request.user, album=album).delete()
-        elif action == "add_to_wishlist":
-            UserAlbumWishlist.objects.get_or_create(user=request.user, album=album)
-        elif action == "remove_from_wishlist":
-            UserAlbumWishlist.objects.filter(user=request.user, album=album).delete()
-        elif action == "add_to_blacklist":
-            UserAlbumBlacklist.objects.get_or_create(user=request.user, album=album)
-        elif action == "remove_from_blacklist":
-            UserAlbumBlacklist.objects.filter(user=request.user, album=album).delete()
-
-        # Fetch updated progress
-        progress = UserArtistProgress.objects.get(user=request.user, artist=album.artist)
-
+def get_user_progress(request):
+    user = request.user
+    try:
+        # Get the user's overall progress
+        user_progress = UserProgress.objects.get(user=user)
+        # Get the album states (collection, wishlist, blacklist)
+        album_states = {
+            album.album.id: {
+                'inCollection': album.album.id in user_progress.collection,
+                'inWishlist': album.album.id in user_progress.wishlist,
+                'inBlacklist': album.album.id in user_progress.blacklist
+            }
+            for album in Album.objects.all()  # Adjust as per your requirements
+        }
+        
+        # Return the user progress data
         return JsonResponse({
-            "collection_count": progress.collection_count,
-            "wishlist_count": progress.wishlist_count,
-            "collection_and_wishlist_count": progress.collection_and_wishlist_count,
-            "blacklist_count": progress.blacklist_count,
+            'success': True,
+            'progress': {
+                'totalAlbums': user_progress.total_albums,
+                'total_collection_count': user_progress.total_collection_count,
+                'total_collection_and_wishlist_count': user_progress.total_collection_and_wishlist_count,
+                'total_wishlist_count': user_progress.total_wishlist_count,
+                'total_blacklist_count': user_progress.total_blacklist_count
+            },
+            'albumStates': album_states
         })
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    except UserProgress.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Progress data not found.'})

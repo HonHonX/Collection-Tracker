@@ -25,18 +25,7 @@ class Album(models.Model):
 
     def __str__(self):
         return self.name
-
-class UserAlbumCollection(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    added_on = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'album')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.album.name}"
-
+    
 class UserAlbumDescription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
@@ -49,6 +38,17 @@ class UserAlbumDescription(models.Model):
         # Strip whitespace before saving
         self.description = self.description.strip()
         super().save(*args, **kwargs)
+
+class UserAlbumCollection(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'album')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.album.name}"
 
 class UserAlbumWishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,7 +75,7 @@ class UserAlbumBlacklist(models.Model):
 class UserArtistProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    total_albums = models.IntegerField(default=0)  # Total albums of the artist
+    total_albums = models.IntegerField(default=0)  # Total albums of the selected artist
     collection = JSONField(default=list)  # Albums only in the user's collection
     wishlist = JSONField(default=list)  # Albums only in the user's wishlist
     blacklist = JSONField(default=list)  # Albums in the user's blacklist
@@ -91,15 +91,26 @@ class UserArtistProgress(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.artist.name} Progress"
 
+class UserProgress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_artists = models.IntegerField(default=0)  # Number of artists the user has interacted with
+    total_albums = models.IntegerField(default=0)  # Total number of albums the user has in collection, wishlist, blacklist
+    total_collection_count = models.IntegerField(default=0)  # Total albums in collection
+    total_wishlist_count = models.IntegerField(default=0)  # Total albums in wishlist
+    total_blacklist_count = models.IntegerField(default=0)  # Total albums in blacklist
+    total_collection_and_wishlist_count = models.IntegerField(default=0)  # Total albums in both collection and wishlist
 
-# Signals to update UserArtistProgress when collection/wishlist/blacklist changes
+    def __str__(self):
+        return f"{self.user.username}'s Progress"
+    
 
+# Signals to update UserArtistProgress/UserProgress when collection/wishlist/blacklist changes
 @receiver([post_save, post_delete], sender=UserAlbumCollection)
 @receiver([post_save, post_delete], sender=UserAlbumWishlist)
 @receiver([post_save, post_delete], sender=UserAlbumBlacklist)
-def update_user_artist_progress(sender, instance, **kwargs):
+def update_user_progress(sender, instance, **kwargs):
     """
-    Update the UserArtistProgress model whenever the UserAlbumCollection,
+    Update the UserArtistProgress and UserProgress models whenever the UserAlbumCollection,
     UserAlbumWishlist, or UserAlbumBlacklist model changes.
     """
     user = instance.user
@@ -117,41 +128,61 @@ def update_user_artist_progress(sender, instance, **kwargs):
             # Calculate the total albums
             progress.total_albums = artist_albums.count()
 
-            # Albums in the user's collection (convert to list)
+            # Albums in the user's collection
             progress.collection = list(
                 UserAlbumCollection.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
 
-            # Albums in the user's wishlist (convert to list)
+            # Albums in the user's wishlist
             progress.wishlist = list(
                 UserAlbumWishlist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
 
-            # Albums in the user's blacklist (convert to list)
+            # Albums in the user's blacklist
             progress.blacklist = list(
                 UserAlbumBlacklist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
 
-            # Convert lists to sets before performing intersection
-            collection_set = set(progress.collection)
-            wishlist_set = set(progress.wishlist)
-
-            # Albums in both collection and wishlist (convert to list)
+            # Albums in both collection and wishlist
             progress.collection_and_wishlist = list(collection_set.intersection(wishlist_set))
 
             # Update the counts
             progress.collection_and_wishlist_count = len(progress.collection_and_wishlist)
-            progress.collection_count = len(collection_set - wishlist_set)  # Only in collection
-            progress.wishlist_count = len(wishlist_set - collection_set)  # Only in wishlist
+            progress.collection_count_total = len(progress.collection)
+            progress.collection_count = (progress.collection_count_total-progress.collection_and_wishlist_count)
+            progress.wishlist_count_total = len(progress.wishlist)
+            progress.wishlist_count = (progress.wishlist_count_total-progress.collection_and_wishlist_count)
             progress.blacklist_count = len(progress.blacklist)
 
-            # Save the progress
             progress.save()
 
+            # Update UserProgress for the user
+            user_progress, created = UserProgress.objects.get_or_create(user=user)
+
+            user_progress.total_artists = Artist.objects.filter(userartistprogress__user=user).distinct().count()
+            user_progress.total_collection_count = UserAlbumCollection.objects.filter(user=user).count()
+            user_progress.total_wishlist_count = UserAlbumWishlist.objects.filter(user=user).count()
+            user_progress.total_blacklist_count = UserAlbumBlacklist.objects.filter(user=user).count()
+
+            # Fetch albums in both collection and wishlist for the user
+            collection_albums = UserAlbumCollection.objects.filter(user=user).values_list('album_id', flat=True)
+            wishlist_albums = UserAlbumWishlist.objects.filter(user=user).values_list('album_id', flat=True)
+
+            # Calculate the intersection of albums in both collection and wishlist
+            user_progress.total_collection_and_wishlist_count = len(set(collection_albums).intersection(wishlist_albums))
+
+            # Calculate the total number of albums the user has in their collection, wishlist, and blacklist combined
+            user_progress.total_albums = (
+                user_progress.total_collection_count + 
+                user_progress.total_wishlist_count 
+            )
+
+            user_progress.save()
+
     except Exception as e:
-        # Optionally log the error or handle it in some way
-        print(f"Error updating user artist progress: {e}")
+        # Handle error and log it
+        print(f"Error updating user progress: {e}")
 
