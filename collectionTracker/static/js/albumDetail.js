@@ -4,66 +4,118 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("edit-description-form");
     const descriptionInput = document.getElementById("description");
     const saveButton = document.getElementById("save-button");
+    const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
     if (form && descriptionInput && saveButton) {
-        // Initially disable the Save button
-        saveButton.disabled = true;
-
-        // Keep track of the original description value
+        saveButton.disabled = true; // Initially disable the Save button
         let originalDescription = descriptionInput.value.trim();
 
-        // Enable/disable the Save button based on changes
         descriptionInput.addEventListener("input", function () {
             const currentDescription = descriptionInput.value.trim();
-            if (currentDescription !== originalDescription) {
-                saveButton.disabled = false;
-            } else {
-                saveButton.disabled = true;
-            }
+            // Enable the Save button if the description changes (even if it's empty)
+            saveButton.disabled = currentDescription === originalDescription;
         });
 
-        // Handle form submission
         form.addEventListener("submit", function (e) {
             e.preventDefault();
+            let description = descriptionInput.value.trim();
 
-            // Trim the input value before submitting
-            const description = descriptionInput.value.trim();
-
+            // Save the description even if it's empty
             if (description === originalDescription) {
                 console.log("No changes made to the description.");
-                return; // No changes, so do not submit the form
+                return;
             }
 
-            // Make the POST request to update the description
-            fetch(form.action, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
-                },
-                body: `description=${encodeURIComponent(description)}`,
-            })
-            .then((response) => response.json()) // Always expect JSON
-            .then((data) => {
-                // Log the server response for debugging
-                console.log("Server response:", data);
-
-                if (data.success) {
-                    alert("Note saved successfully!");
-                    originalDescription = description;  // Update the original description after success
-                    saveButton.disabled = true;  // Disable the save button after successful save
-                } else {
-                    console.log("Error details:", data.error); // Log error details if any
-                    alert(`Error saving the note: ${data.error || "Please try again."}`);
-                }
-            })
-            .catch((error) => {
-                // Log the error details if any occur during the fetch
-                console.error("There was an error saving the note:", error);
-                alert("Error saving the note. Please try again.");
-            });
+            updateServer(form.action, { description: description })
+                .then((data) => {
+                    if (data.success) {
+                        alert("Note saved successfully!");
+                        originalDescription = description;  // Update the original description to reflect the saved value
+                        saveButton.disabled = true; // Disable the save button again
+                    } else {
+                        alert(`Error saving the note: ${data.error || "Please try again."}`);
+                    }
+                })
+                .catch((error) => {
+                    console.error("There was an error saving the note:", error);
+                    alert("Error saving the note. Please try again.");
+                });
         });
     } else {
         console.warn("Required elements (form, descriptionInput, saveButton) not found.");
+    }
+
+    const priorityForm = document.getElementById("priority-form");
+    const prioritySelect = document.getElementById("priority");
+
+    if (priorityForm && prioritySelect) {
+        priorityForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const selectedPriority = prioritySelect.value;
+
+            updateServer(priorityForm.action, { priority: selectedPriority })
+                .then((data) => {
+                    if (data.success) {
+                        alert("Priority updated successfully!");
+                        // Display the priority's human-readable name
+                        const priorityLabel = document.getElementById("priority-label");
+                        if (priorityLabel) {
+                            priorityLabel.textContent = `Priority: ${data.priority_display}`;
+                        }
+                    } else {
+                        alert(`Error updating priority: ${data.error || "Please try again."}`);
+                    }
+                })
+                .catch((error) => {
+                    console.error("There was an error updating the priority:", error);
+                    alert("Error updating priority. Please try again.");
+                });
+        });
+    } else {
+        console.warn("Required elements (priorityForm, prioritySelect) not found.");
+    }
+
+     // Handle substatus update form
+     const substatusForm = document.getElementById("substatus-form");
+     const substatusSelect = document.getElementById("substatus");
+ 
+    if (substatusForm && substatusSelect) {
+        substatusForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const selectedSubstatus = substatusSelect.value;
+            console.log(selectedSubstatus);
+
+            updateServer(substatusForm.action, { substatus: selectedSubstatus })
+                .then((data) => {
+                    if (data.success) {
+                        alert("Substatus updated successfully!");
+                        console.log(selectedSubstatus)
+                        const substatusLabel = document.getElementById("substatus-label");
+                        if (substatusLabel) {
+                            substatusLabel.textContent = `Substatus: ${data.substatus_display}`;
+                        }
+                    } else {
+                        alert(`Error updating substatus: ${data.error || "Please try again."}`);
+                    }
+                })
+                .catch((error) => {
+                    console.error("There was an error updating the substatus:", error);
+                    alert("Error updating substatus. Please try again.");
+                });
+        });
+    } else {
+        console.warn("Required elements (substatusForm, substatusSelect) not found.");
+    }
+     
+    function updateServer(url, params) {
+        const body = new URLSearchParams(params).toString();
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": csrfToken,
+            },
+            body: body,
+        }).then((response) => response.json());
     }
 });

@@ -29,37 +29,57 @@ class Album(models.Model):
 class UserAlbumDescription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    description = models.TextField(
-        blank=True,
-        validators=[MinLengthValidator(1)]  # Optional: enforce minimum length
-    )
+    description = models.TextField(blank=True, null=True)  # Allow null values
 
     def save(self, *args, **kwargs):
         # Strip whitespace before saving
-        self.description = self.description.strip()
+        self.description = self.description.strip() if self.description else None
+        
         super().save(*args, **kwargs)
 
 class UserAlbumCollection(models.Model):
+    SUBSTATUS = [
+        ('delivered', 'Delivered'),
+        ('preordered', 'Preordered'),
+        ('ordered', 'Ordered'),
+        ('unspecified', 'Unspecified'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
+    substatus = models.CharField(
+        max_length=25,
+        choices=SUBSTATUS, 
+        default='unspecified',
+    )
 
     class Meta:
         unique_together = ('user', 'album')
 
     def __str__(self):
-        return f"{self.user.username} - {self.album.name}"
+        return f"{self.user.username} - {self.album.name} (Substatus: {self.get_substatus_display()})"
 
 class UserAlbumWishlist(models.Model):
+    PRIORITY_CHOICES = [
+        (1, 'Low'),
+        (2, 'Medium'),
+        (3, 'High'),
+        (0, 'Unspecified'),
+    ]
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
+    priority = models.IntegerField(
+        choices=PRIORITY_CHOICES, 
+        default=0,
+    )
 
     class Meta:
         unique_together = ('user', 'album')
 
     def __str__(self):
-        return f"{self.user.username} - Wishlist: {self.album.name}"
+        return f"{self.user.username} - Wishlist: {self.album.name} (Priority: {self.get_priority_display()})"
     
 class UserAlbumBlacklist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

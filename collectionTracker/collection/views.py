@@ -162,36 +162,100 @@ def blacklist_overview(request):
 # Album Detail View
 class AlbumDetail(View):
     def get(self, request, album_id):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'User not authenticated'}, status=401)
+        
         album = get_object_or_404(Album, id=album_id)
-        in_collection = UserAlbumCollection.objects.filter(user=request.user, album=album).exists()
-        in_wishlist = UserAlbumWishlist.objects.filter(user=request.user, album=album).exists()
-
-        user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first() if request.user.is_authenticated else None
+        collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
+        wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
+        user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
 
         context = {
             'album': album,
             'artist': album.artist,
-            'in_collection': in_collection,
-            'in_wishlist': in_wishlist,
+            'collection_entry': collection_entry,
+            'wishlist_entry': wishlist_entry,
+            'in_collection': bool(collection_entry),
+            'in_wishlist': bool(wishlist_entry),
             'user_description': user_description,
+            'priority_display': wishlist_entry.get_priority_display() if wishlist_entry else None,
+            'substatus_display': collection_entry.get_substatus_display() if collection_entry else None,
         }
 
         return render(request, 'collection/album_detail.html', context)
 
     def post(self, request, album_id):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'error': 'User not authenticated'}, status=401)
+        
         album = get_object_or_404(Album, id=album_id)
 
-        description = request.POST.get('description', '').strip()
-        if not description:
-            return JsonResponse({'success': False, 'error': 'Description cannot be empty'}, status=400)
+        # Handle description update
+        if 'description' in request.POST:
+            description = request.POST.get('description', '').strip()
+            user_description, created = UserAlbumDescription.objects.get_or_create(user=request.user, album=album)
+            user_description.description = description or None
+            user_description.save()
+            return JsonResponse({'success': True, 'message': 'Description updated successfully'}, status=200)
 
-        user_description, created = UserAlbumDescription.objects.get_or_create(user=request.user, album=album)
-        user_description.description = description
-        user_description.save()
+        if 'priority' in request.POST:
+            priority = request.POST.get('priority', '').strip()
 
-        return JsonResponse({'success': True, 'message': 'Description updated successfully'}, status=200)
+            # Convert the string input to an integer
+            try:
+                priority = int(priority)
+            except ValueError:
+                return JsonResponse({'success': False, 'error': 'Priority must be a valid integer'}, status=400)
 
-# Save Description
+            # Ensure the priority is valid
+            valid_priorities = [choice[0] for choice in UserAlbumWishlist.PRIORITY_CHOICES]
+            if priority not in valid_priorities:
+                return JsonResponse({'success': False, 'error': f'Invalid priority value: {priority}'}, status=400)
+
+            # Retrieve the wishlist entry
+            wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
+            if not wishlist_entry:
+                return JsonResponse({'success': False, 'error': 'Album is not in your wishlist'}, status=400)
+
+            # Update and save
+            wishlist_entry.priority = priority
+            wishlist_entry.save()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Priority updated successfully',
+                'priority_display': wishlist_entry.get_priority_display()
+            }, status=200)
+
+
+        # Handle substatus update
+        if 'substatus' in request.POST:
+            substatus = request.POST.get('substatus', '')
+            collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
+            
+            valid_substatuses = [choice[0] for choice in UserAlbumCollection.SUBSTATUS]
+            if substatus not in valid_substatuses:
+                return JsonResponse({'success': False, 'error': 'Invalid substatus value'}, status=400)
+
+            # Retrieve the collection entry
+            collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
+            if not collection_entry:
+                return JsonResponse({'success': False, 'error': 'Album is not in your collection'}, status=400)
+
+            print(f"Substatus: {substatus}")
+            print(f"Collection entry: {collection_entry}")
+            collection_entry.substatus = substatus
+            print(f"Collection entry new: {collection_entry}")
+            collection_entry.save()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Substatus updated successfully',
+                'substatus_display': collection_entry.get_substatus_display()
+            }, status=200)
+
+        return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)    
+
 @login_required
 def save_description(request, album_id):
     if request.method == "POST":
@@ -204,7 +268,7 @@ def save_description(request, album_id):
                 album=album,
             )
 
-            user_description.description = description
+            user_description.description = description  # can be empty
             user_description.save()
 
             return JsonResponse({'success': True})
@@ -215,3 +279,4 @@ def save_description(request, album_id):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+

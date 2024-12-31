@@ -17,7 +17,7 @@ class AlbumAdmin(admin.ModelAdmin):
 # Register the UserAlbumCollection model with custom configuration
 @admin.register(UserAlbumCollection)
 class UserAlbumCollectionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on')
+    list_display = ('user', 'album', 'added_on', 'substatus')
     list_filter = ('added_on',)  # Filter by the date the album was added
 
 # Register the UserAlbumDescription model with custom configuration
@@ -30,7 +30,7 @@ class UserAlbumDescriptionAdmin(admin.ModelAdmin):
 # Register the UserAlbumWishlist model with custom configuration
 @admin.register(UserAlbumWishlist)
 class UserAlbumWishlistAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on')
+    list_display = ('user', 'album', 'added_on', 'priority')  # Display user, album, date added, and priority
     list_filter = ('added_on',)  # Filter by the date the album was added
 
 # Register the UserAlbumBlacklist model with custom configuration
