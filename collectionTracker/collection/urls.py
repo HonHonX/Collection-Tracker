@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from tracker.views import follow_artist  # Import the view
 
 urlpatterns = [
     # Overview routes
@@ -15,4 +16,7 @@ urlpatterns = [
 
     # Save description
     path("album/<str:album_id>/save_description/", views.save_description, name="save_description"),
+
+    # Follow artist
+    path('follow_artist/', follow_artist, name='follow_artist'),
 ]

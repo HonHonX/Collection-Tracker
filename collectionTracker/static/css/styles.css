@@ -60,7 +60,8 @@ a:visited {
 /* Headlines */
 h1, h2 {
     text-align: left;
-    font-family: 'Bauhaus93', sans-serif;
+    /* font-family: 'Bauhaus93', sans-serif; */
+    font-family: var(--defaultFont);
     color: var(--accent100);
     width:100%;
 }
@@ -190,6 +191,13 @@ select {
     object-fit: cover;
     aspect-ratio: 1 / 1; 
     margin: 2rem 0 2rem 0;
+}
+
+#artist-name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sticky-top {

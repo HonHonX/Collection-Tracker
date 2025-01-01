@@ -20,7 +20,13 @@
                 <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
             {% endif %}
 
-            <h1>{{ artist_name }}</h1>
+            <div id="artist-name">
+                <h1>{{ artist_name }}</h1>
+                <button id="follow-button" class="button" data-artist-id="{{ artist_info.id }}">
+                    {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                </button>
+            </div>
+            
             {% if artist_info.genres %}
                 <p>Genres: {{ artist_info.genres|join:", " }}</p>
             {% endif %}
@@ -100,7 +106,11 @@
                     data-album-name="{{ album.name }}"
                     data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
                     data-image-url="{{ album.image_url }}"
+                    data-artist-id="{{ artist_info.id }}"
                     data-artist-name="{{ artist_name }}"
+                    data-artist-photo-url="{{ artist_photo_url }}"
+                    data-artist-genres="{{ artist_info.genres }}"
+                    data-artist-popularity="{{ artist_info.popularity }}"
                     data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
                     data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
                     data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
@@ -130,4 +140,5 @@
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
+    <script src="{% static 'js/followArtist.js' %}" ></script>>
 {% endblock %}
