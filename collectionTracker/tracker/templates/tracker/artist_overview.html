@@ -20,17 +20,19 @@
                 <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
             {% endif %}
 
-            <h1>{{ artist_name }}</h1>
+            <div id="artist-name">
+                <h1>{{ artist_name }}</h1>
+                <button id="follow-button" class="button" data-artist-id="{{ artist_info.id }}">
+                    {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                </button>
+            </div>
+            
             {% if artist_info.genres %}
                 <p>Genres: {{ artist_info.genres|join:", " }}</p>
             {% endif %}
 
             <p>Popularity: {{ artist_info.popularity }}</p>
             <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
-
-            <button id="follow-button" class="button" data-artist-id="{{ artist_info.id }}">
-                {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
-            </button>
 
             <!-- Add counters for Collection, Wishlist, and Blacklist -->
             <div class="album-counters">
@@ -138,25 +140,5 @@
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
-    <script>
-        document.getElementById('follow-button').addEventListener('click', function() {
-            const artistId = this.getAttribute('data-artist-id');
-            fetch("{% url 'follow_artist' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ artist_id: artistId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.textContent = this.textContent === 'Follow' ? 'Unfollow' : 'Follow';
-                } else {
-                    alert(data.error);
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/followArtist.js' %}" ></script>>
 {% endblock %}

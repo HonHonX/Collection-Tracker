@@ -34,6 +34,7 @@ def artist_search(request):
     user_album_ids = []  # Initialize the variable for user album IDs
     user_wishlist_ids = []  # Initialize the variable for user wishlist IDs
     user_blacklist_ids = []  # Initialize the variable for user blacklist IDs
+    user_followed_artist_ids = []  # Initialize the variable for user followed artist IDs
 
     if request.method == 'POST':
         artist_name = request.POST.get('artist_name')
@@ -108,6 +109,12 @@ def artist_search(request):
                         .values_list('album__id', flat=True)
                     )
 
+                    # Get followed artists
+                    user_followed_artist_ids = list(
+                        UserFollowedArtists.objects.filter(user=request.user)
+                        .values_list('artist__id', flat=True)
+                    )
+
                     # Calculate counts for collection, wishlist, and blacklist
                     collection_count = sum(1 for album in sorted_albums if album['id'] in user_album_ids)
                     wishlist_count = sum(1 for album in sorted_albums if album['id'] in user_wishlist_ids)
@@ -133,6 +140,7 @@ def artist_search(request):
             'collection_count': collection_count,  # Include collection_count
             'wishlist_count': wishlist_count,  # Include wishlist_count
             'blacklist_count': blacklist_count,  # Include blacklist_count
+            'user_followed_artist_ids': user_followed_artist_ids,  # Include user_followed_artist_ids in the context
         })
     
     return render(request, 'tracker/artist_search.html', {

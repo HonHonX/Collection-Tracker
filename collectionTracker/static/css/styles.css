@@ -192,6 +192,13 @@ select {
     margin: 2rem 0 2rem 0;
 }
 
+#artist-name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .sticky-top {
     position: sticky;
     top: 0;
