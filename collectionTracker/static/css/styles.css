@@ -60,7 +60,8 @@ a:visited {
 /* Headlines */
 h1, h2 {
     text-align: left;
-    font-family: 'Bauhaus93', sans-serif;
+    /* font-family: 'Bauhaus93', sans-serif; */
+    font-family: var(--defaultFont);
     color: var(--accent100);
     width:100%;
 }

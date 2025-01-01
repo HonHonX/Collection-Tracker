@@ -70,17 +70,18 @@ def manage_album(request, list_type, action):
     if request.method == 'POST':
         data = json.loads(request.body)
         album_id = data.get('album_id')
+        artist_id = data.get('artist_id')  # Ensure artist_id is retrieved
         artist_name = data.get('artist_name', '').strip()  # Add strip to avoid leading/trailing whitespace
 
-        if not artist_name:
-            return JsonResponse({'success': False, 'error': 'Artist name is required.'}, status=400)
+        if not artist_name or not artist_id:
+            return JsonResponse({'success': False, 'error': 'Artist name and ID are required.'}, status=400)
 
         user = request.user
 
         artist, _ = Artist.objects.get_or_create(
-            id=data.get('artist_id'),
+            id=artist_id,  # Ensure artist_id is used here
             defaults={
-                'name': data.get('artist_name'),
+                'name': artist_name,
                 'photo_url': data.get('artist_photo_url'),
                 'genres': data.get('artist_genres', []),
                 'popularity': data.get('artist_popularity', 0),
