@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')  # Display artist's id and name
+    list_display = ('id', 'name', 'photo_url', 'genres', 'popularity')  # Display artist's id and name
     search_fields = ('name',)  # Allow searching by artist's name
 
 # Register the Album model with custom configuration
@@ -64,3 +64,10 @@ class UserProgressAdmin(admin.ModelAdmin):
         'total_wishlist_count', 'total_blacklist_count', 
         'total_collection_and_wishlist_count'
     )  # Make the aggregated fields readonly
+
+# Register the UserFollowedArtists model with custom configuration
+@admin.register(UserFollowedArtists)
+class UserFollowedArtistsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'artist', 'followed_on')  # Display user, artist, and followed date
+    search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
+    list_filter = ('followed_on',)  # Filter by the date the artist was followed

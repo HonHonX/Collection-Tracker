@@ -72,15 +72,30 @@ def manage_album(request, list_type, action):
         album_id = data.get('album_id')
         artist_name = data.get('artist_name', '').strip()  # Add strip to avoid leading/trailing whitespace
 
-        # print(f"Album ID: {album_id}")
-        # print(f"Artist name: {artist_name}")
-
         if not artist_name:
             return JsonResponse({'success': False, 'error': 'Artist name is required.'}, status=400)
 
         user = request.user
 
-        artist, _ = Artist.objects.get_or_create(name=artist_name)
+        artist, _ = Artist.objects.get_or_create(
+            id=data.get('artist_id'),
+            defaults={
+                'name': data.get('artist_name'),
+                'photo_url': data.get('artist_photo_url'),
+                'genres': data.get('artist_genres', []),
+                'popularity': data.get('artist_popularity', 0),
+            }
+        )
+
+        # Update artist fields if they are provided in the request
+        if artist.photo_url != data.get('artist_photo_url'):
+            artist.photo_url = data.get('artist_photo_url', artist.photo_url)
+        if artist.genres != data.get('artist_genres'):
+            artist.genres = data.get('artist_genres', artist.genres)
+        if artist.popularity != data.get('artist_popularity'):
+            artist.popularity = data.get('artist_popularity', artist.popularity)
+        artist.save() 
+
         album, _ = Album.objects.get_or_create(
             id=album_id,
             defaults={
@@ -92,9 +107,26 @@ def manage_album(request, list_type, action):
             }
         )
 
-        return manage_album_in_list(user, album, list_type, action)
+        # Handle adding/removing albums from collection, wishlist, or blacklist
+        if list_type == 'collection':
+            if action == 'add':
+                UserAlbumCollection.objects.get_or_create(user=user, album=album)
+            elif action == 'remove':
+                UserAlbumCollection.objects.filter(user=user, album=album).delete()
+        elif list_type == 'wishlist':
+            if action == 'add':
+                UserAlbumWishlist.objects.get_or_create(user=user, album=album)
+            elif action == 'remove':
+                UserAlbumWishlist.objects.filter(user=user, album=album).delete()
+        elif list_type == 'blacklist':
+            if action == 'add':
+                UserAlbumBlacklist.objects.get_or_create(user=user, album=album)
+            elif action == 'remove':
+                UserAlbumBlacklist.objects.filter(user=user, album=album).delete()
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
 
 # Collection Overview
 @login_required
@@ -278,5 +310,4 @@ def save_description(request, album_id):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})

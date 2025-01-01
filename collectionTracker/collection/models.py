@@ -7,9 +7,10 @@ from django.db.models import JSONField
 
 # models.py
 class Artist(models.Model):
+    id = models.CharField(max_length=50, primary_key=True, default=0)  # Spotify ID
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
-    genres = models.JSONField(default=list)  # Stores genres as a list of strings
+    genres = models.JSONField(default=list)
     popularity = models.IntegerField(default=0)
     
     def __str__(self):
@@ -24,7 +25,7 @@ class Album(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.name
+        return self.name 
     
 class UserAlbumDescription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -123,6 +124,16 @@ class UserProgress(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Progress"
     
+class UserFollowedArtists(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    followed_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'artist')
+
+    def __str__(self):
+        return f"{self.user.username} follows {self.artist.name}"
 
 # Signals to update UserArtistProgress/UserProgress when collection/wishlist/blacklist changes
 @receiver([post_save, post_delete], sender=UserAlbumCollection)

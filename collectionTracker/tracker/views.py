@@ -8,7 +8,8 @@ import os
 import subprocess
 import logging
 from django.contrib.auth.decorators import login_required
-from collection.models import UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserProgress, UserArtistProgress
+from collection.models import Artist, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserProgress, UserArtistProgress, UserFollowedArtists  # Import the model
+import json
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -76,6 +77,7 @@ def artist_search(request):
 
                 # Add artist info to the context
                 artist_info = {
+                    'id': artist_info['id'],  # Spotify ID
                     'name': artist_info['name'],
                     'genres': artist_info['genres'],  # List of genres
                     'popularity': artist_info['popularity'],  # Popularity score
@@ -168,3 +170,26 @@ def get_user_progress(request):
 
     except UserProgress.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Progress data not found.'})
+
+@login_required
+@csrf_exempt
+def follow_artist(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        artist_id = data.get('artist_id')
+        user = request.user
+
+        try:
+            artist = Artist.objects.get(id=artist_id)
+            follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
+
+            if not created:
+                follow_entry.delete()
+                return JsonResponse({'success': True, 'message': 'Artist unfollowed.'})
+            else:
+                return JsonResponse({'success': True, 'message': 'Artist followed.'})
+
+        except Artist.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Artist not found.'}, status=404)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
