@@ -1,45 +1,66 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Profile Button
-    var profileUrl = document.getElementById('profile-button').getAttribute('data-profile-url');
-    document.getElementById('profile-button').addEventListener('click', function() {
-        window.location.href = profileUrl;
-    });
-   
     // Home Button
-    var homeUrl = document.getElementById('home-button').getAttribute('home-url');
-    document.getElementById('home-button').addEventListener('click', function() {
-        window.location.href = "/index";
-    });
+    var homeButton = document.getElementById('home-button');
+    if (homeButton) {
+        var homeUrl = homeButton.getAttribute('data-home-url');
+        if (homeUrl) {
+            homeButton.addEventListener('click', function() {
+                window.location.href = homeUrl;
+            });
+        } else {
+            console.error('Home URL is not defined');
+        }
+    }
+
+    // Profile Button
+    var profileButton = document.getElementById('profile-button');
+    if (profileButton) {
+        var profileUrl = profileButton.getAttribute('data-profile-url');
+        profileButton.addEventListener('click', function() {
+            window.location.href = profileUrl;
+        });
+    }
 
     // Search Button
     document.addEventListener('click', function(event) {
         const searchBar = document.querySelector('.searchbar');
         const searchButton = document.getElementById('search-button');
 
-        if (!searchButton.contains(event.target) && !searchBar.contains(event.target)) {
-            searchBar.classList.remove('visible');
-        } else if (searchButton.contains(event.target)) {
-            searchBar.classList.toggle('visible');
+        if (searchButton && searchBar) {
+            if (!searchButton.contains(event.target) && !searchBar.contains(event.target)) {
+                searchBar.classList.remove('visible');
+            } else if (searchButton.contains(event.target)) {
+                searchBar.classList.toggle('visible');
+            }
         }
     });
 
     // Collection Button
-    var collectionUrl = document.getElementById('collection-button').getAttribute('data-collection-url');
-    document.getElementById('collection-button').addEventListener('click', function() {
-        window.location.href = collectionUrl;
-    });
+    var collectionButton = document.getElementById('collection-button');
+    if (collectionButton) {
+        var collectionUrl = collectionButton.getAttribute('data-collection-url');
+        collectionButton.addEventListener('click', function() {
+            window.location.href = collectionUrl;
+        });
+    }
 
     // Wishlist Button
-    var wishlistUrl = document.getElementById('wishlist-button').getAttribute('data-wishlist-url');
-    document.getElementById('wishlist-button').addEventListener('click', function() {
-        window.location.href = wishlistUrl;
-    });
+    var wishlistButton = document.getElementById('wishlist-button');
+    if (wishlistButton) {
+        var wishlistUrl = wishlistButton.getAttribute('data-wishlist-url');
+        wishlistButton.addEventListener('click', function() {
+            window.location.href = wishlistUrl;
+        });
+    }
 
     // Blacklist Button
-    var blacklistUrl = document.getElementById('blacklist-button').getAttribute('data-blacklist-url');
-    document.getElementById('blacklist-button').addEventListener('click', function() {
-        window.location.href = blacklistUrl;
-    });
+    var blacklistButton = document.getElementById('blacklist-button');
+    if (blacklistButton) {
+        var blacklistUrl = blacklistButton.getAttribute('data-blacklist-url');
+        blacklistButton.addEventListener('click', function() {
+            window.location.href = blacklistUrl;
+        });
+    }
 
     // Friends Button
     var friendsButton = document.getElementById('friends-button');
@@ -54,11 +75,15 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('Friends button not found'); // Debugging line
     }
- 
-    // Settings Button (Placeholder)
-    document.getElementById('settings-button').addEventListener('click', function() {
-        console.log("Settings clicked!");
-    });
+
+    // Settings Button
+    var settingsButton = document.getElementById('settings-button');
+    if (settingsButton) {
+        var settingsUrl = settingsButton.getAttribute('data-settings-url');
+        settingsButton.addEventListener('click', function() {
+            window.location.href = settingsUrl;
+        });
+    }
 
     // Mobile Navigation
     const searchIcon = document.getElementById("mobile-search"); // Search icon in the navbar
@@ -66,12 +91,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const backdrop = document.getElementById("backdrop"); // Backdrop element
     const body = document.body; // Body to manage scrolling
 
-    // Mobile Search Button
-    function showSearchBar() {
-        searchBar.classList.add("visible");
-        backdrop.classList.add("visible");
-        body.classList.add("no-scroll"); // Prevent scrolling
-    }
+    if (searchIcon && searchBar && backdrop) {
+        // Mobile Search Button
+        function showSearchBar() {
+            searchBar.classList.add("visible");
+            backdrop.classList.add("visible");
+            body.classList.add("no-scroll"); // Prevent scrolling
+        }
 
         // Hide the popup search bar
         function hideSearchBar() {
@@ -92,5 +118,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 hideSearchBar();
             }
         });
-    
+    }
 });

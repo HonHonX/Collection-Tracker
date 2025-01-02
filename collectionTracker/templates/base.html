@@ -9,11 +9,17 @@
                 {% endblock %}
             </title>
             {% load static %}
+            {% if request.user.userprofile.color_scheme == 'spring' %}
+                <link rel="stylesheet" href="{% static 'css/spring_theme.css' %}">
+            {% elif request.user.userprofile.color_scheme == 'summer' %}
+                <link rel="stylesheet" href="{% static 'css/summer_theme.css' %}">
+            {% elif request.user.userprofile.color_scheme == 'autumn' %}
+                <link rel="stylesheet" href="{% static 'css/autumn_theme.css' %}">
+            {% else %}
+                <link rel="stylesheet" href="{% static 'css/winter_theme.css' %}">
+            {% endif %}
             <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
             <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  -->
             
             {% block extra_css %}
                 <!-- Opportunity to add more stylesheets specific to the page -->
