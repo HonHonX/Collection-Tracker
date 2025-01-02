@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Profile Button
+    var profileUrl = document.getElementById('profile-button').getAttribute('data-profile-url');
+    document.getElementById('profile-button').addEventListener('click', function() {
+        window.location.href = profileUrl;
+    });
+   
     // Home Button
     var homeUrl = document.getElementById('home-button').getAttribute('home-url');
     document.getElementById('home-button').addEventListener('click', function() {

@@ -1,0 +1,81 @@
+@import url("../../css/styles.css");
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+}
+
+/* User Image */
+input[type="file"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--neutral0);
+    border-radius: var(--borderRadius, 5px);
+    text-align: center; 
+    width: 100%;
+    background-color: var(--neutral100);
+    padding: 0.5rem 0;
+}
+
+/* Custom button text and appearance */
+input[type="file"]::-webkit-file-upload-button {
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--defaultFont);
+    font-size: 1rem;
+    color: var(--neutral0);
+    background-color: var(--neutral70);
+    border: none;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    box-shadow: var(--boxShadow);
+    transition: var(--transitionStyle);
+    box-sizing: border-box;
+}
+
+/* Hover effect on the file upload button */
+input[type="file"]:hover::-webkit-file-upload-button {
+    background-color: var(--accent100);
+    transform: translateY(-2px);
+}
+
+.image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+}
+
+.user-image {
+    width: 25rem;
+}
+
+#profile-image-form,
+#remove-image-form {
+    background-color: var(--neutral100);
+}
+
+#profile-image-form .user-image input[type="button"],
+#profile-image-form .user-image input[type="submit"] {
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--defaultFont);
+    font-size: 1rem;
+    color: var(--neutral0);
+    background-color: var(--neutral70);
+    border: none;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    box-shadow: var(--boxShadow);
+    transition: var(--transitionStyle);
+    box-sizing: border-box;
+}
+
+/* User Information */
