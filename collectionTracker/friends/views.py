@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
+from collection.models import Album, UserAlbumWishlist, UserAlbumCollection
 from .models import Friend, FriendList
 from .forms import FriendForm
 
@@ -83,4 +84,28 @@ def send_friend_request_email(friend):
     recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)
 
-# Create your views here.
+def user_wishlist(request, username):
+    user = get_object_or_404(User, username=username)
+    if not Friend.objects.filter(user=request.user, friend_email=user.email, status='accepted').exists():
+        return render(request, 'friends/not_friends.html')
+    wishlist = Album.objects.filter(useralbumwishlist__user=user)
+    return render(request, 'friends/user_wishlist.html', {'user': user, 'wishlist': wishlist})
+
+def user_collection(request, username):
+    user = get_object_or_404(User, username=username)
+    if not Friend.objects.filter(user=request.user, friend_email=user.email, status='accepted').exists():
+        return render(request, 'friends/not_friends.html')
+    collection = Album.objects.filter(useralbumcollection__user=user)
+    return render(request, 'friends/user_collection.html', {'user': user, 'collection': collection})
+
+def shared_user_wishlist(request, username):
+    user = get_object_or_404(User, username=username)
+    wishlist = Album.objects.filter(useralbumwishlist__user=user)
+    return render(request, 'friends/user_wishlist.html', {'user': user, 'wishlist': wishlist})
+
+def shared_user_collection(request, username):
+    user = get_object_or_404(User, username=username)
+    collection = Album.objects.filter(useralbumcollection__user=user)
+    return render(request, 'friends/user_collection.html', {'user': user, 'collection': collection})
+
+
