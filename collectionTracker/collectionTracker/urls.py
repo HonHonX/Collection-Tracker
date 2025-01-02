@@ -28,12 +28,12 @@ urlpatterns = [
     re_path(r'^oauth/', include('social_django.urls', namespace='social')), # for github login
 
     path('', include("home.urls")),
-    #path('friends/', include("friends.urls")),
+    path('friends/', include("friends.urls")),
     path('collection/', include("collection.urls")),
     #path('stats/', include("stats.urls")),
     #path('users/', include("users.urls")),
     #path('settings/', include("settings.urls")),
-
+ 
     path("search/", include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
@@ -46,4 +46,4 @@ try:
                        path('accounts/login/', auth_views.LoginView.as_view(template_name=social_login))
                        )
 except:
-    print('Using registration/login.html as the login template')
+    print('Using registration/login.html as the login template') 

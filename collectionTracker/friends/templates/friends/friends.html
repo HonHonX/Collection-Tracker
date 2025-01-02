@@ -1,0 +1,33 @@
+{% extends 'base_with_sidebar.html' %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block maincontent %}
+    <h1>Friends</h1>
+
+    <h2>Add a Friend</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">Add Friend</button>
+    </form>
+
+    <h2>Your Friends</h2>
+    <ul>
+        {% for friend in friends %}
+            <li>
+                {{ friend.name }} - {{ friend.email }} - {{ friend.get_status_display }}{% if friend.status == 'guest' %} (Guest){% endif %}
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="friend_email" value="{{ friend.email }}">
+                    <button type="submit" name="remove_friend" class="button">Remove</button>
+                    {% if friend.status == 'pending' %}
+                        <button type="submit" name="confirm_friend" class="button">Confirm</button>
+                    {% endif %}
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
