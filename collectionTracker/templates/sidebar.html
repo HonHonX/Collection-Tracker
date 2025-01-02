@@ -56,21 +56,37 @@
             <h1 class="pagetitle">Home</h1>
         </div>
 
-        <!-- Navigation Bar -->
+        <!-- Navigation Bar --> 
         <div class="navbar">
-            <div class="nav-item">
+            <div class="nav-item" id="mobile-home-button" home-url="{% url 'index' %}">
                 <img class="icon" src="{% static 'icons/home.svg' %}">
             </div>
-            <div class="nav-item">
-                <img class="icon" src="{% static 'icons/search.svg' %}">    
+            <div class="nav-item" id="mobile-search">
+                <img class="icon" src="{% static 'icons/search.svg' %}">
             </div>
-            <div class="nav-item">
+            <div class="nav-item" id="mobile-collection-button" data-collection-url="{% url 'album_overview' %}">
                 <img class="icon" src="{% static 'icons/wishlist.svg' %}">
             </div>
             <div class="nav-item">
                 <img class="icon" src="{% static 'icons/settings.svg' %}">
             </div>
         </div>
+
+         <!-- Backdrop -->
+         <div class="backdrop" id="backdrop"></div>
+
+         <!-- Popup Search Bar -->
+         <div class="popup-searchbar" id="popup-searchbar">
+             <form method="POST" class="search-form" action="{% url 'artist_search' %}">
+                 {% csrf_token %}
+                 <div class="input-group">
+                     <input type="text" name="artist_name" id="popup-artist-name" placeholder="Enter artist name" class="input-field" required>
+                     <button type="submit" class="button">
+                         <img class="icon" src="{% static 'icons/search.svg' %}">
+                     </button>
+                 </div>
+             </form>
+         </div>
 
 {% endblock %}
 
