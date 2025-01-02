@@ -18,7 +18,7 @@
     <ul>
         {% for friend in friends %}
             <li>
-                {{ friend.name }} - {{ friend.email }} - {{ friend.get_status_display }}{% if friend.status == 'guest' %} (Guest){% endif %}
+                {{ friend.friend_name }} - {{ friend.friend_email }} - {{ friend.get_status_display }}{% if friend.status == 'guest' %} (Guest){% endif %}
                 <form method="post" style="display:inline;">
                     {% csrf_token %}
                     <input type="hidden" name="friend_email" value="{{ friend.email }}">

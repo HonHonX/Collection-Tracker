@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 class Friend(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
-    email = models.EmailField()
+    friend_name = models.CharField(max_length=100, blank=True)
+    friend_email = models.EmailField()
     status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('guest', 'Guest')], default='pending')
 
     def __str__(self):
-        return self.email
+        return f"{self.user.username} - {self.friend_email} ({self.status})"
 
 class FriendList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_list')

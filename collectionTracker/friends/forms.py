@@ -4,4 +4,4 @@ from .models import Friend
 class FriendForm(forms.ModelForm):
     class Meta:
         model = Friend
-        fields = ['email']
+        fields = ['friend_email']

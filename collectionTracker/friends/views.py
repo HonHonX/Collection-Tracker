@@ -11,9 +11,9 @@ def friends_view(request):
     if request.method == 'POST':
         if 'remove_friend' in request.POST:
             friend_email = request.POST.get('friend_email')
-            friend = Friend.objects.filter(user=request.user, email=friend_email).first()
+            friend = Friend.objects.filter(user=request.user, friend_email=friend_email).first()
             if friend:
-                reciprocal_friend = Friend.objects.filter(user__email=friend_email, email=request.user.email).first()
+                reciprocal_friend = Friend.objects.filter(user__email=friend_email, friend_email=request.user.email).first()
                 if reciprocal_friend:
                     reciprocal_friend.delete()
                 friend.delete()
@@ -24,12 +24,12 @@ def friends_view(request):
         else:
             form = FriendForm(request.POST)
             if form.is_valid():
-                email = form.cleaned_data['email']
-                friend_user = User.objects.filter(email=email).first()
+                friend_email = form.cleaned_data['friend_email']
+                friend_user = User.objects.filter(email=friend_email).first()
                 if friend_user and friend_user != request.user:
-                    friend = Friend(user=request.user, email=email, name=friend_user.username, status='pending')
+                    friend = Friend(user=request.user, friend_email=friend_email, friend_name=friend_user.username, status='pending')
                     friend.save()
-                    reciprocal_friend = Friend(user=friend_user, email=request.user.email, name=request.user.username, status='pending')
+                    reciprocal_friend = Friend(user=friend_user, friend_email=request.user.email, friend_name=request.user.username, status='pending')
                     reciprocal_friend.save()
                     send_friend_request_email(friend)
                 else:
@@ -42,37 +42,33 @@ def friends_view(request):
     else:
         form = FriendForm()
     
-    friends = Friend.objects.filter(user=request.user).exclude(email=request.user.email)
+    friends = Friend.objects.filter(user=request.user).exclude(friend_email=request.user.email)
     return render(request, 'friends/friends.html', {'form': form, 'friends': friends})
 
 def send_invitation_email(friend):
     subject = 'Invitation to Join Collection Tracker'
-    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\nhttp://localhost:8000/register/?email={friend.email}\n\nThank you!'
+    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\nhttp://localhost:8000/register/?email={friend.friend_email}\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [friend.email]
+    recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)
 
 @login_required
 def confirm_friend_request(request, friend_email, sender_username):
     sender_user = get_object_or_404(User, username=sender_username)
     
-    friend = get_object_or_404(Friend, email=friend_email)
+    friend = get_object_or_404(Friend, friend_email=str(friend_email))
     friend.status = 'accepted'
     friend.save()
 
-    
-    reciprocal_friend = Friend.objects.filter(user=sender_user, email=request.user.email).first()
+    reciprocal_friend = Friend.objects.filter(user=request.user, friend_email=sender_user.email).first()
     if reciprocal_friend:
-        print(f"Reciprocal friend found: {reciprocal_friend.email} for user {reciprocal_friend.user.email}")  # Debug statement
         reciprocal_friend.status = 'accepted'
         reciprocal_friend.save()
-        print(f"Reciprocal friend {reciprocal_friend.email} status updated to {reciprocal_friend.status}")  # Debug statement
     else:
-        # Create reciprocal friend if not exists
-        reciprocal_friend = Friend(user=sender_user, email=request.user.email, name=request.user.username, status='accepted')
+        # Create reciprocal friend 
+        reciprocal_friend = Friend(user=request.user, friend_email=sender_user.email, friend_name=sender_user.username, status='accepted')
         reciprocal_friend.save()
-        print(f"Reciprocal friend {reciprocal_friend.email} created with status {reciprocal_friend.status}")  # Debug statement
-        
+                
     # Add both friends to each other's FriendList
     friend_list, created = FriendList.objects.get_or_create(user=request.user)
     friend_list.friends.add(friend)
@@ -82,9 +78,9 @@ def confirm_friend_request(request, friend_email, sender_username):
 
 def send_friend_request_email(friend):
     subject = 'Friend Request Confirmation'
-    message = f'Hi {friend.email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\nhttp://localhost:8000/friends/confirm/{friend.email}/{friend.user.username}/\n\nThank you!'
+    message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\nhttp://localhost:8000/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [friend.email]
+    recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)
 
 # Create your views here.
