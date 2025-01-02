@@ -9,11 +9,6 @@ from .forms import ProfileImageForm
 from .models import Profile
 
 # Create your views here.
-
-# This is a little complex because we need to detect when we are
-# running in various configurations
-
-
 class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         #print(request.get_host())
