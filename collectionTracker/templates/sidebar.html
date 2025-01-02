@@ -19,7 +19,7 @@
             <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
         </div>
 
-        <div class="sidebar-item" id="home-button" home-url="{% url 'index' %}">
+        <div class="sidebar-item" id="home-button" data-home-url="{% url 'index' %}">
             <img class="icon" src="{% static 'icons/home.svg' %}">Home
         </div>    
 
@@ -52,7 +52,7 @@
             <img class="icon" src="{% static 'icons/friends.svg' %}">Friends
         </div>
 
-        <div class="sidebar-item" id="settings-button">
+        <div class="sidebar-item" id="settings-button" data-settings-url="{% url 'settings' %}">
             <img class="icon" src="{% static 'icons/settings.svg' %}">Settings
         </div>
 

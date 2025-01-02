@@ -26,7 +26,7 @@
             </p>
         </div>
 
-        <div class="home-button" id="home-button" home-url="{% url 'index' %}">
+        <div class="home-button" id="home-button" data-home-url="{% url 'index' %}">
             <img class="icon" src="{% static 'icons/home.svg' %}">
         </div>   
 
@@ -53,5 +53,4 @@
 
 {% block js %}
     <script src="{% static 'js/navigation.js' %}"></script>
-{% endblock %} 
-
+{% endblock %}
