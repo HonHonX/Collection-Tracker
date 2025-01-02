@@ -18,9 +18,12 @@
     --iconSize: 2rem;
     --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
+    --gapBigBlocks: 2rem;
     --defaultFont: 'Tahoma', sans-serif;
     --transitionStyle: background-color 0.3s ease, transform 0.3s ease;
     --coverSize: 8vw;
+    --buttonWidth: 10rem;
+    --buttonHeight: 3rem;
 }
 
 @font-face {
@@ -135,8 +138,8 @@ select {
 
 /* Buttons */
 .button {
-    width: 10rem;
-    height: 3rem;
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
     padding: 0.75rem 1.5rem;
     font-family: var(--defaultFont);
     font-size: 1rem;

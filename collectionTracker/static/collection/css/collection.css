@@ -3,8 +3,8 @@
 .maincontent {
     display: flex;
     flex-direction: row;
-    gap: 2rem; /* Ensure there is space between columns */
     flex-wrap: wrap; /* Allow the content to wrap in smaller screen sizes */
+    gap: var(--gapBigBlocks);
 }
 
 .album-detail {
