@@ -22,10 +22,8 @@
                 <form method="post" style="display:inline;">
                     {% csrf_token %}
                     <input type="hidden" name="friend_email" value="{{ friend.email }}">
+                    <input type="hidden" name="sender_username" value="{{ friend.user.username }}">
                     <button type="submit" name="remove_friend" class="button">Remove</button>
-                    {% if friend.status == 'pending' %}
-                        <button type="submit" name="confirm_friend" class="button">Confirm</button>
-                    {% endif %}
                 </form>
             </li>
         {% endfor %}
