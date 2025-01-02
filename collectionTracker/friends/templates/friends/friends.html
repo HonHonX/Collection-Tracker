@@ -111,21 +111,5 @@
 {% endblock %}
 
 {% block js %}
-    <script>
-        document.getElementById('generate-token-button').addEventListener('click', function() {
-            fetch("{% url 'generate_token' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('token-display').textContent = data.token;
-                document.getElementById('wishlist-share-link').href = "{% url 'shared_user_wishlist' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', data.token);
-                document.getElementById('collection-share-link').href = "{% url 'shared_user_collection' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', data.token);
-            });
-        });
-    </script>
+    <script src="{% static 'js/generateToken.js' %}"></script>
 {% endblock %}
