@@ -37,6 +37,9 @@ urlpatterns = [
     path("search/", include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 # https://github.com/csev/dj4e-samples/blob/main/dj4e-samples/urls.py
 # for login with github
 try:

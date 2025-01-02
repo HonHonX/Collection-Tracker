@@ -1,0 +1,26 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+    User Profile
+{% endblock %}
+
+{% block maincontent %}
+    <div class="profile-header">
+        <h1>User Profile</h1>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+        {% if user.profile.image %}
+            <img id="profile-image-big" src="{{ user.profile.image.url }}">
+        {% else %}
+            <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Upload Image</button>
+        </form>
+    </div>
+{% endblock %}

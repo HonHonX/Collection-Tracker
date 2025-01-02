@@ -7,6 +7,14 @@
 {% block content %}
     <!-- Desktop Sidebar -->
     <div class="sidebar">
+        <div id="profile-button" data-profile-url="{% url 'user_profile' %}">
+            {% if user.profile.image %}
+                <img id="profile-image-small" src="{{ user.profile.image.url }}">
+            {% else %}
+                <img id="profile-image-small" src="{% static 'img/default.jpg' %}">
+            {% endif %}
+        </div>
+
         <div class="sidebar-logo">
             <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
         </div>

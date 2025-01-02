@@ -123,6 +123,29 @@
     display: none;
 }
 
+/* Profile Image Styling */
+#profile-image-small, #profile-image-big {
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Maintain aspect ratio */
+}
+
+#profile-image-small {
+    width: 4rem;
+}
+
+#profile-image-big {
+    width: 10rem;
+}
+
+#profile-image-small:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    box-shadow: var(--boxShadow);
+}
 
 @media (max-width: 768px) {
 
