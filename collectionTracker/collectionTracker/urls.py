@@ -28,12 +28,12 @@ urlpatterns = [
     re_path(r'^oauth/', include('social_django.urls', namespace='social')), # for github login
 
     path('', include("home.urls")),
-    #path('friends/', include("friends.urls")),
+    path('friends/', include("friends.urls")),
     path('collection/', include("collection.urls")),
     #path('stats/', include("stats.urls")),
     #path('users/', include("users.urls")),
     #path('settings/', include("settings.urls")),
-
+ 
     path("search/", include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 

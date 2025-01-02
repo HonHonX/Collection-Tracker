@@ -25,7 +25,7 @@
                 <option value="{{ artist.name }}">{{ artist.name }}</option>
             {% endfor %}
         </select>
-        
+         
         <label for="sort-criteria">Sort by:</label>
         <select id="sort-criteria">
             <option value="artist">Artist</option>
@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'js/manageAlbumState.js' %}"></script>
-<script src="{% static 'js/sortAlbums.js' %}"></script>
-<script src="{% static 'js/filterByArtist.js' %}"></script>
+    <script src="{% static 'js/manageAlbumState.js' %}"></script>
+    <script src="{% static 'js/sortAlbums.js' %}"></script>
+    <script src="{% static 'js/filterByArtist.js' %}"></script>
 {% endblock %}

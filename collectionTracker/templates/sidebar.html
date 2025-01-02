@@ -39,6 +39,10 @@
         <div class="sidebar-item" id="blacklist-button" data-blacklist-url="{% url 'blacklist_overview' %}">
             <img class="icon" src="{% static 'icons/blacklist.svg' %}">Blacklist
         </div>
+ 
+        <div class="sidebar-item" id="friends-button" data-friends-url="{% url 'friends_view' %}">
+            <img class="icon" src="{% static 'icons/friends.svg' %}">Friends
+        </div>
 
         <div class="sidebar-item" id="settings-button">
             <img class="icon" src="{% static 'icons/settings.svg' %}">Settings
@@ -72,4 +76,4 @@
 
 {% block js %}
     <script src="{% static 'js/navigation.js' %}"></script>
-{% endblock %} 
+{% endblock %}
