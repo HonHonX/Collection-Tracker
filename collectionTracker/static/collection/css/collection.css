@@ -3,15 +3,15 @@
 .maincontent {
     display: flex;
     flex-direction: row;
-    gap: 2rem; /* Ensure there is space between columns */
     flex-wrap: wrap; /* Allow the content to wrap in smaller screen sizes */
+    gap: var(--gapBigBlocks);
 }
 
 .album-detail {
     display: flex;
     flex-direction: column;
     gap: var(--gapDistance);
-    padding: 0 1rem 1rem 1rem;
+    padding: 0 1rem 1rem 0;
     align-self: start;
     width: 25rem; /* Fixed width for album detail */
 }
@@ -42,23 +42,7 @@
     flex: 1; /* Ensure it takes the remaining space */
     border-radius: var(--borderRadius);
     gap: 1rem;
-    max-width: 50rem; /* Limit the maximum width */
-}
-
-.album-status {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gapDistance);
-    margin: 0 0 3.75rem 0;
-}
-
-.collection-status, .wishlist-status {
-    display: flex;
-    flex-direction: row;
     width: 100%;
-    gap: var(--gapDistance);
-    width: 100%;
-    flex-wrap: wrap;
 }
 
 .icon {
@@ -68,3 +52,57 @@
 textarea {
     margin: 0.5rem 0;
 }
+
+/* Album Details */
+.album-status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    margin: 0 0 3.75rem 0;
+}
+
+.album-status button{
+    width:15rem;
+}
+
+.wishlist,
+.collection {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: var(--gapDistance);
+    width: 100%;
+    justify-content: space-left;
+    text-align: left;
+}
+
+.wishlist-status,
+#priority-form,
+.collection-status,
+#substatus-form {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    margin: auto 0;
+    flex-wrap: wrap;
+}
+
+.wishlist-priority,
+.substatus-section {
+    width: 50%;
+}
+
+.wishlist-status,
+.collection-status {
+    flex-grow: 1
+}
+
+.wishlist-priority,
+.substatus-section {
+    display: flex; /* Use flexbox to arrange elements horizontally */
+    gap: var(--gapDistance); /* Add space between the select and button */
+    align-items: center; /* Vertically center the elements */
+    width: auto; /* Let the section take the width it needs */
+}
+

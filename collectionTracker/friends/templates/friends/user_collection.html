@@ -1,0 +1,35 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+    {{ user.username }}'s Collection
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'friends/css/friends.css' %}" type="text/css">
+{% endblock %}
+
+{% block maincontent %}
+    <div class="collection-header">
+        <h1>{{ user.username }}'s Collection</h1>
+        <p>{{ user.username }} has {{ collection.count }} album(s) in their collection.</p>
+    </div>
+
+    <div class="album-grid">
+        {% for album in collection %}
+        <div class="album-item">
+            <a href="{% url 'album_detail' album.id %}">
+                {% if album.image_url %}
+                    <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                {% endif %}
+                <div class="album-info">
+                    <strong>{{ album.name }}</strong><br>
+                    <em>Artist: {{ album.artist.name }}</em><br>
+                    <em>Release Date: {{ album.release_date }}</em><br>
+                    <em>Type: {{ album.album_type }}</em>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

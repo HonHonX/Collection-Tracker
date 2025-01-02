@@ -1,0 +1,115 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+{{ user.first_name }}'s Friends
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'friends/css/friends.css' %}" type="text/css">
+{% endblock %}
+
+{% block maincontent %}
+    <h1>
+        Friends
+    </h1>
+
+    <div id="friend-page">
+        <div id="user-block">
+            <div id="share-userinfo">
+                <h2>Share with Friends</h2>
+                <p>Share a link to your collection or your wishlist with your friends!</br>They will not be able to edit your lists.</p>
+
+                <div id="my-wishlist" class="share-link">
+                    <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+                    <div id="wishlist-link" class="link">
+                        <a id="wishlist-share-link" href="{% url 'shared_user_wishlist' token %}">Share Wishlist</a>
+                    </div>
+                </div>
+
+                <div id="my-collection" class="share-link">
+                    <img class="icon" src="{% static 'icons/collection.svg' %}">
+                    <div id="collection-link" class="link">
+                        <a id="collection-share-link" href="{% url 'shared_user_collection' token %}">Share Collection</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="add-friend">
+                <h2>Add Friend</h2>
+                <form method="post" id="add-friend-form">
+                    {% csrf_token %}
+                    <input id="friend-email" type="email" name="friend_email" placeholder="Friend's Email" required>
+                    <button type="submit" name="add_friend" class="button">Add</button>
+                </form>
+
+                <div id="token-section">
+                    <h2>Sharing Token</h2>
+                    <p>The sharing token was generated for you to make sure that only authorized people can see your shared collection & wishlist. If you want to cut the access for people you previously shared the link with, generate a new token. </p>
+                    <div id="token-box">
+                        <div id="token-display">{{ token }}</div>
+                        <button id="generate-token-button" class="button">Generate Token</button>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="friend-block">
+            <h2>{{ user.first_name }}'s Friends</h2>
+                <div id="friend-legend">
+                    <div class="friend-username">
+                        Username
+                    </div>
+
+                    <div class="friend-mail">
+                        Email
+                    </div>
+
+                    <div class="friend-status">
+                        Status
+                    </div>
+                </div>
+                {% for friend in friends %}
+                    <div class="friend">
+                        <div class="friend-info">   
+                            <div class="friend-username">
+                                {{ friend.friend_name }}{% if friend.status == 'guest' %}(Guest){% endif %}
+                            </div>
+        
+                            <div class="friend-mail">
+                                {{ friend.friend_email }}
+                            </div>
+        
+                            <div class="friend-status">
+                                {{ friend.get_status_display }}
+                            </div>
+                        </div>
+
+                        <div class="friend-controls">
+                            <a id="see-wishlist" href="{% url 'user_wishlist' friend.friend_name %}">
+                                <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+                            </a>
+
+                            <a id="see-collection" href="{% url 'user_collection' friend.friend_name %}">
+                                <img class="icon" src="{% static 'icons/collection.svg' %}">
+                            </a>
+
+                            <form method="post" style="display:inline;" id="remove-friend-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="friend_email" value="{{ friend.email }}">
+                                <input type="hidden" name="sender_username" value="{{ friend.user.username }}">
+
+                                <button type="submit" name="remove_friend" class="button">Remove Friend</button>
+                            </form>
+                        </div>                        
+                    </div>
+                {% endfor %}
+        </div>
+    </div>   
+    
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/generateToken.js' %}"></script>
+{% endblock %}

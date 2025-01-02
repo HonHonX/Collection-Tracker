@@ -1,0 +1,146 @@
+@import url("../../css/styles.css");
+
+button {
+    display: inline;
+}
+
+form {
+    display: inline;
+    background-color: var(--neutral100);
+}
+
+#friend-page {
+    display: flex;
+    flex-direction: column ;
+    justify-content: space-between;
+    gap: var(--gapBigBlocks);
+}
+
+/* User Block */
+#user-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+    justify-content: space-between;
+}
+
+#share-userinfo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#share-userinfo p{
+    height: 3rem;
+    margin: 0 0 var(--gapDistance) 0;
+}
+
+#add-friend {
+    width: 60%;
+}
+
+#add-friend-form {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    background-color: var(--neutral100);
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+#add-friend-form input {
+    height: 3rem;
+}
+
+#friend-email {
+    width: 85%;
+}
+
+.share-link {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);    
+    align-items: center;
+}
+
+.link {
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    height: var(--buttonHeight);
+    padding: 0.75rem;
+    box-sizing: border-box;
+    align-items: center;
+    flex-grow: 1;
+}
+
+#token-box {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    justify-content: space-between;
+}
+
+#token-display {
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    height: var(--buttonHeight);
+    flex-grow: 1;
+    padding: 0.75rem 0.75rem;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Friend Block */
+
+#friend-block {
+    flex-grow: 1;
+}
+
+.friend {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+}
+
+.friend-info,
+#friend-legend {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    width: 60%
+}
+
+#friend-legend {
+    font-weight: bold;
+}
+
+.friend-username {
+    width: 30%;
+}
+
+.friend-mail {
+    width: 50%;
+}
+
+.friend-status {
+    width: 15%;
+}
+
+.friend-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gapDistance);
+}
+
+#remove-friend-form {
+    width: var(--buttonWidth);
+}

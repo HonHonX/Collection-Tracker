@@ -24,30 +24,64 @@
     <div class="custom-detail">
         <!-- Collection Status Section -->
         <div class="album-status">
-            <div class="collection-status" data-album-id="{{ album.spotify_id }}" 
+            <div class="collection-status" 
+            data-album-id="{{ album.spotify_id }}" 
             data-album-name="{{ album.name }}"
             data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
             data-image-url="{{ album.image_url }}"
             data-artist-name="{{ artist_name }}"
             data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
-                {% if in_collection %}
-                    <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;" class="icon">
-                    <p>Album in collection.</p><br>
-                {% else %}
-                    <img src="{% static 'icons/collection.svg' %}" alt="Not in collection" style="opacity: 0.2;" class="icon">
-                    <p>Album not in collection.</p><br>
-                {% endif %}
-            </div>
-
-            <div class="wishlist-status">
-                {% if in_wishlist %}
-                    <img src="{% static 'icons/wishlist.svg' %}" alt="In wishlist" style="opacity: 1;" class="icon">
-                    <p>Album in wishlist.</p><br>
-                {% else %}
-                    <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
-                    <p>Album not in wishlist.</p><br>
-                {% endif %}
+            data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
+            data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
+                <!-- Collection -->
+                <div class="collection">
+                    {% if in_collection %}
+                        <div class="collection-status">
+                            <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;" class="icon">
+                            <p>Album in collection.</p><br>
+                        </div>
+                        <div class="substatus-section">
+                            <form method="post" id="substatus-form">
+                                {% csrf_token %}
+                                <select name="substatus" id="substatus" class="sorting-controls">
+                                    <option value="delivered" {% if collection_entry.substatus == 'delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="preordered" {% if collection_entry.substatus == 'preordered' %}selected{% endif %}>Preordered</option>
+                                    <option value="ordered" {% if collection_entry.substatus == 'ordered' %}selected{% endif %}>Ordered</option>
+                                    <option value="unspecified" {% if collection_entry.substatus == 'unspecified' %}selected{% endif %}>Unspecified</option>
+                                </select>
+                                <button type="submit" class="button">Update Substatus</button>
+                            </form>   
+                        </div>
+                    {% else %}
+                        <img src="{% static 'icons/collection.svg' %}" alt="Not in collection" style="opacity: 0.2;" class="icon">
+                        <p>Album not in collection.</p><br>
+                    {% endif %}
+                </div> 
+ 
+                <!-- Wishlist -->
+                <div class="wishlist">
+                    {% if in_wishlist %}
+                        <div class="wishlist-status">
+                            <img src="{% static 'icons/wishlist.svg' %}" alt="In wishlist" style="opacity: 1;" class="icon">
+                            <p>Album in wishlist.</p><br>
+                        </div>
+                        <div class="wishlist-priority">                            
+                            <form method="post" id="priority-form">
+                                {% csrf_token %}
+                                <select name="priority" id="priority" class="sorting-controls">
+                                    <option value="0" {% if wishlist_entry.priority == 0 %}selected{% endif %}>Unspecified</option>
+                                    <option value="1" {% if wishlist_entry.priority == 1 %}selected{% endif %}>Low</option>
+                                    <option value="2" {% if wishlist_entry.priority == 2 %}selected{% endif %}>Medium</option>
+                                    <option value="3" {% if wishlist_entry.priority == 3 %}selected{% endif %}>High</option>
+                                </select>
+                                <button type="submit" class="button">Update Priority</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
+                        <p>Album not in wishlist.</p><br>
+                    {% endif %}
+                </div>
             </div>
         </div>
         
