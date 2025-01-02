@@ -8,10 +8,6 @@
     --neutral90: #292929;
     --neutral70: #525252;
     --neutral0: #ffffff; /* Regular Font */
-    --accent100: #6467fa; /* Highlight Color */
-    --accent90: #4e50de;
-    --accentVariantA100: #9C8185;
-    --accentVariantB100: #E5A4CB;
 
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
@@ -98,6 +94,96 @@ select {
     transition: var(--transitionStyle);
 }
 
+/* Styles for color swatches in select options */
+select option {
+    display: flex;
+    align-items: center;
+}
+
+select option .theme-swatches {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+select option .color-swatch {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.theme-swatches {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+}
+
+.color-swatch {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* Custom Select Styles */
+.custom-select {
+    position: relative;
+    width: 25rem;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--neutral0);
+    box-shadow: var(--boxShadow);
+}
+
+.selected-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--neutral70);
+    border-radius: var(--borderRadius);
+    box-shadow: var(--boxShadow);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 10;
+}
+
+.options-container.active {
+    max-height: 200px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+.option {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option:hover {
+    background-color: var(--neutral90);
+}
+
+.theme-swatches {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.color-swatch {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+ 
 /* Layout */
 .page {
     display: flex; 
@@ -466,11 +552,14 @@ select {
 
 /* Forms */
 form {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     margin: 0 auto;
-    background-color: var(--neutral90);
+    /* background-color: var(--neutral90); */
     border-radius: var(--borderRadius);
     color: var(--neutral0);
+    gap: var(--gapDistance);
 }
 
 /* Label styling */
@@ -572,11 +661,11 @@ form input.error, form textarea.error {
     color: var(--neutral0);
 }
 
-.sorting-controls select:hover {
+sorting-controls select:hover {
     background-color: var(--accent100); /* Changes color on hover */
 }
 
-.sorting-controls select:focus {
+sorting-controls select:focus {
     outline: none;
     border: 1px solid var(--accent100); /* Highlight border on focus */
 }
