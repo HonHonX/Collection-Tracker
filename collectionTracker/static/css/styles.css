@@ -150,6 +150,7 @@ select {
     cursor: pointer;
     box-shadow: var(--boxShadow);
     transition: var(--transitionStyle);
+    box-sizing: border-box;
 }
 
 .button:hover {

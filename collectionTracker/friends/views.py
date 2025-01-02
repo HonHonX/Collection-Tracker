@@ -3,12 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from collection.models import Album, UserAlbumWishlist, UserAlbumCollection
-from .models import Friend, FriendList
+from .models import Friend, FriendList, SharingToken
 from .forms import FriendForm
+import uuid
 
 @login_required
 def friends_view(request):
+    user = request.user
+    user_token, created = SharingToken.objects.get_or_create(user=user)
     if request.method == 'POST':
         if 'remove_friend' in request.POST:
             friend_email = request.POST.get('friend_email')
@@ -44,7 +48,7 @@ def friends_view(request):
         form = FriendForm()
     
     friends = Friend.objects.filter(user=request.user).exclude(friend_email=request.user.email)
-    return render(request, 'friends/friends.html', {'form': form, 'friends': friends})
+    return render(request, 'friends/friends.html', {'form': form, 'friends': friends, 'token': user_token.token})
 
 def send_invitation_email(friend):
     subject = 'Invitation to Join Collection Tracker'
@@ -98,14 +102,24 @@ def user_collection(request, username):
     collection = Album.objects.filter(useralbumcollection__user=user)
     return render(request, 'friends/user_collection.html', {'user': user, 'collection': collection})
 
-def shared_user_wishlist(request, username):
-    user = get_object_or_404(User, username=username)
+def shared_user_wishlist(request, token):
+    user_token = get_object_or_404(SharingToken, token=token)
+    user = user_token.user
     wishlist = Album.objects.filter(useralbumwishlist__user=user)
     return render(request, 'friends/user_wishlist.html', {'user': user, 'wishlist': wishlist})
 
-def shared_user_collection(request, username):
-    user = get_object_or_404(User, username=username)
+def shared_user_collection(request, token):
+    user_token = get_object_or_404(SharingToken, token=token)
+    user = user_token.user
     collection = Album.objects.filter(useralbumcollection__user=user)
     return render(request, 'friends/user_collection.html', {'user': user, 'collection': collection})
 
+@login_required
+def generate_token(request):
+    user = request.user
+    user_token, created = SharingToken.objects.get_or_create(user=user)
+    if not created:
+        user_token.token = uuid.uuid4()
+        user_token.save()
+    return JsonResponse({'token': str(user_token.token)})
 

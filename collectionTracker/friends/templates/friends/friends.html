@@ -19,18 +19,18 @@
             <div id="share-userinfo">
                 <h2>Share with Friends</h2>
                 <p>Share a link to your collection or your wishlist with your friends!</br>They will not be able to edit your lists.</p>
-                
+
                 <div id="my-wishlist" class="share-link">
                     <img class="icon" src="{% static 'icons/wishlist.svg' %}">
                     <div id="wishlist-link" class="link">
-                        <a href="{% url 'shared_user_wishlist' user.username %}">Share Wishlist</a>
+                        <a id="wishlist-share-link" href="{% url 'shared_user_wishlist' token %}">Share Wishlist</a>
                     </div>
                 </div>
 
                 <div id="my-collection" class="share-link">
                     <img class="icon" src="{% static 'icons/collection.svg' %}">
                     <div id="collection-link" class="link">
-                        <a href="{% url 'shared_user_collection' user.username %}">Share Collection</a>
+                        <a id="collection-share-link" href="{% url 'shared_user_collection' token %}">Share Collection</a>
                     </div>
                 </div>
 
@@ -40,9 +40,18 @@
                 <h2>Add Friend</h2>
                 <form method="post" id="add-friend-form">
                     {% csrf_token %}
-                    <input type="email" name="friend_email" placeholder="Friend's Email" required>
+                    <input id="friend-email" type="email" name="friend_email" placeholder="Friend's Email" required>
                     <button type="submit" name="add_friend" class="button">Add</button>
                 </form>
+
+                <div id="token-section">
+                    <h2>Sharing Token</h2>
+                    <p>The sharing token was generated for you to make sure that only authorized people can see your shared collection & wishlist. If you want to cut the access for people you previously shared the link with, generate a new token. </p>
+                    <div id="token-box">
+                        <div id="token-display">{{ token }}</div>
+                        <button id="generate-token-button" class="button">Generate Token</button>                        
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -99,4 +108,24 @@
         </div>
     </div>   
     
+{% endblock %}
+
+{% block js %}
+    <script>
+        document.getElementById('generate-token-button').addEventListener('click', function() {
+            fetch("{% url 'generate_token' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('token-display').textContent = data.token;
+                document.getElementById('wishlist-share-link').href = "{% url 'shared_user_wishlist' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', data.token);
+                document.getElementById('collection-share-link').href = "{% url 'shared_user_collection' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', data.token);
+            });
+        });
+    </script>
 {% endblock %}
