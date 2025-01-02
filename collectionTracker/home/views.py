@@ -41,3 +41,11 @@ def user_profile(request):
     else:
         form = ProfileImageForm()
     return render(request, 'home/profile.html', {'user': request.user, 'form': form})
+
+@login_required
+def remove_profile_image(request):
+    profile = Profile.objects.get(user=request.user)
+    if profile.image:
+        profile.image.delete()
+        profile.save()
+    return redirect('user_profile')

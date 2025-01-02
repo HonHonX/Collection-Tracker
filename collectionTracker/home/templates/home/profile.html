@@ -20,11 +20,17 @@
             {% else %}
                 <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
             {% endif %}
-            <form id="profile-image-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="button">Upload Image</button>
-            </form>
+            <div class="image-controls">
+                <form id="profile-image-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="button">Upload Image</button>
+                </form>
+                <form id="remove-image-form" method="post" action="{% url 'remove_profile_image' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button">Remove Image</button>
+                </form>
+            </div>
         </div>
         <div class="profile-info">
             <h2>User Information</h2>

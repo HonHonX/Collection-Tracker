@@ -45,13 +45,20 @@ input[type="file"]:hover::-webkit-file-upload-button {
     transform: translateY(-2px);
 }
 
+.image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+}
+
 .user-image {
     width: 25rem;
 }
 
-#profile-image-form {
+#profile-image-form,
+#remove-image-form {
     background-color: var(--neutral100);
-    justify-content: end;
 }
 
 #profile-image-form .user-image input[type="button"],
