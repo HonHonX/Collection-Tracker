@@ -47,7 +47,7 @@ def friends_view(request):
 
 def send_invitation_email(friend):
     subject = 'Invitation to Join Collection Tracker'
-    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\nhttp://localhost:8000/register/?email={friend.friend_email}\n\nThank you!'
+    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\nhttp://localhost:8000/register/?email={friend.friend_email}\n\nPlease click the link below to confirm the request after registering:\n\nhttp://localhost:8000/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)
