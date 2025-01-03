@@ -32,7 +32,7 @@ urlpatterns = [
     path('collection/', include("collection.urls")),
     path('stats/', include("stats.urls")),
     #path('users/', include("users.urls")),
-    path('settings/', include("settings.urls")),
+    # path('settings/', include("settings.urls")),
  
     path("search/", include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, UserProfile
 
 admin.site.register(Profile)
 
-# Register your models here.
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'color_scheme',)

@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import settings_view, change_color_scheme
+from . import views
 
 urlpatterns = [
-    path('', settings_view, name='settings'),
-    path('change-color-scheme/', change_color_scheme, name='change_color_scheme'),
+    path('', views.settings_view, name='settings'),
+    path('change-color-scheme/', views.change_color_scheme, name='change_color_scheme'),
 ]

@@ -1,6 +1,6 @@
 @import url("../../css/styles.css");
 
-.profile-header {
+#settings-block {
     display: flex;
     flex-direction: row;
     gap: var(--gapBigBlocks);
@@ -78,4 +78,14 @@ input[type="file"]:hover::-webkit-file-upload-button {
     box-sizing: border-box;
 }
 
-/* User Information */
+#user-settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+}
+
+#logout-button {
+    background-color: var(--accentVariantB100);
+    align-self: self-end;
+    margin-top: auto;
+}

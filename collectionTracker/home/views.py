@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from .forms import ProfileImageForm
-from .models import Profile
+from .models import Profile, UserProfile
 from collection.models import UserFollowedArtists, Album
 
 # Create your views here.
@@ -59,5 +59,14 @@ def remove_profile_image(request):
     profile = Profile.objects.get(user=request.user)
     if profile.image:
         profile.image.delete()
+        profile.save()
+    return redirect('user_profile')
+
+@login_required
+def change_color_scheme(request):
+    if request.method == 'POST':
+        new_color_scheme = request.POST.get('color_scheme')
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        profile.color_scheme = new_color_scheme
         profile.save()
     return redirect('user_profile')
