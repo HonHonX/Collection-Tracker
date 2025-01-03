@@ -62,6 +62,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Statistics Button
+    var dashboardButton = document.getElementById('dashboard-button');
+    if (dashboardButton) {
+        var dashboardUrl = dashboardButton.getAttribute('data-dashboard-url');
+        dashboardButton.addEventListener('click', function() {
+            window.location.href = dashboardUrl;
+        });
+    }
+
     // Friends Button
     var friendsButton = document.getElementById('friends-button');
     if (friendsButton) {
