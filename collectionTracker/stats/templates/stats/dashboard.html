@@ -1,0 +1,40 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block site_specific_css %}
+    <!-- <link rel="stylesheet" href="{% static 'stats/css/dashboard.css' %}" type="text/css"> -->
+{% endblock %}
+
+{% block maincontent %}
+    <h1>User Dashboard</h1>
+    <div class="dashboard">
+        <div class="stat">
+            <h2>Total Artists</h2>
+            <p>{{ user_progress.total_artists }}</p>
+        </div>
+        <div class="stat">
+            <h2>Total Albums</h2>
+            <p>{{ user_progress.total_albums }}</p>
+        </div>
+        <div class="stat">
+            <h2>Collection Count</h2>
+            <p>{{ user_progress.total_collection_count }}</p>
+        </div>
+        <div class="stat">
+            <h2>Wishlist Count</h2>
+            <p>{{ user_progress.total_wishlist_count }}</p>
+        </div>
+        <div class="stat">
+            <h2>Blacklist Count</h2>
+            <p>{{ user_progress.total_blacklist_count }}</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <!-- Add JavaScript for graphs and charts here -->
+{% endblock %}

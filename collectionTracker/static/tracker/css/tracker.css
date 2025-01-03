@@ -4,7 +4,7 @@
 .maincontent{
     display: flex;
     flex-direction: wrap;
-    gap: 3rem;
+    gap: var(--gapBigBlocks);
     height: 100%;
     padding: 0 2rem;
 }

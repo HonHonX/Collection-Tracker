@@ -30,7 +30,7 @@ urlpatterns = [
     path('', include("home.urls")),
     path('friends/', include("friends.urls")),
     path('collection/', include("collection.urls")),
-    #path('stats/', include("stats.urls")),
+    path('stats/', include("stats.urls")),
     #path('users/', include("users.urls")),
     path('settings/', include("settings.urls")),
  

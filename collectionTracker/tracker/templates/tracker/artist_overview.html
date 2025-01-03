@@ -22,7 +22,13 @@
 
             <div id="artist-name">
                 <h1>{{ artist_name }}</h1>
-                <button id="follow-button" class="button" data-artist-id="{{ artist_info.id }}">
+                <button id="follow-button" class="button" 
+                    data-artist-id="{{ artist_info.id }}" 
+                    data-artist-name="{{ artist_info.name }}"
+                    data-artist-genres="{{ artist_info.genres }}"
+                    data-artist-popularity="{{ artist_info.popularity }}"
+                    data-artist-photo-url="{{ artist_photo_url }}"
+                    data-follow-url="{% url 'follow_artist' %}">
                     {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
                 </button>
             </div>

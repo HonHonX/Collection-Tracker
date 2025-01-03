@@ -1,0 +1,83 @@
+@import url("../../css/styles.css");
+
+:root {
+    --sliderHeight: 15rem;
+}
+
+.followed-artists-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+}
+.artist-card {
+    display: flex;
+    flex-direction: row;
+    height: var(--sliderHeight);
+}
+
+.artist-block {
+    display: flex;
+    flex-direction: row;
+    border-radius: var(--borderRadius);
+    background-color: var(--neutral90);
+    padding: 0 1rem;
+    width: 20rem;
+    height: var(--sliderHeight);
+    gap: var(--gapDistance);
+    align-items: center;
+    box-sizing: border-box;
+}
+
+#artist-image {
+    height: 6rem;
+    width: 6rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+
+#album-image {
+    height: 10rem;
+    width: auto; 
+    border-radius: var(--borderRadius);
+}
+
+#artist-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+p {
+    margin: 0;
+    text-align: left;
+    overflow-x: hidden;
+}
+
+h2 {
+    margin: 0 0 0.5rem 0;
+    text-align: left;
+}
+
+.album-slider {
+    height: var(--sliderHeight);
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    padding: 0 1rem;
+}
+
+.album-block {
+    height: var(--sliderHeight);
+    width: 10rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.album-image {
+    width: auto;
+    border-radius: var(--borderRadius);
+    aspect-ratio: 1/1;
+}

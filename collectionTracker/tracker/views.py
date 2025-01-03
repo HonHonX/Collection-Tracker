@@ -8,8 +8,9 @@ import os
 import subprocess
 import logging
 from django.contrib.auth.decorators import login_required
-from collection.models import Artist, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserProgress, UserArtistProgress, UserFollowedArtists  # Import the model
+from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserProgress, UserArtistProgress, UserFollowedArtists  # Import the model
 import json
+from django.db import transaction
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -39,6 +40,13 @@ def artist_search(request):
     if request.method == 'POST':
         artist_name = request.POST.get('artist_name')
         
+        if not artist_name:
+            error = "Artist name is required."
+            return render(request, 'tracker/artist_search.html', {
+                'artist_name': '',
+                'error': error,
+            })
+        
         try:
             # Search by name → Spotify API
             result = sp.search(q=artist_name, type='artist')
@@ -46,7 +54,6 @@ def artist_search(request):
             if len(result['artists']['items']) == 0:  # List empty
                 error = f"Artist {artist_name} not found!"
             else:
-                # Get artist's Spotify ID and image
                 artist_info = result['artists']['items'][0]
                 artist_id = artist_info['id']
                 artist_photo_url = artist_info['images'][0]['url'] if artist_info['images'] else None
@@ -85,7 +92,7 @@ def artist_search(request):
                     'total_albums': total_albums  # Total number of albums
                 }
 
-                # The first album in the sorted list is the latest
+                # The first album in the sorted list is the latest 
                 if sorted_albums:
                     latest_album = sorted_albums[0]
 
@@ -120,11 +127,37 @@ def artist_search(request):
                     wishlist_count = sum(1 for album in sorted_albums if album['id'] in user_wishlist_ids)
                     blacklist_count = sum(1 for album in sorted_albums if album['id'] in user_blacklist_ids)
 
+                # Save artist and albums to the database
+                with transaction.atomic():
+                    artist, created = Artist.objects.get_or_create(
+                        id=artist_id,
+                        defaults={
+                            'name': artist_info['name'],
+                            'photo_url': artist_photo_url,
+                            'genres': artist_info['genres'],
+                            'popularity': artist_info['popularity'],
+                        }
+                    )
+
+                    for album in sorted_albums:
+                        Album.objects.get_or_create(
+                            id=album['id'],
+                            defaults={
+                                'name': album['name'],
+                                'album_type': album['album_type'],
+                                'release_date': album['release_date'],
+                                'image_url': album['images'][0]['url'] if album['images'] else None,
+                                'artist': artist,
+                            }
+                        )
+
         except Exception as e:
             error = str(e)
 
         # Add a fallback if 'name' is not in artist_info
         artist_name = artist_info.get('name', 'Unknown Artist')  # Fallback to 'Unknown Artist'
+
+        follow_url = request.build_absolute_uri('/search/follow_artist/')
 
         # Pass albums, artist info, artist photo, error message, user_album_ids,user_wishlist_ids and user_blacklist_ids to the template
         return render(request, 'tracker/artist_overview.html', {
@@ -141,6 +174,7 @@ def artist_search(request):
             'wishlist_count': wishlist_count,  # Include wishlist_count
             'blacklist_count': blacklist_count,  # Include blacklist_count
             'user_followed_artist_ids': user_followed_artist_ids,  # Include user_followed_artist_ids in the context
+            'follow_url': follow_url,  # Include follow_url in the context
         })
     
     return render(request, 'tracker/artist_search.html', {
@@ -188,7 +222,14 @@ def follow_artist(request):
         user = request.user
 
         try:
-            artist = Artist.objects.get(id=artist_id)
+            # Check if the artist already exists in the database
+            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
+                'name': data.get('artist_name'),
+                'genres': data.get('artist_genres', []),
+                'popularity': data.get('artist_popularity', 0),
+                'photo_url': data.get('artist_photo_url', '')
+            })
+
             follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
 
             if not created:
@@ -197,7 +238,7 @@ def follow_artist(request):
             else:
                 return JsonResponse({'success': True, 'message': 'Artist followed.'})
 
-        except Artist.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Artist not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)

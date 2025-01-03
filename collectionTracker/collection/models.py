@@ -67,7 +67,7 @@ class UserAlbumWishlist(models.Model):
         (3, 'High'),
         (0, 'Unspecified'),
     ]
-    
+     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)

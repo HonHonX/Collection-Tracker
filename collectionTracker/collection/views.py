@@ -64,7 +64,7 @@ def manage_album_in_list(user, album, list_type, action):
     return JsonResponse({'success': False, 'error': 'Invalid action.'})
 
 # Generic album management view
-@csrf_exempt
+@csrf_exempt 
 @login_required
 def manage_album(request, list_type, action):
     if request.method == 'POST':
