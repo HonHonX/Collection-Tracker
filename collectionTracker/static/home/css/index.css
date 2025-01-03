@@ -4,6 +4,11 @@
     --sliderHeight: 15rem;
 }
 
+.followed-artists-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+}
 .artist-card {
     display: flex;
     flex-direction: row;
@@ -15,7 +20,7 @@
     flex-direction: row;
     border-radius: var(--borderRadius);
     background-color: var(--neutral90);
-    padding: 1rem;
+    padding: 0 1rem;
     width: 20rem;
     height: var(--sliderHeight);
     gap: var(--gapDistance);
@@ -32,7 +37,7 @@
 
 #album-image {
     height: 10rem;
-    width: auto;
+    width: auto; 
     border-radius: var(--borderRadius);
 }
 
@@ -45,18 +50,34 @@
 p {
     margin: 0;
     text-align: left;
+    overflow-x: hidden;
+}
+
+h2 {
+    margin: 0 0 0.5rem 0;
+    text-align: left;
 }
 
 .album-slider {
     height: var(--sliderHeight);
-    padding: 0;
     display: flex;
     flex-direction: row;
     gap: var(--gapDistance);
-    width: 100%;
-    padding: 1rem;
+    padding: 0 1rem;
 }
 
-.album-item {
-    height: 100%;
+.album-block {
+    height: var(--sliderHeight);
+    width: 10rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.album-image {
+    width: auto;
+    border-radius: var(--borderRadius);
+    aspect-ratio: 1/1;
 }

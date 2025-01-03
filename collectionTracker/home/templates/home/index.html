@@ -27,12 +27,12 @@
 
                 <div class="album-slider">
                     {% for album in followed_artist.albums %}
-                        <div class="album-item">
+                        <div class="album-block">
                             <img id="album-image" src="{{ album.image_url }}" alt="{{ album.name }}">
                             <p>{{ album.name }}</p>
                         </div>
                     {% endfor %}
-                </div>
+                </div> {}
             </div>
         {% endfor %}
     </div>
