@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchBar = document.querySelector('.searchbar');
         const searchButton = document.getElementById('search-button');
 
-        if (searchButton && searchBar) {
+        if (searchButton && searchBar) { 
             if (!searchButton.contains(event.target) && !searchBar.contains(event.target)) {
                 searchBar.classList.remove('visible');
             } else if (searchButton.contains(event.target)) {
@@ -126,6 +126,33 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.key === "Escape" && searchBar.classList.contains("visible")) {
                 hideSearchBar();
             }
+        });
+    }
+
+    // Mobile Home Button
+    var mobileHomeButton = document.querySelector('.navbar .nav-item#home-button');
+    if (mobileHomeButton) {
+        var mobileHomeUrl = mobileHomeButton.getAttribute('data-home-url');
+        mobileHomeButton.addEventListener('click', function() {
+            window.location.href = mobileHomeUrl;
+        });
+    }
+
+    // Mobile Collection Button
+    var mobileCollectionButton = document.querySelector('.navbar .nav-item#mobile-collection-button');
+    if (mobileCollectionButton) {
+        var mobileCollectionUrl = mobileCollectionButton.getAttribute('data-collection-url');
+        mobileCollectionButton.addEventListener('click', function() {
+            window.location.href = mobileCollectionUrl;
+        });
+    }
+
+    // Mobile Settings Button
+    var mobileSettingsButton = document.querySelector('.navbar .nav-item#settings-button');
+    if (mobileSettingsButton) {
+        var mobileSettingsUrl = mobileSettingsButton.getAttribute('data-settings-url');
+        mobileSettingsButton.addEventListener('click', function() {
+            window.location.href = mobileSettingsUrl;
         });
     }
 });

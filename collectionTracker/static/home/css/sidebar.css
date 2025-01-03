@@ -18,7 +18,7 @@
 
 .page {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; 
     align-items: start;
     width: 100%;
 }
@@ -59,7 +59,7 @@
 }
 
 .sidebar-item:hover {
-    background-color: var(--neutral70);
+    background-color: var(--accent100);
     box-shadow: var(--boxShadow);
     transform: translateY(-2px);
 }
@@ -179,6 +179,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: auto; /* Ensure navigation items are clickable */
+        z-index: 1001; /* Ensure nav items are above other elements */
     }
 
     /* Hover effect */

@@ -1,0 +1,62 @@
+@import url("../../css/styles.css");
+
+:root {
+    --sliderHeight: 15rem;
+}
+
+.artist-card {
+    display: flex;
+    flex-direction: row;
+    height: var(--sliderHeight);
+}
+
+.artist-block {
+    display: flex;
+    flex-direction: row;
+    border-radius: var(--borderRadius);
+    background-color: var(--neutral90);
+    padding: 1rem;
+    width: 20rem;
+    height: var(--sliderHeight);
+    gap: var(--gapDistance);
+    align-items: center;
+    box-sizing: border-box;
+}
+
+#artist-image {
+    height: 6rem;
+    width: 6rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+
+#album-image {
+    height: 10rem;
+    width: auto;
+    border-radius: var(--borderRadius);
+}
+
+#artist-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+p {
+    margin: 0;
+    text-align: left;
+}
+
+.album-slider {
+    height: var(--sliderHeight);
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    width: 100%;
+    padding: 1rem;
+}
+
+.album-item {
+    height: 100%;
+}

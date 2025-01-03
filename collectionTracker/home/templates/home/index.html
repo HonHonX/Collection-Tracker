@@ -1,1 +1,39 @@
 {% extends 'base_with_sidebar.html' %}
+
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home/css/index.css' %}" type="text/css">
+{% endblock %}  
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block maincontent %}
+    <div class="followed-artists-section">
+        <h2>Followed Artists</h2>
+        {% for followed_artist in followed_artists %}
+            <div class="artist-card">
+                <div class="artist-block">
+                    <img id="artist-image" src="{{ followed_artist.artist.photo_url }}" alt="{{ followed_artist.artist.name }}">
+                    <div id="artist-info">
+                        <h2>{{ followed_artist.artist.name }}</h2>
+                            {% if followed_artist.artist.genres and followed_artist.artist.genres|length > 0 and followed_artist.artist.genres != "[]" %}
+                        <p>Genres: {{ followed_artist.artist.genres|join:", " }}</p>
+                            {% endif %}
+                        <p>Popularity: {{ followed_artist.artist.popularity }}</p>
+                    </div>
+                </div>
+
+                <div class="album-slider">
+                    {% for album in followed_artist.albums %}
+                        <div class="album-item">
+                            <img id="album-image" src="{{ album.image_url }}" alt="{{ album.name }}">
+                            <p>{{ album.name }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

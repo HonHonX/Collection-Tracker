@@ -7,10 +7,17 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from .forms import ProfileImageForm
 from .models import Profile
+from collection.models import UserFollowedArtists, Album
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
     def get(self, request):
+        followed_artists = []
+        if request.user.is_authenticated:
+            followed_artists = UserFollowedArtists.objects.filter(user=request.user).select_related('artist')
+            for followed_artist in followed_artists:
+                followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
+
         #print(request.get_host())
         #host = request.get_host()
         #islocal = host.find('localhost') >= 0 or host.find('127.0.0.1') >= 0
@@ -18,8 +25,13 @@ class HomeView(LoginRequiredMixin, View):
         #    'installed': settings.INSTALLED_APPS,
         #    'islocal': islocal
         #}
-        #return render(request, 'home/index.html', context)
-        return render(request, 'home/index.html', {'settings': settings})
+        #return render(request, 'home/index.html', context)   
+
+        return render(request, 'home/index.html', {
+            'settings': settings,
+            'followed_artists': followed_artists,
+        })
+    
     
 class WelcomeView(View):
     def get(self, request):  
