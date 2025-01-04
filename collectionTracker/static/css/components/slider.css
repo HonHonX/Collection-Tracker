@@ -1,0 +1,26 @@
+.album-slider {
+    height: var(--sliderHeight);      
+    display: flex;                   
+    flex-direction: row;             /* Arrange items in a row */
+    gap: var(--gapDistance);        /* Spacing between album items */
+    padding: 0 1rem;                 
+    flex-grow: 1;
+    overflow-x: auto;                /* Enable horizontal scrolling */
+    overflow-y: hidden;              /* Disable vertical scrolling*/
+    scroll-behavior: smooth;         /* Smooth scrolling */
+    box-sizing: border-box;          
+    margin: 0;                  
+}
+
+.album-slider::-webkit-scrollbar {
+    height: 8px;                     /* Custom scrollbar height */
+}
+
+.album-slider::-webkit-scrollbar-thumb {
+    background-color: var(--neutral70); /* Scrollbar thumb color */
+    border-radius: 4px;              /* Rounded scrollbar thumb */
+}
+
+.album-slider::-webkit-scrollbar-track {
+    background-color: var(--neutral90); /* Scrollbar track color */
+}
