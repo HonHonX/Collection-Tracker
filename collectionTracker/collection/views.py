@@ -70,41 +70,20 @@ def manage_album(request, list_type, action):
     if request.method == 'POST':
         data = json.loads(request.body)
         album_id = data.get('album_id')
-        artist_id = data.get('artist_id')  # Ensure artist_id is retrieved
-        artist_name = data.get('artist_name', '').strip()  # Add strip to avoid leading/trailing whitespace
-
-        if not artist_name or not artist_id:
-            return JsonResponse({'success': False, 'error': 'Artist name and ID are required.'}, status=400)
+        album_name = data.get('album_name')
+        album_type = data.get('album_type')
+        release_date = data.get('release_date')
+        image_url = data.get('image_url')
 
         user = request.user
-
-        artist, _ = Artist.objects.get_or_create(
-            id=artist_id,  # Ensure artist_id is used here
-            defaults={
-                'name': artist_name,
-                'photo_url': data.get('artist_photo_url'),
-                'genres': data.get('artist_genres', []),
-                'popularity': data.get('artist_popularity', 0),
-            }
-        )
-
-        # Update artist fields if they are provided in the request
-        if artist.photo_url != data.get('artist_photo_url'):
-            artist.photo_url = data.get('artist_photo_url', artist.photo_url)
-        if artist.genres != data.get('artist_genres'):
-            artist.genres = data.get('artist_genres', artist.genres)
-        if artist.popularity != data.get('artist_popularity'):
-            artist.popularity = data.get('artist_popularity', artist.popularity)
-        artist.save() 
 
         album, _ = Album.objects.get_or_create(
             id=album_id,
             defaults={
-                'name': data.get('album_name'),
-                'album_type': data.get('album_type'),
-                'release_date': data.get('release_date'),
-                'image_url': data.get('image_url'),
-                'artist': artist,
+                'name': album_name,
+                'album_type': album_type,
+                'release_date': release_date,
+                'image_url': image_url,
             }
         )
 

@@ -1,7 +1,7 @@
 @import url("../../css/styles.css");
 
 :root {
-    --sliderHeight: 13rem;
+    --sliderHeight: 16rem;
 }
 
 p {
@@ -43,7 +43,7 @@ h3 {
     border-radius: var(--borderRadius);
     background-color: var(--neutral90);
     padding: 0 1rem;
-    width: 25rem;
+    width: 22rem;
     height: var(--sliderHeight);
     gap: var(--gapDistance);
     align-items: center;
@@ -52,8 +52,8 @@ h3 {
 }
 
 #artist-image {
-    height: 8rem;
-    width: 8rem;
+    height: 9rem;
+    width: 9rem;
     aspect-ratio: 1/1;
     border-radius: 50%;
 }
@@ -82,7 +82,7 @@ h3 {
     padding: 0 4rem;
 }
 
-.album-block {
+.album-item {
     height: var(--sliderHeight);
     width: 8rem;
     display: flex;
@@ -92,14 +92,13 @@ h3 {
     font-size: 0.6rem;
     line-height: 1.25rem;
     text-transform: capitalize;
+    margin: 0;
 }
 
 .album-block strong {
     font-size: 0.8rem;
 }
 
-.album-image {
-    width: auto;
-    border-radius: var(--borderRadius);
-    aspect-ratio: 1/1;
+#album-image {
+    margin: 0 auto;
 }

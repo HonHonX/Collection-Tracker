@@ -74,18 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const albumType = albumItem.dataset.albumType;
         const releaseDate = albumItem.dataset.releaseDate;
         const imageUrl = albumItem.dataset.imageUrl;
-        const artistName = albumItem.dataset.artistName;
-        const artistId = albumItem.dataset.artistId;
-        const artistPhotoUrl = albumItem.dataset.artistPhotoUrl;
-        const artistGenres = albumItem.dataset.artistGenres;
-        const artistPopularity = albumItem.dataset.artistPopularity;
 
-        console.log({
-            artist_photo_url: albumItem.dataset.artistPhotoUrl,
-            artist_genres: albumItem.dataset.artistGenres,
-            artist_popularity: albumItem.dataset.artistPopularity,
-        });
-    
         const action = isInList ? 'remove' : 'add';
         const url = `/collection/manage_album/${listType}/${action}/`;
     
@@ -114,11 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 album_type: albumType,
                 release_date: releaseDate,
                 image_url: imageUrl,
-                artist_name: artistName,
-                artist_id: artistId,
-                artist_photo_url: artistPhotoUrl,
-                artist_genres: artistGenres,
-                artist_popularity: artistPopularity,
             }),
         })
         .then(response => {
@@ -153,11 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 album_type: albumType,
                                 release_date: releaseDate,
                                 image_url: imageUrl,
-                                artist_name: artistName,
-                                artist_id: artistId,
-                                artist_photo_url: artistPhotoUrl,
-                                artist_genres: artistGenres,
-                                artist_popularity: artistPopularity,
                             }),
                         })
                         .catch(error => {
@@ -183,11 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 album_type: albumType,
                                 release_date: releaseDate,
                                 image_url: imageUrl,
-                                artist_name: artistName,
-                                artist_id: artistId,
-                                artist_photo_url: artistPhotoUrl,
-                                artist_genres: artistGenres,
-                                artist_popularity: artistPopularity,
                             }),
                         })
                         .catch(error => {

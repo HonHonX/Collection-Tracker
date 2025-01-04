@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from .forms import ProfileImageForm
 from .models import Profile, UserProfile
-from collection.models import UserFollowedArtists, Album
+from collection.models import UserFollowedArtists, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -27,9 +27,16 @@ class HomeView(LoginRequiredMixin, View):
         #}
         #return render(request, 'home/index.html', context)   
 
+        user_album_ids = UserAlbumCollection.objects.filter(user=request.user).values_list('album__id', flat=True)
+        user_blacklist_ids = UserAlbumBlacklist.objects.filter(user=request.user).values_list('album__id', flat=True)
+        user_wishlist_ids = UserAlbumWishlist.objects.filter(user=request.user).values_list('album__id', flat=True)
+
         return render(request, 'home/index.html', {
             'settings': settings,
             'followed_artists': followed_artists,
+            'user_album_ids': user_album_ids,
+            'user_blacklist_ids': user_blacklist_ids,
+            'user_wishlist_ids': user_wishlist_ids,
         })
     
     
