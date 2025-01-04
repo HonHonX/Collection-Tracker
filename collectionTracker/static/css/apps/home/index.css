@@ -1,5 +1,3 @@
-@import url("../../css/styles.css");
-
 :root {
     --sliderHeight: 16rem;
 }
@@ -78,13 +76,12 @@ h3 {
     height: var(--sliderHeight);
     display: flex;
     flex-direction: row;
-    gap: var(--gapBigBlocks);
+    gap: var(--gapDistance);
     padding: 0 4rem;
 }
 
 .album-item {
     height: var(--sliderHeight);
-    width: 8rem;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;

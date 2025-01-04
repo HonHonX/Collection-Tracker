@@ -96,6 +96,30 @@ def artist_search(request):
                 if sorted_albums:
                     latest_album = sorted_albums[0]
 
+                # Save artist and albums to the database
+                with transaction.atomic():
+                    artist, created = Artist.objects.get_or_create(
+                        id=artist_id,
+                        defaults={
+                            'name': artist_info['name'],
+                            'photo_url': artist_photo_url,
+                            'genres': artist_info['genres'],
+                            'popularity': artist_info['popularity'],
+                        }
+                    )
+
+                    for album in sorted_albums:
+                        Album.objects.get_or_create(
+                            id=album['id'],
+                            defaults={
+                                'name': album['name'],
+                                'album_type': album['album_type'],
+                                'release_date': album['release_date'],
+                                'image_url': album['images'][0]['url'] if album['images'] else None,
+                                'artist': artist,
+                            }
+                        )
+
                 # Get the list of user albums (user_album_ids), blacklist (user_blacklist_ids) and wishlist (user_wishlist_ids)
                 if request.user.is_authenticated:
                     # Get albums in the user's collection
@@ -126,30 +150,6 @@ def artist_search(request):
                     collection_count = sum(1 for album in sorted_albums if album['id'] in user_album_ids)
                     wishlist_count = sum(1 for album in sorted_albums if album['id'] in user_wishlist_ids)
                     blacklist_count = sum(1 for album in sorted_albums if album['id'] in user_blacklist_ids)
-
-                # Save artist and albums to the database
-                with transaction.atomic():
-                    artist, created = Artist.objects.get_or_create(
-                        id=artist_id,
-                        defaults={
-                            'name': artist_info['name'],
-                            'photo_url': artist_photo_url,
-                            'genres': artist_info['genres'],
-                            'popularity': artist_info['popularity'],
-                        }
-                    )
-
-                    for album in sorted_albums:
-                        Album.objects.get_or_create(
-                            id=album['id'],
-                            defaults={
-                                'name': album['name'],
-                                'album_type': album['album_type'],
-                                'release_date': album['release_date'],
-                                'image_url': album['images'][0]['url'] if album['images'] else None,
-                                'artist': artist,
-                            }
-                        )
 
         except Exception as e:
             error = str(e)

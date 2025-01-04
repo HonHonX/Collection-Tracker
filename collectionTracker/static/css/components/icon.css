@@ -1,0 +1,8 @@
+:root {
+    /* Design Sizes */  
+    --iconSize: 2rem;
+}
+
+.icon:hover {
+    cursor: pointer;
+}

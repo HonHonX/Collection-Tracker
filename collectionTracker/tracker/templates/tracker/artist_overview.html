@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block site_specific_css %}
-    <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css">
+    <!-- <link rel="stylesheet" href="{% static 'css/apps/tracker/artist_overview.css' %}" type="text/css"> -->
 {% endblock %}
 
 {% block maincontent %}
@@ -15,133 +15,145 @@
     {% if error %}
         <p>{{ error }}</p>
     {% else %}
-        <div class="artist-detail">
-            {% if artist_photo_url %}
-                <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
-            {% endif %}
+        <!-- light column -->
+            <div class="artist-detail">
+                {% if artist_photo_url %}
+                    <img id="search-artist-photo" src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                {% endif %}
 
-            <div class="follow-block" 
-                data-artist-id="{{ artist_info.id }}" 
-                data-artist-name="{{ artist_info.name }}" 
-                data-artist-genres="{{ artist_info.genres }}"
-                data-artist-popularity="{{ artist_info.popularity }}"
-                data-artist-photo-url="{{ artist_photo_url }}"
-                data-follow-url="{% url 'follow_artist' %}">
-                <button id="follow-button" class="button">
-                    {% if followed_artist.artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
-                </button>
-            </div>
-
-            <div id="artist-name">
-                <h1>{{ artist_name }}</h1>
-            </div>
-            
-            {% if artist_info.genres %}
-                <p>Genres: {{ artist_info.genres|join:", " }}</p>
-            {% endif %}
-
-            <p>Popularity: {{ artist_info.popularity }}</p>
-            <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
-
-            <!-- Add counters for Collection, Wishlist, and Blacklist -->
-            <div class="album-counters">
-                <h2>artist collection progress</h2>
-                <div class="counter-item">
-                    <div id="progress-bar">
-                        <div id="collection-progress" class="progress"></div>
-                        <div id="collection-and-wishlist-progress" class="progress"></div>
-                        <div id="wishlist-progress" class="progress"></div>
-                        <div id="blacklist-progress" class="progress"></div>
-                    </div>
-                    <span id="collection-percentage"></span>
-                </div>
-                <div id="progress-counter">
-                    <div class="progress-item">
-                        <div id="legend-collection" class="legend"></div>
-                        <span id="collection-counter" class="counter">{{ collection_count }}</br></span> 
-                        <span>Collection</span> 
-                    </div>
-                    <div class="progress-item">
-                        <div id="legend-collection-and-wishlist" class="legend"></div>
-                        <span id="collection-and-wishlist-counter" class="counter">{{ collection_and_wishlist_count }}</br></span> 
-                        <span>Collection & Wishlist</span> 
-                    </div>
-                    <div class="progress-item">
-                        <div id="legend-wishlist" class="legend"></div>
-                        <span id="wishlist-counter" class="counter">{{ wishlist_count }}</br></span> 
-                        <span>Wishlist</span> 
-                    </div>
-                    <div class="progress-item">
-                        <div id="legend-blacklist" class="legend"></div>
-                        <span id="blacklist-counter" class="counter">{{ blacklist_count }}</br></span> 
-                        <span>Blacklist</span>
-                    </div>
-                </div>
-            </div>                                         
-
-        </div>
-
-        <div class="album-overview">
-            <div class="sticky-top">
-                <div class="latest-release">
-                    <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}"
-                    class="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                </div>
-
-                <div class="sorting-controls">
-                    <label for="album-type-filter">Filter by Album Type:</label>
-                    <select id="album-type-filter">
-                        <option value="">All Types</option>
-                        <option value="Album">Album</option>
-                        <option value="Single">Single</option>
-                    </select>
-                    
-                    <label for="sort-criteria">Sort by:</label>
-                    <select id="sort-criteria">
-                        <option value="release_date">Release Date</option>
-                    </select>
-                    <img id="sort-toggle" class="sort-icon" 
-                        src="{% static 'icons/sort-asc.svg' %}" 
-                        alt="Sort toggle" 
-                        data-sort-order="asc">
-                </div>
-
-                <div class="gradient-box"></div>
-            </div>
-            <div class="album-grid">
-                {% for album in albums %}
-                <div class="album-item" 
-                    data-album-id="{{ album.id }}" 
-                    data-album-name="{{ album.name }}"
-                    data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
-                    data-image-url="{{ album.image_url }}"
-                    data-artist-id="{{ artist_info.id }}"
-                    data-artist-name="{{ artist_name }}"
-                    data-artist-photo-url="{{ artist_photo_url }}"
+                <div class="follow-block" 
+                    data-artist-id="{{ artist_info.id }}" 
+                    data-artist-name="{{ artist_info.name }}" 
                     data-artist-genres="{{ artist_info.genres }}"
                     data-artist-popularity="{{ artist_info.popularity }}"
-                    data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
-                    data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
-                    data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
-                    data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
-                    <div class="album-controls">
-                        <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
-                        <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
-                        <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Add/Remove">
+                    data-artist-photo-url="{{ artist_photo_url }}"
+                    data-follow-url="{% url 'follow_artist' %}">
+                    <button id="follow-button" class="button">
+                        {% if followed_artist.artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                    </button>
+                </div>
+
+                <div id="spacer-1"></div>
+
+                <h1>{{ artist_name }}</h1>
+                
+                {% if artist_info.genres %}
+                    <p>Genres: {{ artist_info.genres|join:", " }}</p>
+                {% endif %}
+
+                <p>Popularity: {{ artist_info.popularity }}</p>
+                <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
+
+                <div id="spacer-1"></div>
+
+                <!-- Add counters for Collection, Wishlist, and Blacklist -->
+                <div class="album-counters">
+                    <h2>artist collection progress</h2>
+                    <div class="counter-item">
+                        <div id="progress-bar">
+                            <div id="collection-progress" class="progress"></div>
+                            <div id="collection-and-wishlist-progress" class="progress"></div>
+                            <div id="wishlist-progress" class="progress"></div>
+                            <div id="blacklist-progress" class="progress"></div>
+                        </div>
+                        <span id="collection-percentage"></span>
+                    </div>
+                    <div id="progress-counter">
+                        <div class="progress-item">
+                            <div id="legend-collection" class="legend"></div>
+                            <span id="collection-counter" class="counter">{{ collection_count }}</br></span> 
+                            <span>Collection</span> 
+                        </div>
+                        <div class="progress-item">
+                            <div id="legend-collection-and-wishlist" class="legend"></div>
+                            <span id="collection-and-wishlist-counter" class="counter">{{ collection_and_wishlist_count }}</br></span> 
+                            <span>Collection & Wishlist</span> 
+                        </div>
+                        <div class="progress-item">
+                            <div id="legend-wishlist" class="legend"></div>
+                            <span id="wishlist-counter" class="counter">{{ wishlist_count }}</br></span> 
+                            <span>Wishlist</span> 
+                        </div>
+                        <div class="progress-item">
+                            <div id="legend-blacklist" class="legend"></div>
+                            <span id="blacklist-counter" class="counter">{{ blacklist_count }}</br></span> 
+                            <span>Blacklist</span>
+                        </div>
+                    </div>
+                </div>                                         
+
+            </div>
+
+        <!-- right column -->
+            <div class="album-overview">
+
+                <!-- The top is sticky so that is stays in place upon scrolling -->
+                <div class="sticky-top">
+                    <div class="spotify-block">
+                        <iframe src="https://open.spotify.com/embed/album/{{ latest_album.id }}"
+                        id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                     </div>
 
-                    {% if album.image_url %}
-                    <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
-                    {% endif %}
-                    <div class="album-info">
-                        {{ album.album_type }} <br>
-                        <strong>{{ album.name }} <br></strong>
-                        {{ album.release_date }} <br>
+                    <div class="control-block">
+                        
+                        <div class="filter-block">
+                            <label for="album-type-filter">Filter by Album Type:</label>
+                            <select id="album-type-filter">
+                                <option value="">All Types</option>
+                                <option value="Album">Album</option>
+                                <option value="Single">Single</option>
+                            </select>
+                        </div>
+                        
+                        <div class="sort-block">
+                            <label for="sort-criteria">Sort by:</label>
+                            <select id="sort-criteria">
+                                <option value="release_date">Release Date</option>
+                            </select>
+                            <img id="sort-toggle" class="sort-icon" 
+                                src="{% static 'icons/sort-asc.svg' %}" 
+                                alt="Sort toggle" 
+                                data-sort-order="asc">
+                        </div>
+
                     </div>
+
                 </div>
-                {% endfor %}
+
+                <div class="album-grid">
+                    {% for album in albums %}
+                    <div class="album-item" 
+                        data-album-id="{{ album.id }}" 
+                        data-album-name="{{ album.name }}"
+                        data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
+                        data-image-url="{{ album.image_url }}"
+                        data-artist-id="{{ artist_info.id }}"
+                        data-artist-name="{{ artist_name }}"
+                        data-artist-photo-url="{{ artist_photo_url }}"
+                        data-artist-genres="{{ artist_info.genres }}"
+                        data-artist-popularity="{{ artist_info.popularity }}"
+                        data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
+                        data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
+                        data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
+                        data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
+                        <div class="album-controls">
+                            <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
+                            <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
+                            <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Add/Remove">
+                        </div>
+
+                        {% if album.image_url %}
+                        <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                        {% endif %}
+                        <div class="album-info">
+                            {{ album.album_type }} <br>
+                            <strong>{{ album.name }} <br></strong>
+                            {{ album.release_date }} <br>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
     {% endif %}
 {% endblock %}
 

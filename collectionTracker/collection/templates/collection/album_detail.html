@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block site_specific_css %}
-    <link rel="stylesheet" href="{% static 'collection/css/collection.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/apps/collection/album_detail.css' %}" type="text/css">
 {% endblock %}
 
 {% block maincontent %}
@@ -16,9 +16,9 @@
         {% endif %}
 
         <h1>{{ album.name }}</h1>
-        <p><strong>Artist:</strong> {{ album.artist.name }}</p>
+        <h2>{{ album.artist.name }}</h2>
         <p><strong>Release Date:</strong> {{ album.release_date }}</p>
-        <p><strong>Type:</strong> {{ album.album_type }}</p>
+        <p><strong>Type:</strong> {{ album.album_type }}</p> 
     </div>
 
     <div class="custom-detail">
