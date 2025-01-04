@@ -10,8 +10,9 @@
 {% endblock %}
 
 {% block maincontent %}
+<div class="full-block">
     <h1>User Dashboard</h1>
-    <div class="dashboard">
+    <div class="dashboard-block">
         <div class="stat">
             <h2>Total Artists</h2>
             <p>{{ user_progress.total_artists }}</p>
@@ -33,7 +34,13 @@
             <p>{{ user_progress.total_blacklist_count }}</p>
         </div>
     </div>
-{% endblock %}
+
+    <h1>Badges</h1> 
+    <div class="badges-block">
+
+    </div>
+</div>
+{% endblock %} 
 
 {% block js %}
     <!-- Add JavaScript for graphs and charts here -->

@@ -14,21 +14,12 @@ p {
     font-size: 0.6rem;              /* Ensure consistent font size */
 }
 
-h2 {
-    margin: 0;
-    text-align: left;
-}
-
-h3 {
-    margin: 0;
-    text-align: left;
-}
-
 .followed-artists-section {
     display: flex;
     flex-direction: column;
     gap: var(--gapBigBlocks);
 }
+
 .artist-card {
     display: flex;
     flex-direction: row;
@@ -54,14 +45,6 @@ h3 {
     width: 9rem;
     aspect-ratio: 1/1;
     border-radius: 50%;
-}
-
-#album-image {
-    width: 8rem;
-    height: auto; 
-    border-radius: var(--borderRadius);
-    margin: 0 auto 1rem auto;
-    aspect-ratio: 1/1;
 }
 
 #artist-info {
@@ -92,10 +75,19 @@ h3 {
     margin: 0;
 }
 
+/* .album-item .album-cover {
+    width: 8rem;
+    height: auto; 
+    border-radius: var(--borderRadius);
+    margin: 0.5rem auto 0.5rem auto;
+    aspect-ratio: 1/1;
+    justify-content: center;
+} */
+
 .album-block strong {
     font-size: 0.8rem;
 }
 
-#album-image {
-    margin: 0 auto;
+.album-info {
+    margin: 0;
 }

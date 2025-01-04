@@ -25,9 +25,10 @@
             </p>
         </div>
 
-        <div id="home-button" data-home-url="{% url 'index' %}">
-            <img class="icon" src="{% static 'icons/home.svg' %}">
-        </div>   
+        # Home button
+        <a href="{% url 'index' %}">
+            <img class="icon" id="home-button" src="{% static 'icons/home.svg' %}">
+        </a>
 
         <div class="login {% if user.is_authenticated %}authenticated{% endif %}">
             {% if user.is_authenticated %}

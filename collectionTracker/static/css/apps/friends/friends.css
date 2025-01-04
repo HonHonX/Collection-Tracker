@@ -35,7 +35,10 @@ form {
 }
 
 #add-friend {
+    display: flex;
+    flex-direction: column;
     width: 60%;
+    gap: var(--gapDistance);
 }
 
 #add-friend-form {

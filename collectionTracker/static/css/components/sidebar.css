@@ -1,6 +1,6 @@
 :root {
     /* Design Sizes */
-    --sidebarWidth: 15rem; /* Box Roundness */
+    --sidebarWidth: 20rem; /* Box Roundness */
     --sidebarIcons: calc(var(--iconSize)*0.75);
 }
 
@@ -78,15 +78,7 @@
 
 .searchbar {
     transition: var(--transitionStyle);
-    display: none;
-    transform: scale(0.95); /* Slightly scaled down */
-    pointer-events: none; /* Prevent interactions when invisible */
-}
-
-.searchbar.visible {
-    display: flex;
-    transform: scale(1); /* Original size */
-    pointer-events: auto; /* Allow interactions */
+    width: 100%;
 }
 
 .input-field {

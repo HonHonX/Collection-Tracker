@@ -14,7 +14,7 @@ class Artist(models.Model):
     popularity = models.IntegerField(default=0)
     
     def __str__(self):
-        return self.name
+        return f"{self.name} - ID: {self.id} " 
 
 class Album(models.Model):
     id = models.CharField(max_length=50, primary_key=True)  # Spotify ID

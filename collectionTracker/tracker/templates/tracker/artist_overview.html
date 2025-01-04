@@ -29,7 +29,7 @@
                     data-artist-photo-url="{{ artist_photo_url }}"
                     data-follow-url="{% url 'follow_artist' %}">
                     <button id="follow-button" class="button">
-                        {% if followed_artist.artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                        {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
                     </button>
                 </div>
 
@@ -123,10 +123,11 @@
                 <div class="album-grid">
                     {% for album in albums %}
                     <div class="album-item" 
-                        data-album-id="{{ album.id }}" 
+                        data-album-id="{{ album.spotify_id }}" 
                         data-album-name="{{ album.name }}"
-                        data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
-                        data-image-url="{{ album.image_url }}"
+                        data-album-type="{{ album.album_type }}" 
+                        data-release-date="{{ album.release_date }}"
+                        data-image-url="{{ album.image_url }}"  
                         data-artist-id="{{ artist_info.id }}"
                         data-artist-name="{{ artist_name }}"
                         data-artist-photo-url="{{ artist_photo_url }}"
@@ -136,6 +137,7 @@
                         data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
                         data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
                         data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
+                        
                         <div class="album-controls">
                             <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
                             <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
@@ -143,14 +145,16 @@
                         </div>
 
                         {% if album.image_url %}
-                        <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                            <a href="{% url 'album_detail' album.spotify_id %}">
+                                <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                            </a>
                         {% endif %}
                         <div class="album-info">
                             {{ album.album_type }} <br>
-                            <strong>{{ album.name }} <br></strong>
+                            <div class="album-title"><strong>{{ album.name }} <br></strong></div>
                             {{ album.release_date }} <br>
                         </div>
-                    </div>
+                    </div> 
                     {% endfor %}
                 </div>
             </div>

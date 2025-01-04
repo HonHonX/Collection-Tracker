@@ -14,7 +14,7 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         followed_artists = []
         if request.user.is_authenticated:
-            followed_artists = UserFollowedArtists.objects.filter(user=request.user).select_related('artist')
+            followed_artists = UserFollowedArtists.objects.filter(user=request.user).select_related('artist').order_by('followed_on')
             for followed_artist in followed_artists:
                 followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
 
@@ -34,7 +34,7 @@ class HomeView(LoginRequiredMixin, View):
         return render(request, 'home/index.html', {
             'settings': settings,
             'followed_artists': followed_artists,
-            'user_album_ids': user_album_ids,
+            'user_album_ids': user_album_ids, 
             'user_blacklist_ids': user_blacklist_ids,
             'user_wishlist_ids': user_wishlist_ids,
         })

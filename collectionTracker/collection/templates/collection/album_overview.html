@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block maincontent %}
-
+<div class="full-block">
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
         <p>You have {{ user_collection.count }} album(s) in your collection.</p>
@@ -15,7 +15,7 @@
     <div class="sorting-controls">
         <label for="artist-filter">Filter by Artist:</label>
         <select id="artist-filter">
-            <option value="">All Artists</option>
+            <option value="">All Artists</option> 
             {% for artist in artist_list %}
                 <option value="{{ artist.name }}">{{ artist.name }}</option>
             {% endfor %}
@@ -32,7 +32,7 @@
             alt="Sort toggle" 
             data-sort-order="asc">
     </div>
- 
+
     <div class="album-grid">
         {% for collection_entry in user_collection %}
         <div class="album-item" 
@@ -55,7 +55,7 @@
                 {% endif %}
     
                 <div class="album-info">
-                    <strong>{{ collection_entry.album.name }}</strong><br>
+                    <div class="album-title"><strong>{{ collection_entry.album.name }} <br></strong></div>
                     <em>Artist: {{ collection_entry.album.artist.name }}</em><br>
                     <em>Release Date: {{ collection_entry.album.release_date }}</em><br>
                     <em>Type: {{ collection_entry.album.album_type }}</em>
@@ -64,6 +64,7 @@
         </div>
         {% endfor %}
     </div>
+</div>
 
 {% endblock %}
 {% block js %}

@@ -14,9 +14,10 @@
         {% if album.image_url %}
             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
         {% endif %}
-
-        <h1>{{ album.name }}</h1>
-        <h2>{{ album.artist.name }}</h2>
+            <h1>{{ album.name }}</h1>
+        <a href="{% url 'artist_overview' album.artist.name %}">
+            <h2>{{ album.artist.name }}</h2>
+        </a>
         <p><strong>Release Date:</strong> {{ album.release_date }}</p>
         <p><strong>Type:</strong> {{ album.album_type }}</p> 
     </div>

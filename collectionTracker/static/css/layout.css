@@ -60,6 +60,14 @@ main {
     align-self: center;
 }
 
+/* Layout if there is only one column in maincontent and it should be extended to full width */
+.full-block {
+    display: flex;
+    width: 100%;
+    gap: var(--gapBigBlocks);
+    flex-direction: column;
+}
+
 #spacer-1 {
     height: 1rem;
 }

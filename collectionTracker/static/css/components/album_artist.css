@@ -192,6 +192,7 @@
         padding: 0.5rem;
         border-radius: var(--borderRadius);
         filter: grayscale(0);
+        max-height: 20rem;
     }
     
     .album-item.disabled {
@@ -238,7 +239,7 @@
         text-transform: capitalize;
     }  
     
-    .album-info strong { 
+    .album-info .album-title { 
         font-size: 0.8rem;                      /* Increases the font size for the album title */
         display: block;
         display: -webkit-box;                   /* Required for the line-clamp property */

@@ -16,16 +16,11 @@
         </div>
 
         <div class="sidebar-logo">
-            <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+            </a>
         </div>
 
-        <div class="sidebar-item" id="home-button" data-home-url="{% url 'index' %}">
-            <img class="icon" src="{% static 'icons/home.svg' %}">Home
-        </div>    
-
-        <div class="sidebar-item" id="search-button">
-            <img class="icon" src="{% static 'icons/search.svg' %}">Search
-        </div>
         <div class="searchbar"  name="searchbar" >
             <form method="POST" class="search-form" action="{% url 'artist_search' %}">
                 {% csrf_token %}
@@ -35,6 +30,10 @@
                 </div>
             </form>    
         </div>
+
+        <div class="sidebar-item" id="home-button" data-home-url="{% url 'index' %}">
+            <img class="icon" src="{% static 'icons/home.svg' %}">Home
+        </div>    
 
         <div class="sidebar-item" id="collection-button" data-collection-url="{% url 'collection_overview' %}">
             <img class="icon" src="{% static 'icons/collection.svg' %}">Collection
@@ -55,10 +54,6 @@
         <div class="sidebar-item" id="friends-button" data-friends-url="{% url 'friends_view' %}">
             <img class="icon" src="{% static 'icons/friends.svg' %}">Friends
         </div>
-
-        <!-- <div class="sidebar-item" id="settings-button" data-settings-url="">
-            <img class="icon" src="">Settings
-        </div> -->
 
     </div>
 
