@@ -28,7 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    this.textContent = this.textContent.trim() === 'Follow' ? 'Unfollow' : 'Follow';
+                    if (this.textContent.trim() === 'Follow') {
+                        this.textContent = 'Unfollow';
+                    } else {
+                        this.textContent = 'Follow';
+                        // Remove the artist card from the DOM
+                        block.closest('.artist-card').remove();
+                    }
                 } else {
                     alert(data.error);
                 }
