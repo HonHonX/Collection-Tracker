@@ -20,17 +20,20 @@
                 <img src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
             {% endif %}
 
+            <div class="follow-block" 
+                data-artist-id="{{ artist_info.id }}" 
+                data-artist-name="{{ artist_info.name }}" 
+                data-artist-genres="{{ artist_info.genres }}"
+                data-artist-popularity="{{ artist_info.popularity }}"
+                data-artist-photo-url="{{ artist_photo_url }}"
+                data-follow-url="{% url 'follow_artist' %}">
+                <button id="follow-button" class="button">
+                    {% if followed_artist.artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                </button>
+            </div>
+
             <div id="artist-name">
                 <h1>{{ artist_name }}</h1>
-                <button id="follow-button" class="button" 
-                    data-artist-id="{{ artist_info.id }}" 
-                    data-artist-name="{{ artist_info.name }}"
-                    data-artist-genres="{{ artist_info.genres }}"
-                    data-artist-popularity="{{ artist_info.popularity }}"
-                    data-artist-photo-url="{{ artist_photo_url }}"
-                    data-follow-url="{% url 'follow_artist' %}">
-                    {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
-                </button>
             </div>
             
             {% if artist_info.genres %}
@@ -42,7 +45,7 @@
 
             <!-- Add counters for Collection, Wishlist, and Blacklist -->
             <div class="album-counters">
-                <h2>{{ artist_name }} collection progress</h2>
+                <h2>artist collection progress</h2>
                 <div class="counter-item">
                     <div id="progress-bar">
                         <div id="collection-progress" class="progress"></div>
@@ -146,5 +149,5 @@
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
-    <script src="{% static 'js/followArtist.js' %}" ></script>>
+    <script src="{% static 'js/followArtist.js' %}"></script>
 {% endblock %}

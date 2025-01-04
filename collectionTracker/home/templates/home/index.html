@@ -9,9 +9,9 @@
     Index
 {% endblock %}
 
-{% block maincontent %}
+{% block maincontent %} 
     <div class="followed-artists-section">
-        <h2>Followed Artists</h2>
+        <h1>Followed Artists</h1>
         {% for followed_artist in followed_artists %}
             <div class="artist-card">
                 <div class="artist-block">
@@ -22,6 +22,17 @@
                         <p>Genres: {{ followed_artist.artist.genres|join:", " }}</p>
                             {% endif %}
                         <p>Popularity: {{ followed_artist.artist.popularity }}</p>
+                        <div class="follow-block" 
+                            data-artist-id="{{ followed_artist.artist.id }}" 
+                            data-artist-name="{{ followed_artist.artist.name }}" 
+                            data-artist-genres="{{ followed_artist.artist.genres }}"
+                            data-artist-popularity="{{ followed_artist.artist.popularity }}"
+                            data-artist-photo-url="{{ followed_artist.artist.photo_url }}"
+                            data-follow-url="{% url 'follow_artist' %}">
+                            <button id="follow-button" class="button">
+                                Unfollow
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -29,11 +40,17 @@
                     {% for album in followed_artist.albums %}
                         <div class="album-block">
                             <img id="album-image" src="{{ album.image_url }}" alt="{{ album.name }}">
-                            <p>{{ album.name }}</p>
+                            <p>{{ album.album_type }}</p>
+                            <p><strong>{{ album.name }}</strong></p>
+                            <p>{{ album.release_date }}</p>
                         </div>
                     {% endfor %}
-                </div> {}
+                </div> 
             </div>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/followArtist.js' %}"></script>
 {% endblock %}

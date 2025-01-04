@@ -1,13 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const followButton = document.getElementById('follow-button');
-    if (followButton) {
+    const followBlocks = document.querySelectorAll('.follow-block');
+    followBlocks.forEach(block => {
+        const followButton = block.querySelector('#follow-button');
+        
         followButton.addEventListener('click', function() {
-            const artistId = followButton.getAttribute('data-artist-id');
-            const artistName = followButton.getAttribute('data-artist-name');
-            const artistGenres = followButton.getAttribute('data-artist-genres');
-            const artistPopularity = followButton.getAttribute('data-artist-popularity');
-            const artistPhotoUrl = followButton.getAttribute('data-artist-photo-url');
-            const url = followButton.getAttribute('data-follow-url');
+            const artistId = block.getAttribute('data-artist-id');
+            const artistName = block.getAttribute('data-artist-name');
+            const artistGenres = block.getAttribute('data-artist-genres');
+            const artistPopularity = block.getAttribute('data-artist-popularity');
+            const artistPhotoUrl = block.getAttribute('data-artist-photo-url');
+            const url = block.getAttribute('data-follow-url');
 
             fetch(url, {
                 method: 'POST',
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({
                     artist_id: artistId,
                     artist_name: artistName,
-                    artist_genres: artistGenres,
+                    artist_genres: artistGenres, 
                     artist_popularity: artistPopularity,
                     artist_photo_url: artistPhotoUrl
                 })
@@ -32,5 +34,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    }
+    });
 });

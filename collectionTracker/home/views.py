@@ -37,6 +37,13 @@ class WelcomeView(View):
     def get(self, request):  
         return render(request, 'home/welcome.html', {'settings': settings}) 
     
+class RedirectView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            return redirect('welcome')
+
 @login_required
 def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
