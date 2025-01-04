@@ -3,6 +3,7 @@
 {% block extra_css %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/apps/home/index.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/components/slider.css' %}" type="text/css">
 {% endblock %}  
 
 {% block title %}
@@ -10,7 +11,7 @@
 {% endblock %}
 
 {% block maincontent %} 
-    <div class="followed-artists-section">
+    <div class="full-block">
         <h1>Followed Artists</h1>
         {% for followed_artist in followed_artists %} 
             <div class="artist-card">
@@ -68,7 +69,7 @@
                             {% endif %}
                             <div class="album-info">
                                 <p>{{ album.album_type }}</p>
-                                <p><strong>{{ album.name }}</strong></p>
+                                <strong>{{ album.name }}</strong>
                                 <p>{{ album.release_date }}</p>
                             </div>
                         </div>
@@ -82,4 +83,5 @@
 {% block js %}
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/followArtist.js' %}"></script>
+    <script src="{% static 'js/albumSlider.js' %}"></script>
 {% endblock %}

@@ -17,6 +17,10 @@ main {
     box-sizing: border-box; /* Include padding and border in dimensions */
 }
 
+body::-webkit-scrollbar {
+    display: none; /* Hide vertical scrollbar*/
+}
+
 .maincontent {
     height: 100vh;
     display: flex;
