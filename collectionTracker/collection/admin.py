@@ -5,7 +5,7 @@ from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, Us
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'photo_url', 'genres', 'popularity')  # Display artist's id and name
-    search_fields = ('name',)  # Allow searching by artist's name
+    search_fields = ('name',)  # Allow searching by artist's name 
 
 # Register the Album model with custom configuration
 @admin.register(Album)
@@ -70,4 +70,4 @@ class UserProgressAdmin(admin.ModelAdmin):
 class UserFollowedArtistsAdmin(admin.ModelAdmin):
     list_display = ('user', 'artist', 'followed_on')  # Display user, artist, and followed date
     search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
-    list_filter = ('followed_on',)  # Filter by the date the artist was followed
+    list_filter = ('artist', 'followed_on')  # Filter by the date the artist was followed

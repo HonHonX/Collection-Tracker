@@ -1,0 +1,77 @@
+/* Layout: Styles related to the overall layout and structure. */
+:root {
+    /* Design Sizes */
+    --borderRadius: 0.5rem; /* Box Roundness */
+    --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
+    --gapDistance: 1rem;
+    --gapBigBlocks: 2rem;
+    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;   
+}
+
+main {
+    display: flex; 
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100vw; 
+    height: 100vh;
+    box-sizing: border-box; /* Include padding and border in dimensions */
+}
+
+.maincontent {
+    height: 100vh;
+    display: flex;
+    flex-direction: wrap;
+    flex-grow: 1;
+    padding: 2rem;
+    box-sizing: border-box;
+    gap: var(--gapBigBlocks);
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* used for sites without a sidebar */
+.main-block {
+    width: 50%;
+    height: auto;
+    display: flex;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 5rem; /* Added padding for better spacing */
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    gap: var(--gapBigBlocks);
+    margin: auto;
+    box-sizing: border-box;
+    text-align: left;
+    justify-content: space-around;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensure the sticky content stays on top */
+    background: var(--neutral100);
+}
+
+.logo {
+    width: 50%;
+    height: auto;
+    align-self: center;
+}
+
+/* Layout if there is only one column in maincontent and it should be extended to full width */
+.full-block {
+    display: flex;
+    width: 100%;
+    gap: var(--gapBigBlocks);
+    flex-direction: column;
+}
+
+#spacer-1 {
+    height: 1rem;
+}
+
+#spacer-2 {
+    height: 2rem;
+}

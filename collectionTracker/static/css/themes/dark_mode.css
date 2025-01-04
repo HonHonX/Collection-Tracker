@@ -1,0 +1,8 @@
+/* Dark Mode: Dark Mode basic theme */
+:root {
+    /* Colors */
+    --neutral100: #1f1f1f; /* Page Background */
+    --neutral90: #292929;
+    --neutral70: #525252;
+    --neutral0: #ffffff; /* Regular Font */
+}

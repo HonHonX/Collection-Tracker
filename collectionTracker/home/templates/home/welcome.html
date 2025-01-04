@@ -6,18 +6,17 @@
         
 {% block extra_css %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'home/css/welcome.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/apps/home/welcome.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
-
-    <div class="maincontent">
+    <div class="main-block">
         <!-- Logo -->
         <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
         <h1>Meet your ultimate companion for managing your physical music collection!</h1>
 
         <!-- <h1>Welcome to {{ settings.APP_NAME }}</h1> -->
-        <div class="introduction">
+        <div id="introduction">
             <p>
                 With Beats & Bops, you can effortlessly track and organize your entire music library.
                 Discover new music, rediscover old favorites, and never buy the same album twice. 
@@ -26,31 +25,33 @@
             </p>
         </div>
 
-        <div class="home-button" id="home-button" data-home-url="{% url 'index' %}">
-            <img class="icon" src="{% static 'icons/home.svg' %}">
-        </div>   
-
-        <div class="linkblock">
-        </div>
+        # Home button
+        <a href="{% url 'index' %}">
+            <img class="icon" id="home-button" src="{% static 'icons/home.svg' %}">
+        </a>
 
         <div class="login {% if user.is_authenticated %}authenticated{% endif %}">
             {% if user.is_authenticated %}
-            Logged in as {{ user.username }}
-            <form action="{% url 'logout' %}?next=/" method="post" id="logout">
-                {% csrf_token %}
-                <button type="submit" class="button" >Logout</button>
-            </form>
+                Logged in as {{ user.username }}
+                <form action="{% url 'logout' %}?next=/" method="post" id="logout">
+                    {% csrf_token %}
+                    <button type="submit" class="button" >Logout</button>
+                </form>
 
             {% else %}
-                <button class="button" id="login-button">Login</button>
-                <button class="button" id="register-button" register-url="">Register</button>
-                <script src="{% static 'js/auth.js' %}"></script>
+                <div class="button-block">
+                    <button class="button" id="login-button">Login</button>
+                    <button class="button" id="register-button" register-url="">Register</button>
+                </div>
             {% endif %}
         </div>
+
+        <div id="spacer-2"></div>
     </div>
 
 {% endblock content %}
 
 {% block js %}
+    <script src="{% static 'js/auth.js' %}"></script>
     <script src="{% static 'js/navigation.js' %}"></script>
 {% endblock %}

@@ -1,10 +1,6 @@
-/* Regular Sidebar styling */
-@import url("../../css/styles.css");
-
-
 :root {
     /* Design Sizes */
-    --sidebarWidth: 15rem; /* Box Roundness */
+    --sidebarWidth: 20rem; /* Box Roundness */
     --sidebarIcons: calc(var(--iconSize)*0.75);
 }
 
@@ -16,16 +12,10 @@
     display: none;
 }
 
-.page {
-    display: flex;
-    flex-direction: row; 
-    align-items: start;
-    width: 100%;
-}
-
 .sidebar {
     position: sticky; /* Ensures the sidebar stays fixed in place */
     top: 0;
+    left: 0;
     display: flex;
     width: var(--sidebarWidth);
     height: 100vh; /* Full viewport height */
@@ -38,7 +28,7 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    border-radius: var(--borderRadius);
+    border-radius: 0 var(--borderRadius) var(--borderRadius) 0  ;
     gap: var(--gapDistance);
     top: 0; /* Aligns the top of the sidebar with the viewport */
     left: 0; /* Aligns the sidebar to the left of the viewport */
@@ -88,15 +78,7 @@
 
 .searchbar {
     transition: var(--transitionStyle);
-    display: none;
-    transform: scale(0.95); /* Slightly scaled down */
-    pointer-events: none; /* Prevent interactions when invisible */
-}
-
-.searchbar.visible {
-    display: flex;
-    transform: scale(1); /* Original size */
-    pointer-events: auto; /* Allow interactions */
+    width: 100%;
 }
 
 .input-field {

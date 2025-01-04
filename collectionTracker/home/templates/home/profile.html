@@ -7,15 +7,18 @@
 
 {% block extra_css %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'home/css/profile.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/apps/home/profile.css' %}" type="text/css">
 {% endblock %}
 
 {% block maincontent %}
+<div class="full-block">
     <h1>{{ user.username }}'s Profile</h1>
     <div id="settings-block">
         <div class="user-image">
             <h2>Profile Image</h2>
+            <div id="spacer-1"></div>
             {% if user.profile.image %}
+            
                 <img id="profile-image-big" src="{{ user.profile.image.url }}">
             {% else %}
                 <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
@@ -102,6 +105,7 @@
             <button type="submit" id="logout-button" class="button">Logout</button>
         </form>
     </div>
+</div>
 {% endblock %}
 
 {% block js %}

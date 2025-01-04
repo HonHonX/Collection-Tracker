@@ -32,7 +32,7 @@ def manage_album_in_list(user, album, list_type, action):
     Add or remove an album to/from the specified list (collection/wishlist/blacklist) for the given user.
     """
 
-    # print(f"List Type: {list_type}, Action: {action}")
+    print(f"List Type: {list_type}, Action: {action}")
 
     model_map = {
         'collection': UserAlbumCollection,
@@ -126,7 +126,7 @@ def album_overview(request):
         'user_blacklist_ids': user_blacklist_ids,
         'user_wishlist': user_wishlist,
         'user_wishlist_ids': user_wishlist_ids,
-        'user_collection' : user_collection,
+        'user_collection': user_collection,
         'user_album_ids': user_album_ids,
         'artist_list': artist_list,
     })

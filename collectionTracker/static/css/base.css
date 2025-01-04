@@ -1,0 +1,66 @@
+/* Base Styles: General styles and resets. */
+:root {
+    /* Design Sizes */
+    --defaultFont: 'Tahoma', sans-serif;
+}
+
+@font-face {
+    font-family: 'Bauhaus93';
+    src: url("/static/fonts/BAUHS93.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: var(--defaultFont);
+    font-size: 1rem; /* 16px */
+    background-color: var(--neutral100);
+    color: var(--neutral0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--accent100);
+    text-decoration: none;
+}
+
+a:hover,
+a:visited {
+    color: var(--accentVariantB100);
+}
+
+/* Headlines */
+h1, h2, h3 {
+    text-align: left;
+    font-family: var(--defaultFont);
+    margin: 0;
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--accent100);
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--accentVariantB100);
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: var(--accentVariantA100);
+}
+
+p  {
+    font-weight: 100;
+    -webkit-font-smoothing: antialiased;
+}
+
+textarea {
+    font-family: var(--defaultFont);
+}

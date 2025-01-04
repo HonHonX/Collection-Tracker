@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
             updateAlbumState(albumItem.dataset.inBlacklist === 'true', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist");
             controlIconBlacklist.addEventListener('click', () => handleAlbumClick(albumItem, 'blacklist', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist", controlIconCollection,  controlIconWishlist));
         }
-
+ 
         // Update background color based on the album's state
         updateAlbumBackgroundColor(albumItem);
 
-    });
+    });  
 
     // Update the state of album icons based on its list status (in collection, wishlist, or blacklist)
     function updateAlbumState(isInList, controlIcon, addIcon, removeIcon, altAdd, altRemove) {

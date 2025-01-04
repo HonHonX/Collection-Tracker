@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             console.error('Home URL is not defined');
-        }
+        } 
     }
 
     // Profile Button
@@ -20,20 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = profileUrl;
         });
     }
-
-    // Search Button
-    document.addEventListener('click', function(event) {
-        const searchBar = document.querySelector('.searchbar');
-        const searchButton = document.getElementById('search-button');
-
-        if (searchButton && searchBar) { 
-            if (!searchButton.contains(event.target) && !searchBar.contains(event.target)) {
-                searchBar.classList.remove('visible');
-            } else if (searchButton.contains(event.target)) {
-                searchBar.classList.toggle('visible');
-            }
-        }
-    });
 
     // Collection Button
     var collectionButton = document.getElementById('collection-button');

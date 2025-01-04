@@ -1,25 +1,26 @@
-<!-- {# {% extends "base_menu.html" %} #} -->
 {% extends 'base.html' %}
 
 {% block extra_css %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'home/css/welcome.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/apps/user/login_register.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
 
-  <div class="maincontent">
+  <div class="maincontent">  
+    <div class="main-block">
 
-    <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
- 
-    <h1>Register</h1>
-    
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Register" class="button" />
-    </form>
+      <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
+  
+      <h1>Register</h1>
+      
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Register" class="button" />
+      </form>
 
+    </div>
   </div>
 
 {% endblock %}

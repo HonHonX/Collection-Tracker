@@ -6,12 +6,8 @@
     {{ user.first_name }}'s Wishlist
 {% endblock %}
 
-{% block site_specific_css %}
-    <!-- <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}" type="text/css"> -->
-{% endblock %}
-
 {% block maincontent %}
-
+<div class="full-block">
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Wishlist</h1>
         <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
@@ -23,7 +19,7 @@
             <option value="">All Artists</option>
             {% for artist in artist_list %}
                 <option value="{{ artist.name }}">{{ artist.name }}</option>
-            {% endfor %}
+            {% endfor %} 
         </select>
          
         <label for="sort-criteria">Sort by:</label>
@@ -60,7 +56,7 @@
                 {% endif %}
     
                 <div class="album-info">
-                    <strong>{{ wishlist_entry.album.name }}</strong><br>
+                    <div class="album-title"><strong>{{ wishlist_entry.album.name }} <br></strong></div>
                     <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
                     <em>Release Date: {{ wishlist_entry.album.release_date }}</em><br>
                     <em>Type: {{ wishlist_entry.album.album_type }}</em>
@@ -69,7 +65,7 @@
         </div>
         {% endfor %}
     </div>
-
+</div>
 {% endblock %}
 
 {% block js %}
