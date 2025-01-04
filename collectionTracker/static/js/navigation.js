@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Settings Button
-    var settingsButton = document.getElementById('settings-button');
-    if (settingsButton) {
-        var settingsUrl = settingsButton.getAttribute('data-settings-url');
-        settingsButton.addEventListener('click', function() {
-            window.location.href = settingsUrl;
-        });
-    }
+    // var settingsButton = document.getElementById('settings-button');
+    // if (settingsButton) {
+    //     var settingsUrl = settingsButton.getAttribute('data-settings-url');
+    //     settingsButton.addEventListener('click', function() {
+    //         window.location.href = settingsUrl;
+    //     });
+    // }
 
     // Mobile Navigation
     const searchIcon = document.getElementById("mobile-search"); // Search icon in the navbar
@@ -147,12 +147,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mobile Settings Button
-    var mobileSettingsButton = document.querySelector('.navbar .nav-item#settings-button');
-    if (mobileSettingsButton) {
-        var mobileSettingsUrl = mobileSettingsButton.getAttribute('data-settings-url');
-        mobileSettingsButton.addEventListener('click', function() {
-            window.location.href = mobileSettingsUrl;
-        });
-    }
+    // Mobile Settings Button → Setting page removed, should link to profile page
+    // var mobileSettingsButton = document.querySelector('.navbar .nav-item#settings-button');
+    // if (mobileSettingsButton) {
+    //     var mobileSettingsUrl = mobileSettingsButton.getAttribute('data-settings-url');
+    //     mobileSettingsButton.addEventListener('click', function() {
+    //         window.location.href = mobileSettingsUrl;
+    //     });
+    // }
+
+
 });

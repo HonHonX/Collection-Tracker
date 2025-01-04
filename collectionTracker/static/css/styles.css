@@ -62,7 +62,6 @@ h1, h2 {
     /* font-family: 'Bauhaus93', sans-serif; */
     font-family: var(--defaultFont);
     color: var(--accent100);
-    width:100%;
 }
 
 h1 {
@@ -274,13 +273,19 @@ select option .color-swatch {
 }
 
 .artist-detail img {
-    width: 100%;
+    width: 80%;
     height: auto;
-    margin-bottom: 1rem;
     border-radius: 50%;
     object-fit: cover;
     aspect-ratio: 1 / 1; 
-    margin: 2rem 0 2rem 0;
+    margin: 2rem auto 1rem auto;
+}
+
+.artist-detail .follow-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4rem;
 }
 
 #artist-name {

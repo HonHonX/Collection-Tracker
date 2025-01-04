@@ -1,8 +1,8 @@
-from django.apps import AppConfig
+# from django.apps import AppConfig
 
-class SettingsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'settings'
+# class SettingsConfig(AppConfig):
+#     default_auto_field = 'django.db.models.BigAutoField'
+#     name = 'settings'
 
-    def ready(self):
-        import settings.signals  # Ensure signals are loaded
+#     def ready(self):
+#         import settings.signals  # Ensure signals are loaded

@@ -22,7 +22,7 @@ class Album(models.Model):
     album_type = models.CharField(max_length=50)
     release_date = models.DateField()
     image_url = models.URLField(blank=True, null=True)
-    artist = models.ForeignKey(Artist, on_delete=models.SET_NULL, null=True)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name 
@@ -146,7 +146,15 @@ def update_user_progress(sender, instance, **kwargs):
     """
     user = instance.user
     album = instance.album
-    artist = album.artist
+
+    # Check if the album still has an associated artist
+    if not album.artist_id:
+        return
+
+    try:
+        artist = album.artist
+    except Artist.DoesNotExist:
+        return
 
     try:
         with transaction.atomic():

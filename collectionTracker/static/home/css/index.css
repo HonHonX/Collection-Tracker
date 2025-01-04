@@ -1,7 +1,29 @@
 @import url("../../css/styles.css");
 
 :root {
-    --sliderHeight: 15rem;
+    --sliderHeight: 16rem;
+}
+
+p {
+    margin: 0;
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 1;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1.25rem;           /* Line height for two lines */
+    max-height: 1.25rem;  /* Ensures the height accommodates exactly two lines */
+    font-size: 0.6rem;              /* Ensure consistent font size */
+}
+
+h2 {
+    margin: 0;
+    text-align: left;
+}
+
+h3 {
+    margin: 0;
+    text-align: left;
 }
 
 .followed-artists-section {
@@ -21,63 +43,62 @@
     border-radius: var(--borderRadius);
     background-color: var(--neutral90);
     padding: 0 1rem;
-    width: 20rem;
+    width: 22rem;
     height: var(--sliderHeight);
     gap: var(--gapDistance);
     align-items: center;
     box-sizing: border-box;
+    justify-content: space-between;
 }
 
 #artist-image {
-    height: 6rem;
-    width: 6rem;
+    height: 9rem;
+    width: 9rem;
     aspect-ratio: 1/1;
     border-radius: 50%;
 }
 
 #album-image {
-    height: 10rem;
-    width: auto; 
+    width: 8rem;
+    height: auto; 
     border-radius: var(--borderRadius);
+    margin: 0 auto 1rem auto;
+    aspect-ratio: 1/1;
 }
 
 #artist-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-}
-
-p {
-    margin: 0;
-    text-align: left;
-    overflow-x: hidden;
-}
-
-h2 {
-    margin: 0 0 0.5rem 0;
-    text-align: left;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-grow: 1;
 }
 
 .album-slider {
     height: var(--sliderHeight);
     display: flex;
     flex-direction: row;
-    gap: var(--gapDistance);
-    padding: 0 1rem;
+    gap: var(--gapBigBlocks);
+    padding: 0 4rem;
 }
 
-.album-block {
+.album-item {
     height: var(--sliderHeight);
-    width: 10rem;
+    width: 8rem;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     box-sizing: border-box;
     overflow-x: hidden;
+    font-size: 0.6rem;
+    line-height: 1.25rem;
+    text-transform: capitalize;
+    margin: 0;
 }
 
-.album-image {
-    width: auto;
-    border-radius: var(--borderRadius);
-    aspect-ratio: 1/1;
+.album-block strong {
+    font-size: 0.8rem;
+}
+
+#album-image {
+    margin: 0 auto;
 }
