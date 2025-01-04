@@ -75,12 +75,38 @@ h3 {
 }
 
 .album-slider {
-    height: var(--sliderHeight);
-    display: flex;
-    flex-direction: row;
-    gap: var(--gapBigBlocks);
-    padding: 0 4rem;
+    height: var(--sliderHeight);      
+    display: flex;                   
+    flex-direction: row;             /* Arrange items in a row */
+    gap: var(--gapBigBlocks);        /* Spacing between album items */
+    padding: 0 1rem;                 
+    width: 59rem;
+    overflow-x: auto;                /* Enable horizontal scrolling */
+    overflow-y: hidden;              /* Disable vertical scrolling*/
+    scroll-behavior: smooth;         /* Smooth scrolling */
+    box-sizing: border-box;          
+    margin: 0 auto;                  
 }
+
+.album-slider::-webkit-scrollbar {
+    height: 8px;                     /* Custom scrollbar height */
+}
+
+.album-slider::-webkit-scrollbar-thumb {
+    background-color: var(--neutral70); /* Scrollbar thumb color */
+    border-radius: 4px;              /* Rounded scrollbar thumb */
+}
+
+.album-slider::-webkit-scrollbar-track {
+    background-color: var(--neutral90); /* Scrollbar track color */
+}
+
+.album-item {
+    flex: 0 0 auto;                  /* Prevent shrinking or growing */
+    width: 8rem;                     /* Fixed width for album items */
+    box-sizing: border-box;          /* Include padding in width */
+}
+
 
 .album-item {
     height: var(--sliderHeight);

@@ -42,6 +42,10 @@ body {
     line-height: 1.5;
 }
 
+body::-webkit-scrollbar {
+    display: none; /* Hide vertical scrollbar*/
+  }
+
 main {
     width: 100%;
 }
