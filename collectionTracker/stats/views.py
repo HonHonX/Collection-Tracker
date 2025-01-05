@@ -7,6 +7,12 @@ from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, Integer
 @login_required
 def dashboard_view(request):
     user = request.user
+    selected_artist_id = request.GET.get('selected_artist_id')
+    user_rank = None
+    users_with_more_albums = 0
+    selected_artist = None
+    artist_list = Artist.objects.filter(album__useralbumcollection__user=user).distinct()
+    
     try:
         user_progress = UserProgress.objects.get(user=user)
     except UserProgress.DoesNotExist:
@@ -68,6 +74,18 @@ def dashboard_view(request):
     for ranked_user in user_and_friends:
         ranked_user.icon_url = ranked_user.profile.image.url if ranked_user.profile.image else None
 
+    # Calculate user's rank for the selected artist
+    if selected_artist_id:
+        selected_artist = Artist.objects.get(id=selected_artist_id)
+        user_album_count = UserAlbumCollection.objects.filter(user=user, album__artist=selected_artist).count()
+        total_users = User.objects.filter(useralbumcollection__album__artist=selected_artist).distinct().count()
+        users_with_more_albums = User.objects.filter(
+            useralbumcollection__album__artist=selected_artist
+        ).annotate(
+            album_count=Count('useralbumcollection__album', filter=Q(useralbumcollection__album__artist=selected_artist))
+        ).filter(album_count__gt=user_album_count).count()
+        user_rank = (total_users - users_with_more_albums) / total_users * 100
+
     context = {
         'user_progress': user_progress,
         'top_genres': top_genres,
@@ -75,6 +93,11 @@ def dashboard_view(request):
         'top_quality_artists': top_quality_artists,
         'top_friends': top_friends,
         'user_and_friends': user_and_friends,
+        'artist_list': artist_list,
+        'user_rank': user_rank,
+        'selected_artist_id': selected_artist_id,
+        'selected_artist': selected_artist,
+        'users_with_more_albums': users_with_more_albums,
     }
     return render(request, 'stats/dashboard.html', context)
 

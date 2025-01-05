@@ -11,16 +11,8 @@
 
 {% block maincontent %}
 <div class="stats-block">
-    <div class="top-block">
-        <h2>Top 5 - Genres</h2>
-        <div class="top-list">
-            {% for genre in top_genres %}
-                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
-                    <span class="countable">{{ forloop.counter }}. {{ genre.name }}:</span><span>{{ genre.album_count }} album(s)</span>  
-                </div>
-            {% endfor %}
-        </div>
 
+    <div class="top-block">
         <h2>Top 5 - Artists</h2>
         <div class="top-list">
             {% for artist in top_artists %}
@@ -40,60 +32,67 @@
             {% endfor %}
         </div>
 
+        <h2>Top 5 - Genres</h2>
+        <div class="top-list" id="top-genres">
+            {% for genre in top_genres %}
+                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                    <span class="countable">{{ forloop.counter }}. {{ genre.name }}:</span><span>{{ genre.album_count }} album(s)</span>  
+                </div>
+            {% endfor %}
+        </div>
     </div>
     
     <div class="full-block">        
-        <div class="friends-block">
-            <h2>Top 3 Friends with Similar Collections</h2>
-            <div class="top-list" id="similar-friends">
-                {% for friend in top_friends %}
-                    <div class="friend">
-                        <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
-                            <div class="friend-name">
-                                <span>{{ forloop.counter }}.</span>
-                                {% if friend.icon_url %}
-                                    <img src="{{ friend.icon_url }}" alt="{{ friend.username }}" class="user-icon">
-                                {% endif %}
-                                <span>{{ friend.username }}</span>
-                            </div>
-                            <span>{{ friend.common_albums|length }} album(s) in common</span>
-                        </div>
-                        <div class="common-albums">
-                            {% for album in friend.common_albums %}
-                                <div class="album-item">
-                                    <a href="{% url 'album_detail' album.id %}">
-                                        <img src="{{ album.image_url }}" alt="{{ album.name }}" class="album-cover">
-                                    </a>
-                                    <div class="album-info">
-                                        <p>{{ album.name }}</p>
-                                        <p>{{ album.artist.name }}</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
 
-            <h2>Friend Collection Ranking</h2>
-            <div class="top-list" id="friend-collection">
-                {% for ranked_user in user_and_friends %}
+        <h2>Top 3 Friends with Similar Collections</h2>
+        <div class="top-list" id="similar-friends">
+            {% for friend in top_friends %}
+                <div class="friend">
                     <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
                         <div class="friend-name">
                             <span>{{ forloop.counter }}.</span>
-                            {% if ranked_user.icon_url %}
-                                <img src="{{ ranked_user.icon_url }}" alt="{{ ranked_user.username }}" class="user-icon">
+                            {% if friend.icon_url %}
+                                <img src="{{ friend.icon_url }}" alt="{{ friend.username }}" class="user-icon">
                             {% endif %}
-                            <span>{{ ranked_user.username }}</span>
+                            <span>{{ friend.username }}</span>
                         </div>
-                        <span>{{ ranked_user.collection_size }} album(s)</span>
+                        <span>{{ friend.common_albums|length }} album(s) in common</span>
                     </div>
-                {% endfor %}
-            </div>
+                    <div class="common-albums">
+                        {% for album in friend.common_albums %}
+                            <div class="album-item">
+                                <a href="{% url 'album_detail' album.id %}">
+                                    <img src="{{ album.image_url }}" alt="{{ album.name }}" class="album-cover">
+                                </a>
+                                <div class="album-info">
+                                    <p>{{ album.name }}</p>
+                                    <p>{{ album.artist.name }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2>Friend Collection Ranking</h2>
+        <div class="top-list" id="friend-collection">
+            {% for ranked_user in user_and_friends %}
+                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                    <div class="friend-name">
+                        <span>{{ forloop.counter }}.</span>
+                        {% if ranked_user.icon_url %}
+                            <img src="{{ ranked_user.icon_url }}" alt="{{ ranked_user.username }}" class="user-icon">
+                        {% endif %}
+                        <span>{{ ranked_user.username }}</span>
+                    </div>
+                    <span>{{ ranked_user.collection_size }} album(s)</span>
+                </div>
+            {% endfor %}
         </div>
         
+        <h2>Collection Counts</h2>
         <div class="dashboard-block">
-            <h2>Collection Counts</h2>
             <div class="quantities-block">
                 <div class="stat">
                     <h3>Total Artists</h3>
@@ -116,6 +115,29 @@
                     <p>{{ user_progress.total_blacklist_count }}</p>
                 </div>
             </div>
+        </div>
+
+        <h2>Your Rank for Selected Artist</h2>
+        <div class="competition-block">
+            <form method="get" action="{% url 'dashboard' %}">
+                <select name="selected_artist_id" onchange="this.form.submit()">
+                    <option value="">Select an artist</option>
+                    {% for artist in artist_list %}
+                        <option value="{{ artist.id }}" {% if artist.id == selected_artist_id %}selected{% endif %}>{{ artist.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <div id="artist-rank">
+                {% if user_rank is not None %}
+                    <span>You are among the top {{ user_rank|floatformat:2 }}% for {{ selected_artist.name }}<br></span>
+                    <span>{{ users_with_more_albums }} user(s) have collected more albums than you for this artist.</span>
+                {% endif %}
+            </div>
+            {% if users_with_more_albums == 0 %}
+                <div id="crown">
+                    <img src="{% static 'icons/crown.svg' %}" alt="Crown" class="status-icon">
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
