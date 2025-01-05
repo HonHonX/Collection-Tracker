@@ -93,3 +93,32 @@ input[type="file"]:hover::-webkit-file-upload-button {
     align-self: self-end;
     margin-top: auto;
 }
+
+.badge-container {
+    position: relative;
+    display: inline-block;
+    width: 8rem;
+    height: 8rem;
+}
+.badge-icon {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    object-position: center;
+    transition: var(--transitionStyle);
+}
+
+.badge-sub-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    border-radius: 50%;
+    border: 2px solid white; /* Optional: Add a border to make the sub icon stand out */
+}
+
+.badge-item.disabled {
+    opacity: 0.6;
+    filter: grayscale(100%);
+}

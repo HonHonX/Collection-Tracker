@@ -7,7 +7,10 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from .forms import ProfileImageForm
 from .models import Profile, UserProfile
+from stats.models import Badge, UserBadge
 from collection.models import UserFollowedArtists, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -43,13 +46,15 @@ class WelcomeView(View):
 class RedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('home')
+            return redirect('index')  # Update this line to use the correct view name
         else:
             return redirect('welcome')
 
 @login_required
 def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge')}
+    all_badges = Badge.objects.all()
     if request.method == 'POST':
         form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -62,7 +67,7 @@ def user_profile(request):
             return redirect('user_profile')
     else:
         form = ProfileImageForm()
-    return render(request, 'home/profile.html', {'user': request.user, 'form': form})
+    return render(request, 'home/profile.html', {'user': request.user, 'form': form, 'badges': badges, 'all_badges': all_badges})
 
 @login_required
 def remove_profile_image(request):

@@ -1,5 +1,6 @@
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
     Profile
@@ -20,7 +21,7 @@
             {% if user.profile.image %}
             
                 <img id="profile-image-big" src="{{ user.profile.image.url }}">
-            {% else %}
+            {% else %} 
                 <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
             {% endif %}
             <div class="image-controls">
@@ -97,6 +98,23 @@
                 <p>Currently active: {{ request.user.userprofile.color_scheme |capfirst }}</p>
             </div>
         </div>
+    </div>
+
+    <div class="badges-block">
+        <h2>Badges</h2>
+        {% for badge in all_badges %}
+            {% with user_badge=badges|get_item:badge.id %}
+            <div class="badge-item {% if not user_badge %}disabled{% endif %}">
+                <div class="badge-container">
+                    <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
+                    {% if badge.sub_icon_url %}
+                        <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
+                    {% endif %}
+                </div>
+                <p>{{ badge.name }}</p>
+            </div>
+            {% endwith %}
+        {% endfor %}
     </div>
 
     <div class="logout">

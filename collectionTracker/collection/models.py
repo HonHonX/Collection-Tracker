@@ -14,7 +14,7 @@ class Genre(models.Model):
     def get_artists(self):
         return self.artists.all()
 
-    def album_count(self):
+    def album_count(self): 
         return Album.objects.filter(artist__genres=self).count()
 
     def get_album_ids(self):

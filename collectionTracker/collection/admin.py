@@ -86,3 +86,4 @@ class UserFollowedArtistsAdmin(admin.ModelAdmin):
     list_display = ('user', 'artist', 'followed_on')  # Display user, artist, and followed date
     search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
     list_filter = ('artist', 'followed_on')  # Filter by the date the artist was followed
+
