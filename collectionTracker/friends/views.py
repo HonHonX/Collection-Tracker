@@ -56,7 +56,7 @@ def friends_view(request):
     return render(request, 'friends/friends.html', {'form': form, 'friends': friends, 'token': user_token.token})
 
 def send_invitation_email(friend, request):
-    base_url = get_base_url(request)
+    base_url = 'https://wtcollectiontracker.eu.pythonanywhere.com'
     subject = 'Invitation to Join Collection Tracker'
     message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\n{base_url}/register/?email={friend.friend_email}\n\nPlease click the link below to confirm the request after registering:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
@@ -88,7 +88,7 @@ def confirm_friend_request(request, friend_email, sender_username):
     return redirect('friends_view')
 
 def send_friend_request_email(friend, request):
-    base_url = get_base_url(request)
+    base_url = 'https://wtcollectiontracker.eu.pythonanywhere.com'
     subject = 'Friend Request Confirmation'
     message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
