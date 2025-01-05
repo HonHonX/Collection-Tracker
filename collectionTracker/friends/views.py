@@ -8,6 +8,11 @@ from collection.models import Album, UserAlbumWishlist, UserAlbumCollection
 from .models import Friend, FriendList, SharingToken
 from .forms import FriendForm
 import uuid
+import tldextract
+
+def get_base_url(request):
+    extracted = tldextract.extract(request.get_host())
+    return f"{request.scheme}://{extracted.domain}.{extracted.suffix}"
 
 @login_required
 def friends_view(request):
@@ -36,13 +41,13 @@ def friends_view(request):
                     friend.save()
                     reciprocal_friend = Friend(user=friend_user, friend_email=request.user.email, friend_name=request.user.username, status='pending')
                     reciprocal_friend.save()
-                    send_friend_request_email(friend)
+                    send_friend_request_email(friend, request)
                 else:
                     friend = form.save(commit=False)
                     friend.user = request.user
                     friend.status = 'guest'
                     friend.save()
-                    send_invitation_email(friend)
+                    send_invitation_email(friend, request)
                 return redirect('friends_view')
     else:
         form = FriendForm()
@@ -50,9 +55,10 @@ def friends_view(request):
     friends = Friend.objects.filter(user=request.user).exclude(friend_email=request.user.email)
     return render(request, 'friends/friends.html', {'form': form, 'friends': friends, 'token': user_token.token})
 
-def send_invitation_email(friend):
+def send_invitation_email(friend, request):
+    base_url = get_base_url(request)
     subject = 'Invitation to Join Collection Tracker'
-    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\nhttp://localhost:8000/register/?email={friend.friend_email}\n\nPlease click the link below to confirm the request after registering:\n\nhttp://localhost:8000/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
+    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\n{base_url}/register/?email={friend.friend_email}\n\nPlease click the link below to confirm the request after registering:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)
@@ -81,9 +87,10 @@ def confirm_friend_request(request, friend_email, sender_username):
     reciprocal_friend_list.friends.add(reciprocal_friend)
     return redirect('friends_view')
 
-def send_friend_request_email(friend):
+def send_friend_request_email(friend, request):
+    base_url = get_base_url(request)
     subject = 'Friend Request Confirmation'
-    message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\nhttp://localhost:8000/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
+    message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [friend.friend_email]
     send_mail(subject, message, email_from, recipient_list)

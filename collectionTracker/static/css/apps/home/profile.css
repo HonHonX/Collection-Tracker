@@ -97,7 +97,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: var(--gapBigBlocks);
 }
 
 /* Badges */

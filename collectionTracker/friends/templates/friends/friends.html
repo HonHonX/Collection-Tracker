@@ -93,11 +93,9 @@
                                 <img class="icon" src="{% static 'icons/collection.svg' %}">
                             </a>
 
-                            <form method="post" style="display:inline;" id="remove-friend-form">
+                            <form method="post" action="{% url 'friends_view' %}">
                                 {% csrf_token %}
-                                <input type="hidden" name="friend_email" value="{{ friend.email }}">
-                                <input type="hidden" name="sender_username" value="{{ friend.user.username }}">
-
+                                <input type="hidden" name="friend_email" value="{{ friend.friend_email }}">
                                 <button type="submit" name="remove_friend" class="button">Remove</button>
                             </form>
                         </div>                        
@@ -110,4 +108,4 @@
 
 {% block js %}
     <script src="{% static 'js/generateToken.js' %}"></script>
-{% endblock %} 
+{% endblock %}

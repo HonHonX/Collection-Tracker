@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from friends.models import Friend, FriendList
 from stats.models import Badge, UserBadge
 from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress
 from django.db.models import Count
@@ -13,10 +14,10 @@ def create_all_badges():
     for badge_info in badges:
         Badge.objects.get_or_create(name=badge_info["name"], defaults=badge_info)
 
-@receiver([post_save, post_delete], sender=UserFollowedArtists)
+@receiver([post_save, post_delete], sender=Friend)
 def award_friend_badges(sender, instance, **kwargs):
     user = instance.user
-    friend_count = UserFollowedArtists.objects.filter(user=user).count()
+    friend_count = Friend.objects.filter(user=user, status='accepted').count()
 
     first_friend_badge, _ = Badge.objects.get_or_create(name="First Friend", defaults={
         'description': "Awarded for adding your first friend.",
@@ -58,6 +59,10 @@ def award_collection_progress_badge(sender, instance, **kwargs):
     artist = instance.artist
 
     if artist is None:
+        return
+
+    # Check if the artist is in the user's personal collection
+    if not UserAlbumCollection.objects.filter(user=user, album__artist=artist).exists():
         return
 
     badges = [
@@ -105,7 +110,7 @@ def award_collection_progress_badge(sender, instance, **kwargs):
     # Award Top Collector badge
     top_collector_badge, _ = Badge.objects.get_or_create(name=f"Top Collector: {artist.name}", defaults={
         'description': f"Awarded for being the top collector for {artist.name}.",
-        'image_url': '/static/badges/first_place.png',
+        'image_url': '/static/badges/top_collector.png',
         'sub_icon_url': artist.photo_url
     })
 

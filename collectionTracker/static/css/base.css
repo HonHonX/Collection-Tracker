@@ -2,7 +2,7 @@
 :root {
     /* Design Sizes */
     --defaultFont: 'Montserrat', 'Verdana' , sans-serif;
-    --headlineFont: 'Bauhaus93', 'Verdana' , sans-serif;
+    --headlineFont: 'Bauhaus93', 'Montserrat', 'Verdana' , sans-serif;
 }
 
 @font-face {

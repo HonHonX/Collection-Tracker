@@ -38,6 +38,10 @@
                 </div>
             </div>
 
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+
             <div class="logout">
                 <form action="{% url 'logout' %}?next=/" method="post" id="logout">
                     {% csrf_token %}
@@ -128,7 +132,7 @@
                     </div>
                 </div>
                 {% endwith %}
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>
