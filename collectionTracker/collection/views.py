@@ -52,7 +52,7 @@ def manage_album_in_list(user, album, list_type, action):
             return JsonResponse({'success': False, 'message': f'Album "{album.name}" is already in your {list_type}.'})
 
     elif action == 'remove':
-        try:
+        try: 
             entry = model.objects.get(user=user, album=album)
             entry_exists = model.objects.filter(user=user, album=album).exists()
             # print(f"Entry exists before deletion: {entry_exists}")

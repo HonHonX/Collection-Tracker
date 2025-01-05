@@ -38,7 +38,7 @@ class Album(models.Model):
     id = models.CharField(max_length=50, primary_key=True)  # Spotify ID
     name = models.CharField(max_length=200)
     album_type = models.CharField(max_length=50)
-    release_date = models.DateField()
+    release_date = models.DateField() 
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True)
 
