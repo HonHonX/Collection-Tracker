@@ -2,8 +2,9 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from friends.models import Friend, FriendList
 from stats.models import Badge, UserBadge
-from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress
+from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress, Album, Artist
 from django.db.models import Count, Q
+from django.contrib.auth.models import User
 
 def create_all_badges():
     badges = [
@@ -53,23 +54,23 @@ def award_first_album_badge(sender, instance, **kwargs):
     else:
         UserBadge.objects.filter(user=user, badge=first_album_badge).delete()
 
-@receiver([post_save, post_delete], sender=UserArtistProgress)
+@receiver([post_save, post_delete], sender=UserAlbumCollection)
 def award_collection_progress_badge(sender, instance, **kwargs):
     user = instance.user
-    artist = instance.artist
+    artist = instance.album.artist
 
     if artist is None:
         return
 
+    # Calculate total albums and collection count for the artist
+    total_albums = Album.objects.filter(artist=artist).count()
+    collection_count = UserAlbumCollection.objects.filter(user=user, album__artist=artist).count()
+
     # Check if the artist is in the user's personal collection
-    if not UserAlbumCollection.objects.filter(user=user, album__artist=artist).exists():
+    if collection_count == 0:
         # Ensure all badges related to the artist are deleted
         badges = Badge.objects.filter(name__icontains=artist.name)
         UserBadge.objects.filter(user=user, badge__in=badges).delete()
-        return
-
-    # Ensure UserArtistProgress has been created and filled with values
-    if not instance.total_albums or not instance.collection_count:
         return
 
     badges = [
@@ -107,16 +108,12 @@ def award_collection_progress_badge(sender, instance, **kwargs):
         })
 
         if 'threshold' in badge_info:
-            progress_percentage = instance.collection_count / instance.total_albums
+            progress_percentage = collection_count / total_albums
 
             if progress_percentage >= badge_info['threshold']:
                 UserBadge.objects.get_or_create(user=user, badge=badge)
             else:
                 UserBadge.objects.filter(user=user, badge=badge).delete()
-
-        # Ensure badge is deleted if collection_count is 0
-        if instance.collection_count == 0:
-            UserBadge.objects.filter(user=user, badge=badge).delete()
 
     # Award Top Collector badge
     top_collector_badge, _ = Badge.objects.get_or_create(name=f"Top Collector: {artist.name}", defaults={
@@ -131,3 +128,8 @@ def award_collection_progress_badge(sender, instance, **kwargs):
     ).annotate(
         collection_size=Count('useralbumcollection__album')
     ).order_by('-collection_size')[:3]
+
+    if user in user_and_friends:
+        UserBadge.objects.get_or_create(user=user, badge=top_collector_badge)
+    else:
+        UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
