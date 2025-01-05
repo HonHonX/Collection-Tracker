@@ -42,7 +42,7 @@
                 {% endif %}
 
                 <p>Popularity: {{ artist_info.popularity }}</p>
-                <p>Total Albums: <span id="total-albums">{{ artist_info.total_albums }}</span></p>
+                <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
 
                 <div id="spacer-1"></div>
 
@@ -50,39 +50,38 @@
                 <div class="album-counters">
                     <h2>artist collection progress</h2>
                     <div class="counter-item">
-                        <div id="progress-bar">
-                            <div id="collection-progress" class="progress"></div>
-                            <div id="collection-and-wishlist-progress" class="progress"></div>
-                            <div id="wishlist-progress" class="progress"></div>
-                            <div id="blacklist-progress" class="progress"></div>
+                        <div class="progress-bar">
+                            <div class="collection-progress progress"></div>
+                            <div class="collection-and-wishlist-progress progress"></div>
+                            <div class="wishlist-progress progress"></div>
+                            <div class="blacklist-progress progress"></div>
                         </div>
-                        <span id="collection-percentage"></span>
+                        <span class="collection-percentage"></span>
                     </div>
-                    <div id="progress-counter">
+                    <div class="progress-counter">
                         <div class="progress-item">
-                            <div id="legend-collection" class="legend"></div>
-                            <span id="collection-counter" class="counter">{{ collection_count }}</br></span> 
+                            <div class="legend-collection legend"></div>
+                            <span class="collection-counter counter">{{ collection_count }}</br></span> 
                             <span>Collection</span> 
                         </div>
                         <div class="progress-item">
-                            <div id="legend-collection-and-wishlist" class="legend"></div>
-                            <span id="collection-and-wishlist-counter" class="counter">{{ collection_and_wishlist_count }}</br></span> 
+                            <div class="legend-collection-and-wishlist legend"></div>
+                            <span class="collection-and-wishlist-counter counter">{{ collection_and_wishlist_count }}</br></span> 
                             <span>Collection & Wishlist</span> 
                         </div>
                         <div class="progress-item">
-                            <div id="legend-wishlist" class="legend"></div>
-                            <span id="wishlist-counter" class="counter">{{ wishlist_count }}</br></span> 
+                            <div class="legend-wishlist legend"></div>
+                            <span class="wishlist-counter counter">{{ wishlist_count }}</br></span> 
                             <span>Wishlist</span> 
                         </div>
                         <div class="progress-item">
-                            <div id="legend-blacklist" class="legend"></div>
-                            <span id="blacklist-counter" class="counter">{{ blacklist_count }}</br></span> 
+                            <div class="legend-blacklist legend"></div>
+                            <span class="blacklist-counter counter">{{ blacklist_count }}</br></span> 
                             <span>Blacklist</span>
                         </div>
                     </div>
                 </div>                                         
-
-            </div>
+            </div> 
 
         <!-- right column -->
             <div class="album-overview">
@@ -117,7 +116,7 @@
                         </div>
 
                     </div>
-
+                    
                 </div>
 
                 <div class="album-grid">
@@ -158,7 +157,7 @@
                     {% endfor %}
                 </div>
             </div>
-    {% endif %}
+    {% endif %} 
 {% endblock %}
 
 {% block js %}
@@ -166,4 +165,5 @@
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
     <script src="{% static 'js/followArtist.js' %}"></script>
+    <script src="{% static 'js/updateProgressBars.js' %}"></script>
 {% endblock %}

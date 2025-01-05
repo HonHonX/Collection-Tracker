@@ -120,7 +120,7 @@ class UserProgress(models.Model):
     total_wishlist_count = models.IntegerField(default=0)  # Total albums in wishlist
     total_blacklist_count = models.IntegerField(default=0)  # Total albums in blacklist
     total_collection_and_wishlist_count = models.IntegerField(default=0)  # Total albums in both collection and wishlist
-
+ 
     def __str__(self):
         return f"{self.user.username}'s Progress"
     

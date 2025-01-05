@@ -17,6 +17,7 @@ class HomeView(LoginRequiredMixin, View):
             followed_artists = UserFollowedArtists.objects.filter(user=request.user).select_related('artist').order_by('followed_on')
             for followed_artist in followed_artists:
                 followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
+                followed_artist.album_count = followed_artist.albums.count()  # Add album count
 
         #print(request.get_host())
         #host = request.get_host()
@@ -26,6 +27,7 @@ class HomeView(LoginRequiredMixin, View):
         #    'islocal': islocal
         #}
         #return render(request, 'home/index.html', context)   
+
 
         user_album_ids = UserAlbumCollection.objects.filter(user=request.user).values_list('album__id', flat=True)
         user_blacklist_ids = UserAlbumBlacklist.objects.filter(user=request.user).values_list('album__id', flat=True)
@@ -47,7 +49,7 @@ class WelcomeView(View):
 class RedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('index')
+            return redirect('home')
         else:
             return redirect('welcome')
 

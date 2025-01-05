@@ -24,9 +24,9 @@ def register(request):
             ) 
 
             # Redirect to the homepage
-            return redirect('/index')
+            return redirect('/home')
     else:
         form = RegisterForm()
 
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form, 'request': request})
 

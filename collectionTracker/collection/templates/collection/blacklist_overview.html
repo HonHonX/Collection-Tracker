@@ -26,7 +26,7 @@
         <select id="sort-criteria">
             <option value="artist">Artist</option>
             <option value="album_type">Album Type</option>
-            <option value="release_date">Release Date</option>
+            <option value="release_date">Released</option>
         </select>
         <img id="sort-toggle" class="sort-icon" 
             src="{% static 'icons/sort-asc.svg' %}" 
@@ -58,7 +58,7 @@
                 <div class="album-info">
                     <div class="album-title"><strong>{{ blacklist_entry.album.name }} <br></strong></div>
                     <em>Artist: {{ blacklist_entry.album.artist.name }}</em><br>
-                    <em>Release Date: {{ blacklist_entry.album.release_date }}</em><br>
+                    <em>Released: {{ blacklist_entry.album.release_date }}</em><br>
                     <em>Type: {{ blacklist_entry.album.album_type }}</em>
                 </div>
             </a>

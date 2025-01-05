@@ -22,7 +22,7 @@ def get_user_album_ids(user):
         user_wishlist,
         user_blacklist,
     )
-
+ 
 def get_artist_list(user):
     """Returns a list of unique artists from the user's collection."""
     return Artist.objects.filter(album__useralbumcollection__user=user).distinct()

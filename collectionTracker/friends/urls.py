@@ -10,3 +10,4 @@ urlpatterns = [
     path('share/<str:token>/collection/', views.shared_user_collection, name='shared_user_collection'),
     path('generate_token/', views.generate_token, name='generate_token'),
 ]
+ 

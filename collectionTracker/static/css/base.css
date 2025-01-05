@@ -1,12 +1,20 @@
 /* Base Styles: General styles and resets. */
 :root {
     /* Design Sizes */
-    --defaultFont: 'Tahoma', sans-serif;
+    --defaultFont: 'Montserrat', 'Verdana' , sans-serif;
+    --headlineFont: 'Bauhaus93', 'Verdana' , sans-serif;
 }
 
 @font-face {
     font-family: 'Bauhaus93';
     src: url("/static/fonts/BAUHS93.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url("/static/fonts/MONTSERRAT-MEDIUM.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -37,8 +45,9 @@ a:visited {
 /* Headlines */
 h1, h2, h3 {
     text-align: left;
-    font-family: var(--defaultFont);
+    font-family: var(--headlineFont);
     margin: 0;
+    letter-spacing: 0.1rem;
 }
 
 h1 {

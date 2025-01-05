@@ -1,10 +1,16 @@
 :root {
     --sliderHeight: 17rem;
 }
+
+p {
+    margin: 0;
+}
+
 .artist-card {
     display: flex; 
     flex-direction: row;
     height: var(--sliderHeight);
+    gap: var(--gapDistance);
 }
 
 .artist-block {
@@ -13,12 +19,12 @@
     border-radius: var(--borderRadius);
     background-color: var(--neutral90);
     padding: 0 1rem;
-    width: 22rem;
     height: var(--sliderHeight);
     gap: var(--gapDistance);
     align-items: center;
     box-sizing: border-box;
     justify-content: space-between;
+    flex: 0 0 25rem;
 }
 
 .artist-block p {
@@ -63,14 +69,23 @@
     margin: 0;
 }
 
-.album-info p {
+.album-info strong {
     margin: 0;
     display: -webkit-box;           /* Required for the line-clamp property */
-    -webkit-line-clamp: 1;          /* Number of lines to show */
+    -webkit-line-clamp: 2;          /* Number of lines to show */
     -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
     overflow: hidden;               /* Hides the overflowing text */
     text-overflow: ellipsis;        /* Adds '...' for overflow */
-    line-height: 1.25rem;           /* Line height for two lines */
-    max-height: 1.25rem;  /* Ensures the height accommodates exactly two lines */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 2rem;               /* Ensures the height accommodates exactly two lines */
     font-size: 0.6rem;              /* Ensure consistent font size */
+}
+
+.progress-bar {
+    background-color: var(--neutral70);
+    flex: 0 0 10rem;
+}
+
+.collection-percentage {
+    padding: 0 0.5rem;
 }

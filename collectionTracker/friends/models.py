@@ -26,4 +26,4 @@ class SharingToken(models.Model):
     token = models.CharField(default=generate_unique_token, max_length=36, unique=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.token}"
+        return f"{self.user.username} - {self.token}" 
