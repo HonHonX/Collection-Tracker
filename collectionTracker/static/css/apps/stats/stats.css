@@ -1,0 +1,43 @@
+.maincontent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+    height: 100%;
+}
+
+.top-block {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--borderRadius);
+    padding: 1rem;
+    gap: var(--gapDistance);
+    width: 33%;
+    height: min-content;
+}
+
+.stats-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+    height: 100%;
+    width: 100%;
+}
+
+.top-list {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    gap: var(--gapDistance);
+    height: auto;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.ranked-item {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+}
