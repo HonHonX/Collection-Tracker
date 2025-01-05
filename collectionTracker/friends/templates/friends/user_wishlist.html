@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block maincontent %}
+<div class="full-block">
     <div class="collection-header">
         <h1>{{ user.username }}'s Wishlist</h1>
         <p>{{ user.username }} has {{ wishlist.count }} album(s) in their wishlist.</p>
@@ -32,4 +33,5 @@
         </div>
         {% endfor %}
     </div>
+</div>
 {% endblock %}

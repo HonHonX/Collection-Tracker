@@ -2,8 +2,7 @@
     height: var(--sliderHeight);      
     display: flex;                   
     flex-direction: row;             /* Arrange items in a row */
-    gap: var(--gapDistance);        /* Spacing between album items */
-    padding: 0 1rem;                 
+    gap: var(--gapDistance);        /* Spacing between album items */              
     flex-grow: 1;
     overflow-x: auto;                /* Enable horizontal scrolling */
     overflow-y: hidden;              /* Disable vertical scrolling*/

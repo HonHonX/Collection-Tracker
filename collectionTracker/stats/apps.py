@@ -1,6 +1,10 @@
 from django.apps import AppConfig
 
-
 class StatsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
     name = 'stats'
+
+    def ready(self):
+        import stats.signals
+        # Remove the call to create_all_badges to avoid database access during app initialization
+        # from stats.signals import create_all_badges
+        # create_all_badges()

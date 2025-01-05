@@ -5,28 +5,46 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import JSONField
 
-# models.py
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_artists(self):
+        return self.artists.all()
+
+    def album_count(self): 
+        return Album.objects.filter(artist__genres=self).count()
+
+    def get_album_ids(self):
+        return Album.objects.filter(artist__genres=self).values_list('id', flat=True)
+
 class Artist(models.Model):
     id = models.CharField(max_length=50, primary_key=True, default=0)  # Spotify ID
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
-    genres = models.JSONField(default=list)
+    genres = models.ManyToManyField(Genre, related_name='artists')
     popularity = models.IntegerField(default=0)
     
-    def __str__(self):
+    def __str__(self): 
         return f"{self.name} - ID: {self.id} " 
+
+    def set_genres(self, genre_names):
+        genres = [Genre.objects.get_or_create(name=name)[0] for name in genre_names]
+        self.genres.set(genres)
 
 class Album(models.Model):
     id = models.CharField(max_length=50, primary_key=True)  # Spotify ID
     name = models.CharField(max_length=200)
     album_type = models.CharField(max_length=50)
-    release_date = models.DateField()
+    release_date = models.DateField() 
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name 
-    
+
 class UserAlbumDescription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
@@ -120,9 +138,9 @@ class UserProgress(models.Model):
     total_wishlist_count = models.IntegerField(default=0)  # Total albums in wishlist
     total_blacklist_count = models.IntegerField(default=0)  # Total albums in blacklist
     total_collection_and_wishlist_count = models.IntegerField(default=0)  # Total albums in both collection and wishlist
-
+ 
     def __str__(self):
-        return f"{self.user.username}'s Progress"
+        return f"{self.user.username}'s Progress" 
     
 class UserFollowedArtists(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -224,4 +242,3 @@ def update_user_progress(sender, instance, **kwargs):
     except Exception as e:
         # Handle error and log it
         print(f"Error updating user progress: {e}")
-

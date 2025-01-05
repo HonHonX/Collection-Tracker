@@ -1,4 +1,4 @@
-@@ -0,0 +1,10 @@
+// @@ -0,0 +1,10 @@
 //Implement slider scroll behavior with mouse interaction
 document.querySelectorAll('.album-slider').forEach(slider => {
     slider.addEventListener('wheel', (event) => {

@@ -1,7 +1,13 @@
+:root {
+    /* Design Sizes */
+    --buttonWidth: 12rem;
+}
+
 #settings-block {
     display: flex;
     flex-direction: row;
     gap: var(--gapBigBlocks);
+    height: 100%;
 }
 
 /* User Image */
@@ -18,6 +24,7 @@ input[type="file"] {
     width: 100%;
     background-color: var(--neutral100);
     padding: 0.5rem 0;
+    font-family: var(--defaultFont);
 }
 
 /* Custom button text and appearance */
@@ -84,6 +91,89 @@ input[type="file"]:hover::-webkit-file-upload-button {
 
 #logout-button {
     background-color: var(--accentVariantB100);
-    align-self: self-end;
-    margin-top: auto;
+}
+
+#first-column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Badges */
+.badges-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    width: 100%;
+    height: 100%;
+}
+
+.badge-display {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge-item {
+    width: 9rem;
+    height: 16rem;
+    background-color: var(--neutral90);
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: var(--borderRadius);
+}
+
+.badge-item.disabled {
+    opacity: 0.25;
+    filter: grayscale(100%);
+}
+
+.badge-item span {
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 3;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 3rem;               /* Ensures the height accommodates exactly two lines */
+    font-size: 0.8rem;              /* Ensure consistent font size */
+}
+
+.badge-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin-bottom: 1rem;
+}
+
+.badge-icon {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    object-position: center;
+    transition: var(--transitionStyle);
+}
+
+.badge-sub-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    border: 2px solid var(--neutral0);
+}
+
+.badge-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-description strong{
+    color: var(--accentVariantB100);
 }

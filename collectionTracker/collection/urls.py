@@ -20,4 +20,4 @@ urlpatterns = [
     # Follow artist
     path('follow_artist/', follow_artist, name='follow_artist'),
 ]
- 
+   

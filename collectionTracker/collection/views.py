@@ -22,7 +22,7 @@ def get_user_album_ids(user):
         user_wishlist,
         user_blacklist,
     )
-
+ 
 def get_artist_list(user):
     """Returns a list of unique artists from the user's collection."""
     return Artist.objects.filter(album__useralbumcollection__user=user).distinct()
@@ -52,7 +52,7 @@ def manage_album_in_list(user, album, list_type, action):
             return JsonResponse({'success': False, 'message': f'Album "{album.name}" is already in your {list_type}.'})
 
     elif action == 'remove':
-        try:
+        try: 
             entry = model.objects.get(user=user, album=album)
             entry_exists = model.objects.filter(user=user, album=album).exists()
             # print(f"Entry exists before deletion: {entry_exists}")
@@ -69,7 +69,7 @@ def manage_album_in_list(user, album, list_type, action):
 def manage_album(request, list_type, action):
     if request.method == 'POST':
         data = json.loads(request.body)
-        album_id = data.get('album_id')
+        album_id = data.get('album_id') 
         album_name = data.get('album_name')
         album_type = data.get('album_type')
         release_date = data.get('release_date')

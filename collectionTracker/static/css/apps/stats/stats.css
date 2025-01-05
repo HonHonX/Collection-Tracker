@@ -1,0 +1,156 @@
+.maincontent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    height: 100%;
+}
+
+.top-block {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--borderRadius);
+    gap: var(--gapDistance);
+    width: 33%;
+    height: min-content;
+    height: 100%;
+}
+
+.stats-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+    width: 100%;
+}
+
+.first-place {
+    color: var(--accent100);
+    font-weight: bold;
+}
+
+.top-list {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    box-sizing: border-box;
+    padding: 1rem;
+    height: 13rem;
+    gap: 0.8rem;
+}
+
+#top-genres {
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+#friend-collection {
+    height: 9rem;
+}
+
+.ranked-item {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.countable {
+    width: 13rem;
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 1;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 1rem;               /* Ensures the height accommodates exactly two lines */
+}
+
+.full-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+}
+
+.common-albums {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gapDistance);
+    margin-top: 0.5rem;
+}
+
+.album-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 6rem;
+    height: 100%;
+    margin: 0;
+}
+
+.album-item p{
+    margin: 0;
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 1;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 1rem;               /* Ensures the height accommodates exactly two lines */
+}
+
+.album-cover {
+    width: 100%;
+    border-radius: var(--borderRadius);
+}
+
+.album-info {
+    text-align: center;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.user-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+}
+
+.friend-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.quantities-block,
+.competition-block {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    text-align: center;
+    align-items: center;
+}
+.competition-block {
+    flex-grow: 1;
+}
+
+.competition-block form {
+    width: 30%;
+    margin: 0;
+}
+
+#artist-rank {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0 var(--gapBigBlocks);
+}
+
+.status-icon {
+    width: 2rem;
+    height: 2rem;
+}

@@ -61,7 +61,7 @@ def send_invitation_email(friend):
 def confirm_friend_request(request, friend_email, sender_username):
     sender_user = get_object_or_404(User, username=sender_username)
     
-    friend = get_object_or_404(Friend, friend_email=str(friend_email))
+    friend = get_object_or_404(Friend, friend_email=friend_email, user=sender_user)
     friend.status = 'accepted'
     friend.save()
 

@@ -9,7 +9,6 @@
                 {% endblock %}
             </title>
             {% load static %}
-            <link rel="stylesheet" href="{% static 'css/main.css' %}">
             {% if request.user.userprofile.color_scheme == 'spring' %}
                 <link rel="stylesheet" href="{% static 'css/themes/spring_theme.css' %}">
             {% elif request.user.userprofile.color_scheme == 'summer' %}
@@ -19,7 +18,7 @@
             {% else %}
                 <link rel="stylesheet" href="{% static 'css/themes/winter_theme.css' %}">
             {% endif %}
-            <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+            <link rel="stylesheet" href="{% static 'css/main.css' %}">
             <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
             
             {% block extra_css %}

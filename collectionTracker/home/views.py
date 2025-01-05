@@ -7,7 +7,10 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from .forms import ProfileImageForm
 from .models import Profile, UserProfile
+from stats.models import Badge, UserBadge
 from collection.models import UserFollowedArtists, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, View):
@@ -17,19 +20,14 @@ class HomeView(LoginRequiredMixin, View):
             followed_artists = UserFollowedArtists.objects.filter(user=request.user).select_related('artist').order_by('followed_on')
             for followed_artist in followed_artists:
                 followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
-
-        #print(request.get_host())
-        #host = request.get_host()
-        #islocal = host.find('localhost') >= 0 or host.find('127.0.0.1') >= 0
-        #context = {
-        #    'installed': settings.INSTALLED_APPS,
-        #    'islocal': islocal
-        #}
-        #return render(request, 'home/index.html', context)   
+                followed_artist.album_count = followed_artist.albums.count()  # Add album count
 
         user_album_ids = UserAlbumCollection.objects.filter(user=request.user).values_list('album__id', flat=True)
         user_blacklist_ids = UserAlbumBlacklist.objects.filter(user=request.user).values_list('album__id', flat=True)
         user_wishlist_ids = UserAlbumWishlist.objects.filter(user=request.user).values_list('album__id', flat=True)
+
+        # Fetch the 10 newest albums released by followed artists
+        newest_albums = Album.objects.filter(artist__userfollowedartists__user=request.user).order_by('-release_date')[:20]
 
         return render(request, 'home/index.html', {
             'settings': settings,
@@ -37,6 +35,7 @@ class HomeView(LoginRequiredMixin, View):
             'user_album_ids': user_album_ids, 
             'user_blacklist_ids': user_blacklist_ids,
             'user_wishlist_ids': user_wishlist_ids,
+            'newest_albums': newest_albums,
         })
     
     
@@ -47,13 +46,15 @@ class WelcomeView(View):
 class RedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('index')
+            return redirect('index')  # Update this line to use the correct view name
         else:
             return redirect('welcome')
 
 @login_required
 def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge').order_by('awarded_date')}
+    all_badges = Badge.objects.all()
     if request.method == 'POST':
         form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -66,7 +67,7 @@ def user_profile(request):
             return redirect('user_profile')
     else:
         form = ProfileImageForm()
-    return render(request, 'home/profile.html', {'user': request.user, 'form': form})
+    return render(request, 'home/profile.html', {'user': request.user, 'form': form, 'badges': badges, 'all_badges': all_badges, 'badge_awarded_dates': {badge.badge.pk: badge.awarded_date for badge in badges.values()}})
 
 @login_required
 def remove_profile_image(request):

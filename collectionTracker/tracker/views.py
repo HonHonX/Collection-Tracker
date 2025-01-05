@@ -96,10 +96,11 @@ def get_artist_data(artist_name, user):
                     defaults={
                         'name': artist_info['name'],
                         'photo_url': artist_photo_url,
-                        'genres': artist_info['genres'],
                         'popularity': artist_info['popularity'],
                     }
                 )
+                if created:
+                    artist.set_genres(artist_info['genres'])
 
                 for album in sorted_albums:
                     Album.objects.get_or_create(
