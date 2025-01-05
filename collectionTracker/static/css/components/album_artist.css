@@ -67,6 +67,15 @@
     }
 
     /* Sorting Controls */
+
+    .sorting-controls {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--gapDistance);
+    }
+
     .control-block {
         background-color: var(--neutral100);
         display: flex;
