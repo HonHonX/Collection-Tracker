@@ -47,7 +47,7 @@
                     <p>The sharing token was generated for you to make sure that only authorized people can see your shared collection & wishlist. If you want to cut the access for people you previously shared the link with, generate a new token. </p>
                     <div id="token-box">
                         <div id="token-display">{{ token }}</div>
-                        <button id="generate-token-button" class="button">Generate Token</button>                        
+                        <button id="generate-token-button" class="button">New Token</button>                        
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                                 <input type="hidden" name="friend_email" value="{{ friend.email }}">
                                 <input type="hidden" name="sender_username" value="{{ friend.user.username }}">
 
-                                <button type="submit" name="remove_friend" class="button">Remove Friend</button>
+                                <button type="submit" name="remove_friend" class="button">Remove</button>
                             </form>
                         </div>                        
                     </div>

@@ -10,9 +10,6 @@
 {% endblock %}
 
 {% block maincontent %}
-
-<h1>User Dashboard</h1>
-
 <div class="stats-block">
     <div class="top-block">
         <h2>Top 5 Genres</h2>
@@ -24,7 +21,7 @@
             {% endfor %}
         </div>
 
-        <h2>Top 10 Artists</h2>
+        <h2>Top 5 Artists</h2>
         <div class="top-list">
             {% for artist in top_artists %}
                 <div class="ranked-item {% if forloop.first %}first-place{% endif %}">

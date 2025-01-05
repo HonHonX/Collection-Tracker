@@ -29,7 +29,7 @@ def dashboard_view(request):
             'album__useralbumcollection',
             filter=Q(album__useralbumcollection__user=user)
         )
-    ).filter(album_count__gt=0).order_by('-album_count')[:10]
+    ).filter(album_count__gt=0).order_by('-album_count')[:5]
 
     context = {
         'user_progress': user_progress,
