@@ -39,9 +39,24 @@
     <div class="badges-block">
 
     </div>
+
+    <h1>Top 5 Genres</h1>
+    <div class="top-genres-block">
+        <ul>
+            {% for genre in top_genres %}
+                <li>{{ genre.name }}: {{ genre.album_count }} albums
+                    <ul>
+                        {% for album_id in genre.album_ids %}
+                            <li>Album ID: {{ album_id }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %} 
 
 {% block js %}
     <!-- Add JavaScript for graphs and charts here -->
-{% endblock %} 
+{% endblock %}

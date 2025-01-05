@@ -1,11 +1,26 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists, Genre
+
+# Register the Genre model with the admin panel
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = ('name', 'get_artists', 'get_album_ids')
+    search_fields = ('name',)
+
+    def get_artists(self, obj):
+        return ", ".join([artist.name for artist in obj.get_artists()])
+    get_artists.short_description = 'Artists'
+
+    def get_album_ids(self, obj):
+        return ", ".join(obj.get_album_ids())
+    get_album_ids.short_description = 'Album IDs'
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'photo_url', 'genres', 'popularity')  # Display artist's id and name
+    list_display = ('id', 'name', 'popularity')  # Remove the many-to-many field 'genres'
     search_fields = ('name',)  # Allow searching by artist's name 
+    filter_horizontal = ('genres',)  # Add genres to the admin panel
 
 # Register the Album model with custom configuration
 @admin.register(Album)
