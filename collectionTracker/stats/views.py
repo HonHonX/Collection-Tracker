@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User  # Add this import
+from friends.models import Friend
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
 
@@ -63,12 +64,16 @@ def dashboard_view(request):
         friend.common_albums = list(Album.objects.filter(id__in=friend.common_album_ids))
         friend.icon_url = friend.profile.image.url if friend.profile.image else None
 
+    # Retrieve all friends of the user
+    friends = Friend.objects.filter(user=user, status='accepted').values_list('friend_email', flat=True)
+    friends_users = User.objects.filter(email__in=friends)
+
     # Calculate ranking of users and their friends based on collection size
     user_and_friends = User.objects.filter(
-        Q(id=user.id) | Q(useralbumcollection__album__useralbumcollection__user=user)
+        Q(id=user.id) | Q(id__in=friends_users)
     ).annotate(
         collection_size=Count('useralbumcollection__album')
-    ).order_by('-collection_size')
+    ).order_by('-collection_size')[:3]
 
     # Add user icons for each user in the ranking
     for ranked_user in user_and_friends:
@@ -100,5 +105,3 @@ def dashboard_view(request):
         'users_with_more_albums': users_with_more_albums,
     }
     return render(request, 'stats/dashboard.html', context)
-
-

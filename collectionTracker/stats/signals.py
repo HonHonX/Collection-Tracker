@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from friends.models import Friend, FriendList
 from stats.models import Badge, UserBadge
 from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress
-from django.db.models import Count
+from django.db.models import Count, Q
 
 def create_all_badges():
     badges = [
@@ -63,6 +63,13 @@ def award_collection_progress_badge(sender, instance, **kwargs):
 
     # Check if the artist is in the user's personal collection
     if not UserAlbumCollection.objects.filter(user=user, album__artist=artist).exists():
+        # Ensure all badges related to the artist are deleted
+        badges = Badge.objects.filter(name__icontains=artist.name)
+        UserBadge.objects.filter(user=user, badge__in=badges).delete()
+        return
+
+    # Ensure UserArtistProgress has been created and filled with values
+    if not instance.total_albums or not instance.collection_count:
         return
 
     badges = [
@@ -107,6 +114,10 @@ def award_collection_progress_badge(sender, instance, **kwargs):
             else:
                 UserBadge.objects.filter(user=user, badge=badge).delete()
 
+        # Ensure badge is deleted if collection_count is 0
+        if instance.collection_count == 0:
+            UserBadge.objects.filter(user=user, badge=badge).delete()
+
     # Award Top Collector badge
     top_collector_badge, _ = Badge.objects.get_or_create(name=f"Top Collector: {artist.name}", defaults={
         'description': f"Awarded for being the top collector for {artist.name}.",
@@ -114,8 +125,9 @@ def award_collection_progress_badge(sender, instance, **kwargs):
         'sub_icon_url': artist.photo_url
     })
 
-    top_collector = UserAlbumCollection.objects.filter(album__artist=artist).values('user').annotate(total=Count('album')).order_by('-total').first()
-    if top_collector and top_collector['user'] == user.id:
-        UserBadge.objects.get_or_create(user=user, badge=top_collector_badge)
-    else:
-        UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
+    # Calculate ranking of users and their friends based on collection size, limited to top 3
+    user_and_friends = User.objects.filter(
+        Q(id=user.id) | Q(useralbumcollection__album__useralbumcollection__user=user)
+    ).annotate(
+        collection_size=Count('useralbumcollection__album')
+    ).order_by('-collection_size')[:3]

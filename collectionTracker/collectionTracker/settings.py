@@ -54,8 +54,7 @@ INSTALLED_APPS = [
     'stats',
     'users',
     'settings',
-
-    'tracker',      # for testing
+    'tracker',   
 ]
 
 MIDDLEWARE = [
@@ -170,23 +169,23 @@ LOGIN_REDIRECT_URL = '/index/'
 
 LOGIN_URL = '/accounts/login/'
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'collection.signals': {  # Add this logger for signals.py
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'                       # SMTP-Server Gmail
