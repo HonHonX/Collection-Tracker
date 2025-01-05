@@ -19,17 +19,15 @@
     <div class="album-grid">
         {% for album in collection %}
         <div class="album-item">
-            <a href="{% url 'album_detail' album.id %}">
-                {% if album.image_url %}
-                    <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
-                {% endif %}
-                <div class="album-info">
-                    <strong>{{ album.name }}</strong><br>
-                    <em>Artist: {{ album.artist.name }}</em><br>
-                    <em>Release Date: {{ album.release_date }}</em><br>
-                    <em>Type: {{ album.album_type }}</em>
-                </div>
-            </a>
+            {% if album.image_url %}
+                <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+            {% endif %}
+            <div class="album-info">
+                <strong>{{ album.name }}</strong><br>
+                <em>Artist: {{ album.artist.name }}</em><br>
+                <em>Release Date: {{ album.release_date }}</em><br>
+                <em>Type: {{ album.album_type }}</em>
+            </div>
         </div>
         {% endfor %}
     </div>

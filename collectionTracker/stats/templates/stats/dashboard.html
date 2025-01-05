@@ -130,7 +130,11 @@
             <div id="artist-rank">
                 {% if user_rank is not None %}
                     <span>You are among the top {{ user_rank|floatformat:2 }}% for {{ selected_artist.name }}<br></span>
-                    <span>{{ users_with_more_albums }} user(s) have collected more albums than you for this artist.</span>
+                    {% if users_with_more_albums == 0 %}
+                        <span>You are the top collector for this artist!</span>
+                    {% else %}
+                        <span>{{ users_with_more_albums }} user(s)'s collection for this artist is bigger.</span>
+                    {% endif %}
                 {% endif %}
             </div>
             {% if users_with_more_albums == 0 %}
