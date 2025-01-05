@@ -1,12 +1,13 @@
 :root {
     /* Design Sizes */
-    --buttonWidth: 15rem;
+    --buttonWidth: 12rem;
 }
 
 #settings-block {
     display: flex;
     flex-direction: row;
     gap: var(--gapBigBlocks);
+    height: 100%;
 }
 
 /* User Image */
@@ -90,16 +91,66 @@ input[type="file"]:hover::-webkit-file-upload-button {
 
 #logout-button {
     background-color: var(--accentVariantB100);
-    align-self: self-end;
-    margin-top: auto;
+}
+
+#first-column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Badges */
+.badges-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    width: 100%;
+    height: 100%;
+}
+
+.badge-display {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge-item {
+    width: 9rem;
+    height: 16rem;
+    background-color: var(--neutral90);
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: var(--borderRadius);
+}
+
+.badge-item.disabled {
+    opacity: 0.25;
+    filter: grayscale(100%);
+}
+
+.badge-item span {
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 3;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 3rem;               /* Ensures the height accommodates exactly two lines */
+    font-size: 0.8rem;              /* Ensure consistent font size */
 }
 
 .badge-container {
     position: relative;
     display: inline-block;
-    width: 8rem;
-    height: 8rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin-bottom: 1rem;
 }
+
 .badge-icon {
     height: 100%;
     width: auto;
@@ -112,13 +163,17 @@ input[type="file"]:hover::-webkit-file-upload-button {
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 20%;
-    height: 20%;
+    width: 40%;
+    height: 40%;
     border-radius: 50%;
-    border: 2px solid white; /* Optional: Add a border to make the sub icon stand out */
+    border: 2px solid var(--neutral0);
 }
 
-.badge-item.disabled {
-    opacity: 0.6;
-    filter: grayscale(100%);
+.badge-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-description strong{
+    color: var(--accentVariantB100);
 }

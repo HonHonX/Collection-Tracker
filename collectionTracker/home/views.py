@@ -53,7 +53,7 @@ class RedirectView(View):
 @login_required
 def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
-    badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge')}
+    badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge').order_by('awarded_date')}
     all_badges = Badge.objects.all()
     if request.method == 'POST':
         form = ProfileImageForm(request.POST, request.FILES)
@@ -67,7 +67,7 @@ def user_profile(request):
             return redirect('user_profile')
     else:
         form = ProfileImageForm()
-    return render(request, 'home/profile.html', {'user': request.user, 'form': form, 'badges': badges, 'all_badges': all_badges})
+    return render(request, 'home/profile.html', {'user': request.user, 'form': form, 'badges': badges, 'all_badges': all_badges, 'badge_awarded_dates': {badge.badge.pk: badge.awarded_date for badge in badges.values()}})
 
 @login_required
 def remove_profile_image(request):

@@ -10,7 +10,7 @@ class BadgeAdmin(admin.ModelAdmin):
 # Register the UserBadge model with the admin panel
 @admin.register(UserBadge)
 class UserBadgeAdmin(admin.ModelAdmin):
-    list_display = ('user', 'badge', 'awarded_on')
+    list_display = ('user', 'badge', 'awarded_date')
     search_fields = ('user__username', 'badge__name')
-    list_filter = ('awarded_on',)
+    list_filter = ('awarded_date',)
 

@@ -15,24 +15,33 @@
 <div class="full-block">
     <h1>{{ user.username }}'s Profile</h1>
     <div id="settings-block">
-        <div class="user-image">
-            <h2>Profile Image</h2>
-            <div id="spacer-1"></div>
-            {% if user.profile.image %}
-            
-                <img id="profile-image-big" src="{{ user.profile.image.url }}">
-            {% else %} 
-                <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
-            {% endif %}
-            <div class="image-controls">
-                <form id="profile-image-form" method="post" enctype="multipart/form-data">
+        <div id="first-column">
+            <div class="user-image">
+                <h2>Profile Image</h2>
+                <div id="spacer-1"></div>
+                {% if user.profile.image %}
+                
+                    <img id="profile-image-big" src="{{ user.profile.image.url }}">
+                {% else %} 
+                    <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
+                {% endif %}
+                <div class="image-controls">
+                    <form id="profile-image-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="button">Upload Image</button>
+                    </form>
+                    <form id="remove-image-form" method="post" action="{% url 'remove_profile_image' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Remove Image</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="logout">
+                <form action="{% url 'logout' %}?next=/" method="post" id="logout">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="button">Upload Image</button>
-                </form>
-                <form id="remove-image-form" method="post" action="{% url 'remove_profile_image' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button">Remove Image</button>
+                    <button type="submit" id="logout-button" class="button">Logout</button>
                 </form>
             </div>
         </div>
@@ -98,31 +107,32 @@
                 <p>Currently active: {{ request.user.userprofile.color_scheme |capfirst }}</p>
             </div>
         </div>
-    </div>
 
-    <div class="badges-block">
-        <h2>Badges</h2>
-        {% for badge in all_badges %}
-            {% with user_badge=badges|get_item:badge.id %}
-            <div class="badge-item {% if not user_badge %}disabled{% endif %}">
-                <div class="badge-container">
-                    <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
-                    {% if badge.sub_icon_url %}
-                        <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
-                    {% endif %}
+        <div class="badges-block">
+            <h2>Badges</h2>
+            <div class="badge-display">
+                {% for badge in all_badges %}
+                {% with user_badge=badges|get_item:badge.id %}
+                <div class="badge-item {% if not user_badge %}disabled{% endif %}">
+                    <div class="badge-container">
+                        <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
+                        {% if badge.sub_icon_url %}
+                            <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
+                        {% endif %}
+                    </div>
+                    <div class="badge-description">
+                        <span><strong>{{ badge.name }}</strong></span><br>
+                        {% if user_badge %}
+                            <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
+                        {% endif %}
+                    </div>
                 </div>
-                <p>{{ badge.name }}</p>
+                {% endwith %}
+            {% endfor %}
             </div>
-            {% endwith %}
-        {% endfor %}
+        </div>
     </div>
 
-    <div class="logout">
-        <form action="{% url 'logout' %}?next=/" method="post" id="logout">
-            {% csrf_token %}
-            <button type="submit" id="logout-button" class="button">Logout</button>
-        </form>
-    </div>
 </div>
 {% endblock %}
 
