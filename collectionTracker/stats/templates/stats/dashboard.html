@@ -18,23 +18,21 @@
         <h2>Top 5 Genres</h2>
         <div class="top-list">
             {% for genre in top_genres %}
-                <div class="ranked-item">
-                    <span>{{ genre.name }}:</span><span>{{ genre.album_count }} albums</span>  
+                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                    <span>{{ forloop.counter }}. {{ genre.name }}:</span><span>{{ genre.album_count }} album(s)</span>  
                 </div>
             {% endfor %}
         </div>
 
-        <h2>Top 10 Artist</h2>
+        <h2>Top 10 Artists</h2>
         <div class="top-list">
-            {% for  %}
-                <div class="ranked-item">
-                    <span>{{ genre.name }}:</span><span>{{ genre.album_count }} albums</span>  
+            {% for artist in top_artists %}
+                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                    <span>{{ forloop.counter }}. {{ artist.name }}:</span><span>{{ artist.album_count }} album(s)</span>  
                 </div>
             {% endfor %}
         </div>
     </div>
-
-    
     
     <div class="full-block">
         <div class="dashboard-block">
