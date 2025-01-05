@@ -12,52 +12,110 @@
 {% block maincontent %}
 <div class="stats-block">
     <div class="top-block">
-        <h2>Top 5 Genres</h2>
+        <h2>Top 5 - Genres</h2>
         <div class="top-list">
             {% for genre in top_genres %}
                 <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
-                    <span>{{ forloop.counter }}. {{ genre.name }}:</span><span>{{ genre.album_count }} album(s)</span>  
+                    <span class="countable">{{ forloop.counter }}. {{ genre.name }}:</span><span>{{ genre.album_count }} album(s)</span>  
                 </div>
             {% endfor %}
         </div>
 
-        <h2>Top 5 Artists</h2>
+        <h2>Top 5 - Artists</h2>
         <div class="top-list">
             {% for artist in top_artists %}
                 <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
-                    <span>{{ forloop.counter }}. {{ artist.name }}:</span><span>{{ artist.album_count }} album(s)</span>  
+                    <span class="countable">{{ forloop.counter }}. {{ artist.name }}:</span><span>{{ artist.album_count }} album(s)</span>  
                 </div>
             {% endfor %}
         </div>
+
+        <h2>Top 5 - Completion</h2>
+        <div class="top-list">
+            {% for artist_progress in top_quality_artists %}
+                <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                    <span class="countable">{{ forloop.counter }}. {{ artist_progress.artist.name }}:</span>
+                    <span>{{ artist_progress.progress_percentage|floatformat:2 }}%</span>
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
     
-    <div class="full-block">
-        <div class="dashboard-block">
-            <div class="stat">
-                <h2>Total Artists</h2>
-                <p>{{ user_progress.total_artists }}</p>
+    <div class="full-block">        
+        <div class="friends-block">
+            <h2>Top 3 Friends with Similar Collections</h2>
+            <div class="top-list" id="similar-friends">
+                {% for friend in top_friends %}
+                    <div class="friend">
+                        <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                            <div class="friend-name">
+                                <span>{{ forloop.counter }}.</span>
+                                {% if friend.icon_url %}
+                                    <img src="{{ friend.icon_url }}" alt="{{ friend.username }}" class="user-icon">
+                                {% endif %}
+                                <span>{{ friend.username }}</span>
+                            </div>
+                            <span>{{ friend.common_albums|length }} album(s) in common</span>
+                        </div>
+                        <div class="common-albums">
+                            {% for album in friend.common_albums %}
+                                <div class="album-item">
+                                    <a href="{% url 'album_detail' album.id %}">
+                                        <img src="{{ album.image_url }}" alt="{{ album.name }}" class="album-cover">
+                                    </a>
+                                    <div class="album-info">
+                                        <p>{{ album.name }}</p>
+                                        <p>{{ album.artist.name }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="stat">
-                <h2>Total Albums</h2>
-                <p>{{ user_progress.total_albums }}</p>
-            </div>
-            <div class="stat">
-                <h2>Collection Count</h2>
-                <p>{{ user_progress.total_collection_count }}</p>
-            </div>
-            <div class="stat">
-                <h2>Wishlist Count</h2>
-                <p>{{ user_progress.total_wishlist_count }}</p>
-            </div>
-            <div class="stat">
-                <h2>Blacklist Count</h2>
-                <p>{{ user_progress.total_blacklist_count }}</p>
+
+            <h2>Friend Collection Ranking</h2>
+            <div class="top-list" id="friend-collection">
+                {% for ranked_user in user_and_friends %}
+                    <div class="ranked-item {% if forloop.first %}first-place{% endif %}">
+                        <div class="friend-name">
+                            <span>{{ forloop.counter }}.</span>
+                            {% if ranked_user.icon_url %}
+                                <img src="{{ ranked_user.icon_url }}" alt="{{ ranked_user.username }}" class="user-icon">
+                            {% endif %}
+                            <span>{{ ranked_user.username }}</span>
+                        </div>
+                        <span>{{ ranked_user.collection_size }} album(s)</span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-    
-        <h1>Badges</h1> 
-        <div class="badges-block">
-    
+        
+        <div class="dashboard-block">
+            <h2>Collection Counts</h2>
+            <div class="quantities-block">
+                <div class="stat">
+                    <h3>Total Artists</h3>
+                    <p>{{ user_progress.total_artists }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Total Albums</h3>
+                    <p>{{ user_progress.total_albums }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Collection Count</h3>
+                    <p>{{ user_progress.total_collection_count }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Wishlist Count</h3>
+                    <p>{{ user_progress.total_wishlist_count }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Blacklist Count</h3>
+                    <p>{{ user_progress.total_blacklist_count }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -73,3 +73,7 @@ p  {
 textarea {
     font-family: var(--defaultFont);
 }
+
+input {
+    font-family: var(--defaultFont);
+}
