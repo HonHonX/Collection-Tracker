@@ -12,6 +12,49 @@
 
 {% block maincontent %} 
     <div class="full-block">
+
+        <h1>Newest Albums</h1>
+        <div class="newest-albums-block">
+            <div class="album-slider">
+                {% for album in newest_albums %}
+                <div class="album-item" 
+                    data-album-id="{{ album.id }}" 
+                    data-album-name="{{ album.name }}"
+                    data-album-type="{{ album.album_type }}" 
+                    data-release-date="{{ album.release_date }}"
+                    data-image-url="{{ album.image_url }}"  
+                    data-artist-id="{{ album.artist.id }}"
+                    data-artist-name="{{ album.artist.name }}"
+                    data-artist-photo-url="{{ album.artist.photo_url }}"
+                    data-artist-genres="{{ album.artist.genres }}"
+                    data-artist-popularity="{{ album.artist.popularity }}"
+                    data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}"
+                    data-in-wishlist="{% if album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
+                    data-in-blacklist="{% if album.id in user_blacklist_ids %}true{% else %}false{% endif %}"
+                    data-in-collection-and-wishlist="{% if album.id in user_album_ids and album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
+                    
+                    <div class="album-controls">
+                        <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
+                        <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
+                        <img id="control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Add/Remove">
+                    </div>
+    
+                    {% if album.image_url %}
+                        <a href="{% url 'album_detail' album.id %}">
+                            <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
+                        </a>
+                    {% endif %}
+                    <div class="album-info">
+                        <p>{{ album.album_type }}</p>
+                        <strong>{{ album.name }}</strong>
+                        <p>{{ album.artist.name }}</p>
+                        <p>{{ album.release_date }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
         <h1>Followed Artists</h1>
         {% for followed_artist in followed_artists %} 
             <div class="artist-card">
@@ -96,7 +139,10 @@
                 </div> 
             </div>
         {% endfor %}
+
     </div>
+
+    
 {% endblock %}
 
 {% block js %}

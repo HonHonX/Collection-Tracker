@@ -19,19 +19,12 @@ class HomeView(LoginRequiredMixin, View):
                 followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
                 followed_artist.album_count = followed_artist.albums.count()  # Add album count
 
-        #print(request.get_host())
-        #host = request.get_host()
-        #islocal = host.find('localhost') >= 0 or host.find('127.0.0.1') >= 0
-        #context = {
-        #    'installed': settings.INSTALLED_APPS,
-        #    'islocal': islocal
-        #}
-        #return render(request, 'home/index.html', context)   
-
-
         user_album_ids = UserAlbumCollection.objects.filter(user=request.user).values_list('album__id', flat=True)
         user_blacklist_ids = UserAlbumBlacklist.objects.filter(user=request.user).values_list('album__id', flat=True)
         user_wishlist_ids = UserAlbumWishlist.objects.filter(user=request.user).values_list('album__id', flat=True)
+
+        # Fetch the 10 newest albums released by followed artists
+        newest_albums = Album.objects.filter(artist__userfollowedartists__user=request.user).order_by('-release_date')[:20]
 
         return render(request, 'home/index.html', {
             'settings': settings,
@@ -39,6 +32,7 @@ class HomeView(LoginRequiredMixin, View):
             'user_album_ids': user_album_ids, 
             'user_blacklist_ids': user_blacklist_ids,
             'user_wishlist_ids': user_wishlist_ids,
+            'newest_albums': newest_albums,
         })
     
     
