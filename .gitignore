@@ -6,3 +6,6 @@ venv/
 __pycache__/
 .env
 .cache
+
+# Ignore SQLite database
+db.sqlite3
