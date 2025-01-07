@@ -79,3 +79,18 @@ body::-webkit-scrollbar {
 #spacer-2 {
     height: 2rem;
 }
+
+/* Adjust vertical scrollbar */
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--neutral70);
+    border-radius: 0.25rem; 
+}
+
+/* Scrollbar Track (Scrollbar bg) */
+::-webkit-scrollbar-track {
+    background-color: var(--neutral90); 
+}

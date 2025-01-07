@@ -116,6 +116,12 @@
         border-radius: var(--borderRadius);
         filter: grayscale(0);
         max-height: 20rem;
+        transition: var(--transitionStyle);
+    }
+
+    .album-item:hover {
+        transform: scale(1.1); /* Enlarge the album item */
+        box-shadow: var(--boxShadow); /* Add a shadow on hover */
     }
     
     .album-item.disabled {

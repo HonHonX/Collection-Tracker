@@ -1,6 +1,6 @@
 from django.db.models import Count, Q
 from django.db.models import Count, F, ExpressionWrapper, FloatField
-from collection.models import Genre, Artist, UserAlbumCollection, UserArtistProgress, Album
+from collection.models import Genre, Artist, UserAlbumCollection, UserArtistProgress, Album, User
 from stats.models import Badge
 
 def calculate_top_genres(user):

@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('friends/', include("friends.urls")),
-    path('collection/', include("collection.urls")),
+    path('', include("collection.urls")),
     path('stats/', include("stats.urls")),
     path('', include("users.urls")),
-
+    path('accounts/', include('django.contrib.auth.urls')),  # Add this line to include auth URLs
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-  
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
