@@ -116,6 +116,12 @@
         border-radius: var(--borderRadius);
         filter: grayscale(0);
         max-height: 20rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth effect */
+    }
+
+    .album-item:hover {
+        transform: scale(1.1); /* Enlarge the album item */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add shadow effect */
     }
     
     .album-item.disabled {
