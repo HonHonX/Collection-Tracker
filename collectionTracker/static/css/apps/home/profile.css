@@ -112,14 +112,34 @@ input[type="file"]:hover::-webkit-file-upload-button {
 .badge-display {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap; 
     gap: var(--gapDistance);
-    align-items: center;
-    flex-wrap: wrap;
+    width: 100%;
+    height: 42rem;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    padding: 1rem;
+    box-sizing: border-box; 
+    scrollbar-width: thin; /* Firefox Scrollbar */
+    scrollbar-color: var(--neutral70) var(--neutral90); /* Firefox Scrollbar */
+}
+
+/* Scrollbar für Webkit-basierte Browser (Chrome, Edge, Safari) */
+.badge-display::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.badge-display::-webkit-scrollbar-thumb {
+    background-color: var(--neutral70); 
+    border-radius: 4px; 
+}
+
+.badge-display::-webkit-scrollbar-track {
+    background-color: var(--neutral90); 
 }
 
 .badge-item {
-    width: 9rem;
+    width: 8.5rem;
     height: 16rem;
     background-color: var(--neutral90);
     padding: 1rem;
@@ -147,7 +167,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
     position: relative;
     display: inline-block;
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
     margin-bottom: 1rem;
 }
 
