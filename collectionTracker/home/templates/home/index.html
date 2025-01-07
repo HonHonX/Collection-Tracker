@@ -11,6 +11,25 @@
 {% endblock %}
 
 {% block maincontent %} 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+        icon: "success",
+        title: "Erfolgreich angemeldet"
+        });
+    });
+</script>
     <div class="full-block">
 
         <h1>Newest Albums</h1>
@@ -54,7 +73,6 @@
                 {% endfor %}
             </div>
         </div>
-
         <h1>Followed Artists</h1>
         {% for followed_artist in followed_artists %} 
             <div class="artist-card">

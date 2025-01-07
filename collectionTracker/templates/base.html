@@ -20,7 +20,9 @@
             {% endif %}
             <link rel="stylesheet" href="{% static 'css/main.css' %}">
             <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-            
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"><!-- Sweet Alert 2 Notification-->
+            <link rel="stylesheet" href="{% static 'css/components/notifications.css' %}" type="text/css"> <!-- Sweet Alert 2 Custom Design fit to Web Application Dark Mode Theme -->
+
             {% block extra_css %}
                 <!-- Opportunity to add more stylesheets specific to the page -->
             {% endblock %}
@@ -40,6 +42,7 @@
             <footer>
                 <!-- <p>&copy; 2024 Beats & Bops</p> -->
             </footer>
+            <!-- Overarching JS-->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Sweet Alert 2 Notification -->
         </body>
-
 </html>

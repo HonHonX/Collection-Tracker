@@ -1,0 +1,53 @@
+/* Custom SweetAlert2 Dark Mode Styles */
+
+/* Main Elements */
+.swal2-popup {
+    background-color: var(--neutral90); 
+    color: var(--text-color);
+    border-radius: 8px; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.swal2-title {
+    color: var(--text-color); /* Title Color */
+    font-family: var(--defaultFont);
+}
+
+.swal2-content {
+    color: var(--text-color); /* Content/Text Color */
+}
+
+.swal2-toast {
+    background-color: var(--neutral90) !important; /* Hintergrundfarbe */
+    color: var(--text-color) !important; /* Textfarbe */
+    border-radius: 8px !important; /* Abgerundete Ecken */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5) !important; /* Schatten */
+}
+
+/* Title und Content im Toast */
+.swal2-toast .swal2-title,
+.swal2-toast .swal2-content {
+    color: var(--text-color) !important; /* Titel und Text im Toast */
+}
+
+/* Buttons */
+.swal2-confirm {
+    background-color: var(--button-bg); 
+    color: var(--button-text);
+    border: none; 
+    border-radius: 5px;
+    padding: 10px 20px; 
+}
+
+.swal2-cancel {
+    background-color: transparent;
+    color: var(--button-text); 
+    border: 1px solid var(--button-bg); 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+}
+
+/* Special */
+.swal2-timer-progress-bar {
+    background-color: var(--neutral70); /* Fortschrittsbalken-Farbe */
+}
