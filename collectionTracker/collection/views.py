@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 import json
 from django.db import IntegrityError
+from tracker.views import get_artist_data
 
 # Helper functions
 def get_user_album_ids(user):
@@ -321,3 +322,27 @@ def follow_artist(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
+
+def artist_search(request):
+    if request.method == 'POST':
+        artist_name = request.POST.get('artist_name')
+        
+        if not artist_name:
+            error = "Artist name is required."
+            return render(request, 'collection/artist_search.html', {
+                'artist_name': '',
+                'error': error,
+            })
+        
+        context = get_artist_data(artist_name, request.user)
+        context['follow_url'] = request.build_absolute_uri('/collection/follow_artist/')
+        
+        return render(request, 'collection/artist_overview.html', context)
+    
+    return render(request, 'collection/artist_search.html')
+
+def artist_overview(request, artist_name):
+    context = get_artist_data(artist_name, request.user)
+    context['follow_url'] = request.build_absolute_uri('/collection/follow_artist/')
+    
+    return render(request, 'collection/artist_overview.html', context)

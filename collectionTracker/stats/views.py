@@ -4,6 +4,7 @@ from django.contrib.auth.models import User  # Add this import
 from friends.models import Friend
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
+from django.http import JsonResponse
 
 @login_required
 def dashboard_view(request):
@@ -105,3 +106,35 @@ def dashboard_view(request):
         'users_with_more_albums': users_with_more_albums,
     }
     return render(request, 'stats/dashboard.html', context)
+
+@login_required
+def get_user_progress(request):
+    user = request.user
+    try:
+        # Get the user's overall progress
+        user_progress = UserProgress.objects.get(user=user)
+        # Get the album states (collection, wishlist, blacklist)
+        album_states = {
+            album.album.id: {
+                'inCollection': album.album.id in user_progress.collection,
+                'inWishlist': album.album.id in user_progress.wishlist,
+                'inBlacklist': album.album.id in user_progress.blacklist
+            }
+            for album in Album.objects.all()  # Adjust as per your requirements
+        }
+         
+        # Return the user progress data
+        return JsonResponse({
+            'success': True,
+            'progress': {
+                'totalAlbums': user_progress.total_albums,
+                'total_collection_count': user_progress.total_collection_count,
+                'total_collection_and_wishlist_count': user_progress.total_collection_and_wishlist_count,
+                'total_wishlist_count': user_progress.total_wishlist_count,
+                'total_blacklist_count': user_progress.total_blacklist_count
+            },
+            'albumStates': album_states
+        })
+
+    except UserProgress.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Progress data not found.'})

@@ -33,7 +33,7 @@ urlpatterns = [
     path('stats/', include("stats.urls")),
     #path('users/', include("users.urls")),
     # path('settings/', include("settings.urls")),
-    path("search/", include("tracker.urls")),  # for testing
+    path('search/', include("tracker.urls")),  # for testing
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
   
 if settings.DEBUG:
