@@ -6,3 +6,18 @@
     --neutral70: #525252;
     --neutral0: #ffffff; /* Regular Font */
 }
+
+/* Anpassung der vertikalen Scrollbar in Darkmode */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--neutral70); /* Farbe des Schiebereglers */
+    border-radius: 4px; /* Abgerundete Ecken für den Schieberegler */
+}
+
+/* Scrollbar Track (der Hintergrund der Scrollbar) */
+::-webkit-scrollbar-track {
+    background-color: var(--neutral90); 
+}
