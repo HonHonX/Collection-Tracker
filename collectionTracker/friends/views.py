@@ -7,78 +7,69 @@ from django.http import JsonResponse
 from collection.models import Album, UserAlbumWishlist, UserAlbumCollection
 from .models import Friend, FriendList, SharingToken
 from .forms import FriendForm
+from utils.friend_helpers import get_base_url, remove_friend, add_guest_friend, send_invitation_email, create_reciprocal_friend, are_friends, send_email, send_friend_request_email
 import uuid
-import tldextract
 
-def get_base_url(request):
-    extracted = tldextract.extract(request.get_host())
-    return f"{request.scheme}://{extracted.domain}.{extracted.suffix}"
 
 @login_required
 def friends_view(request):
+    """
+    Handles the friends view, including adding and removing friends.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered friends view.
+    """
     user = request.user
     user_token, created = SharingToken.objects.get_or_create(user=user)
+    
     if request.method == 'POST':
         if 'remove_friend' in request.POST:
             friend_email = request.POST.get('friend_email')
-            friend = Friend.objects.filter(user=request.user, friend_email=friend_email).first()
-            if friend:
-                reciprocal_friend = Friend.objects.filter(user__email=friend_email, friend_email=request.user.email).first()
-                if reciprocal_friend:
-                    reciprocal_friend.delete()
-                friend.delete()
-                # Remove friend from FriendList
-                friend_list = FriendList.objects.get(user=request.user)
-                friend_list.friends.remove(friend)
+            remove_friend(user, friend_email)
             return redirect('friends_view')
         else:
             form = FriendForm(request.POST)
             if form.is_valid():
                 friend_email = form.cleaned_data['friend_email']
                 friend_user = User.objects.filter(email=friend_email).first()
-                if friend_user and friend_user != request.user:
-                    friend = Friend(user=request.user, friend_email=friend_email, friend_name=friend_user.username, status='pending')
-                    friend.save()
-                    reciprocal_friend = Friend(user=friend_user, friend_email=request.user.email, friend_name=request.user.username, status='pending')
-                    reciprocal_friend.save()
-                    send_friend_request_email(friend, request)
+                if friend_user and friend_user != user:
+                    Friend.objects.bulk_create([
+                        Friend(user=user, friend_email=friend_email, friend_name=friend_user.username, status='pending'),
+                        Friend(user=friend_user, friend_email=user.email, friend_name=user.username, status='pending')
+                    ])
+                    send_friend_request_email(friend_user, request)
                 else:
-                    friend = form.save(commit=False)
-                    friend.user = request.user
-                    friend.status = 'guest'
-                    friend.save()
-                    send_invitation_email(friend, request)
+                    handle_guest_friend(form, user, request)
                 return redirect('friends_view')
     else:
         form = FriendForm()
     
-    friends = Friend.objects.filter(user=request.user).exclude(friend_email=request.user.email)
+    friends = Friend.objects.filter(user=user).exclude(friend_email=user.email).select_related('user')
     return render(request, 'friends/friends.html', {'form': form, 'friends': friends, 'token': user_token.token})
-
-def send_invitation_email(friend, request):
-    base_url = 'https://wtcollectiontracker.eu.pythonanywhere.com'
-    subject = 'Invitation to Join Collection Tracker'
-    message = f'Hi,\n\nYou have received a friend request from {friend.user.username} on Collection Tracker. Please join the app using the link below to accept the request:\n\n{base_url}/register/?email={friend.friend_email}\n\nPlease click the link below to confirm the request after registering:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [friend.friend_email]
-    send_mail(subject, message, email_from, recipient_list)
 
 @login_required
 def confirm_friend_request(request, friend_email, sender_username):
+    """
+    Confirms a friend request and updates the friend status to 'accepted'.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        friend_email (str): The email of the friend.
+        sender_username (str): The username of the sender.
+
+    Returns:
+        HttpResponse: Redirects to the friends view.
+    """
     sender_user = get_object_or_404(User, username=sender_username)
     
     friend = get_object_or_404(Friend, friend_email=friend_email, user=sender_user)
     friend.status = 'accepted'
     friend.save()
 
-    reciprocal_friend = Friend.objects.filter(user=request.user, friend_email=sender_user.email).first()
-    if reciprocal_friend:
-        reciprocal_friend.status = 'accepted'
-        reciprocal_friend.save()
-    else:
-        # Create reciprocal friend 
-        reciprocal_friend = Friend(user=request.user, friend_email=sender_user.email, friend_name=sender_user.username, status='accepted')
-        reciprocal_friend.save()
+    reciprocal_friend = create_reciprocal_friend(request.user, sender_user)
                 
     # Add both friends to each other's FriendList
     friend_list, created = FriendList.objects.get_or_create(user=request.user)
@@ -87,35 +78,67 @@ def confirm_friend_request(request, friend_email, sender_username):
     reciprocal_friend_list.friends.add(reciprocal_friend)
     return redirect('friends_view')
 
-def send_friend_request_email(friend, request):
-    base_url = 'https://wtcollectiontracker.eu.pythonanywhere.com'
-    subject = 'Friend Request Confirmation'
-    message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [friend.friend_email]
-    send_mail(subject, message, email_from, recipient_list)
+def friend_wishlist(request, username):
+    """
+    Displays the wishlist of a user if they are friends with the current user.
 
-def user_wishlist(request, username):
+    Args:
+        request (HttpRequest): The HTTP request object.
+        username (str): The username of the user whose wishlist is to be displayed.
+
+    Returns:
+        HttpResponse: The rendered user wishlist view.
+    """
     user = get_object_or_404(User, username=username)
-    if not Friend.objects.filter(user=request.user, friend_email=user.email, status='accepted').exists():
+    if not are_friends(request.user, user):
         return render(request, 'friends/not_friends.html')
     wishlist = Album.objects.filter(useralbumwishlist__user=user)
     return render(request, 'friends/user_wishlist.html', {'user': user, 'wishlist': wishlist})
 
-def user_collection(request, username):
+def friend_collection(request, username):
+    """
+    Displays the collection of a user if they are friends with the current user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        username (str): The username of the user whose collection is to be displayed.
+
+    Returns:
+        HttpResponse: The rendered user collection view.
+    """
     user = get_object_or_404(User, username=username)
-    if not Friend.objects.filter(user=request.user, friend_email=user.email, status='accepted').exists():
+    if not are_friends(request.user, user):
         return render(request, 'friends/not_friends.html')
     collection = Album.objects.filter(useralbumcollection__user=user)
     return render(request, 'friends/user_collection.html', {'user': user, 'collection': collection})
 
 def shared_user_wishlist(request, token):
+    """
+    Displays the wishlist of a user based on a sharing token.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        token (str): The sharing token.
+
+    Returns:
+        HttpResponse: The rendered user wishlist view.
+    """
     user_token = get_object_or_404(SharingToken, token=token)
     user = user_token.user
     wishlist = Album.objects.filter(useralbumwishlist__user=user)
     return render(request, 'friends/user_wishlist.html', {'user': user, 'wishlist': wishlist})
 
 def shared_user_collection(request, token):
+    """
+    Displays the collection of a user based on a sharing token.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        token (str): The sharing token.
+
+    Returns:
+        HttpResponse: The rendered user collection view.
+    """
     user_token = get_object_or_404(SharingToken, token=token)
     user = user_token.user
     collection = Album.objects.filter(useralbumcollection__user=user)
@@ -123,10 +146,26 @@ def shared_user_collection(request, token):
 
 @login_required
 def generate_token(request):
+    """
+    Generates a new sharing token for the current user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: A JSON response containing the new token.
+    """
     user = request.user
     user_token, created = SharingToken.objects.get_or_create(user=user)
     if not created:
         user_token.token = uuid.uuid4()
         user_token.save()
     return JsonResponse({'token': str(user_token.token)})
+
+
+
+
+
+
+
 

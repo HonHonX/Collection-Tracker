@@ -1,0 +1,179 @@
+:root {
+    /* Design Sizes */
+    --buttonWidth: 12rem;
+}
+
+#settings-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+    height: 100%;
+}
+
+/* User Image */
+input[type="file"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--neutral0);
+    border-radius: var(--borderRadius, 5px);
+    text-align: center; 
+    width: 100%;
+    background-color: var(--neutral100);
+    padding: 0.5rem 0;
+    font-family: var(--defaultFont);
+}
+
+/* Custom button text and appearance */
+input[type="file"]::-webkit-file-upload-button {
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--defaultFont);
+    font-size: 1rem;
+    color: var(--neutral0);
+    background-color: var(--neutral70);
+    border: none;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    box-shadow: var(--boxShadow);
+    transition: var(--transitionStyle);
+    box-sizing: border-box;
+}
+
+/* Hover effect on the file upload button */
+input[type="file"]:hover::-webkit-file-upload-button {
+    background-color: var(--accent100);
+    transform: translateY(-2px);
+}
+
+.image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    justify-content: space-between;
+}
+
+.user-image {
+    width: 25rem;
+}
+
+#profile-image-form,
+#remove-image-form {
+    background-color: var(--neutral100);
+}
+
+#profile-image-form .user-image input[type="button"],
+#profile-image-form .user-image input[type="submit"] {
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--defaultFont);
+    font-size: 1rem;
+    color: var(--neutral0);
+    background-color: var(--neutral70);
+    border: none;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    box-shadow: var(--boxShadow);
+    transition: var(--transitionStyle);
+    box-sizing: border-box;
+}
+
+#user-settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+}
+
+#logout-button {
+    background-color: var(--accentVariantB100);
+}
+
+#first-column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapBigBlocks);
+}
+
+/* Badges */
+.badges-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    width: 100%;
+    height: 100%;
+}
+
+.badge-display {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.badge-item {
+    width: 9rem;
+    height: 16rem;
+    background-color: var(--neutral90);
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: var(--borderRadius);
+}
+
+.badge-item.disabled {
+    opacity: 0.25;
+    filter: grayscale(100%);
+}
+
+.badge-item span {
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 3;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 1rem;              /* Line height for one line */
+    max-height: 3rem;               /* Ensures the height accommodates exactly two lines */
+    font-size: 0.8rem;              /* Ensure consistent font size */
+}
+
+.badge-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin-bottom: 1rem;
+}
+
+.badge-icon {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    object-position: center;
+    transition: var(--transitionStyle);
+}
+
+.badge-sub-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    border: 2px solid var(--neutral0);
+}
+
+.badge-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-description strong{
+    color: var(--accentVariantB100);
+}

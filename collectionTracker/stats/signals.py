@@ -5,29 +5,23 @@ from stats.models import Badge, UserBadge
 from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress, Album, Artist
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-
-def create_all_badges():
-    badges = [
-        {"name": "First Friend", "description": "Awarded for adding your first friend.", "image_url": "/static/badges/first_friend.png"},
-        {"name": "Five Friends", "description": "Awarded for adding five friends.", "image_url": "/static/badges/five_friends.png"},
-        {"name": "First Album", "description": "Awarded for adding the first album to your collection.", "image_url": "/static/badges/first_album.png"},
-    ]
-    for badge_info in badges:
-        Badge.objects.get_or_create(name=badge_info["name"], defaults=badge_info)
+from utils.stats_helpers import get_or_create_badge, create_all_badges
 
 @receiver([post_save, post_delete], sender=Friend)
 def award_friend_badges(sender, instance, **kwargs):
+    """
+    Signal receiver to award badges based on the number of friends a user has.
+    
+    Args:
+        sender (Model): The model class that sent the signal.
+        instance (Friend): The instance of the model that triggered the signal.
+        **kwargs: Additional keyword arguments.
+    """
     user = instance.user
     friend_count = Friend.objects.filter(user=user, status='accepted').count()
 
-    first_friend_badge, _ = Badge.objects.get_or_create(name="First Friend", defaults={
-        'description': "Awarded for adding your first friend.",
-        'image_url': '/static/badges/first_friend.png'
-    })
-    five_friends_badge, _ = Badge.objects.get_or_create(name="Five Friends", defaults={
-        'description': "Awarded for adding five friends.",
-        'image_url': '/static/badges/five_friends.png'
-    })
+    first_friend_badge, _ = get_or_create_badge("First Friend", "Awarded for adding your first friend.", '/static/badges/first_friend.png')
+    five_friends_badge, _ = get_or_create_badge("Five Friends", "Awarded for adding five friends.", '/static/badges/five_friends.png')
 
     if friend_count >= 1:
         UserBadge.objects.get_or_create(user=user, badge=first_friend_badge)
@@ -41,13 +35,18 @@ def award_friend_badges(sender, instance, **kwargs):
 
 @receiver([post_save, post_delete], sender=UserAlbumCollection)
 def award_first_album_badge(sender, instance, **kwargs):
+    """
+    Signal receiver to award a badge for adding the first album to the user's collection.
+    
+    Args:
+        sender (Model): The model class that sent the signal.
+        instance (UserAlbumCollection): The instance of the model that triggered the signal.
+        **kwargs: Additional keyword arguments.
+    """
     user = instance.user
     album_count = UserAlbumCollection.objects.filter(user=user).count()
 
-    first_album_badge, _ = Badge.objects.get_or_create(name="First Album", defaults={
-        'description': "Awarded for adding the first album to your collection.",
-        'image_url': '/static/badges/first_album.png'
-    })
+    first_album_badge, _ = get_or_create_badge("First Album", "Awarded for adding the first album to your collection.", '/static/badges/first_album.png')
 
     if album_count >= 1:
         UserBadge.objects.get_or_create(user=user, badge=first_album_badge)
@@ -56,6 +55,14 @@ def award_first_album_badge(sender, instance, **kwargs):
 
 @receiver([post_save, post_delete], sender=UserAlbumCollection)
 def award_collection_progress_badge(sender, instance, **kwargs):
+    """
+    Signal receiver to award badges based on the user's collection progress for an artist.
+    
+    Args:
+        sender (Model): The model class that sent the signal.
+        instance (UserAlbumCollection): The instance of the model that triggered the signal.
+        **kwargs: Additional keyword arguments.
+    """
     user = instance.user
     artist = instance.album.artist
 
@@ -101,11 +108,7 @@ def award_collection_progress_badge(sender, instance, **kwargs):
     ]
 
     for badge_info in badges:
-        badge, _ = Badge.objects.get_or_create(name=badge_info['name'], defaults={
-            'description': badge_info['description'],
-            'image_url': badge_info['image_url'],
-            'sub_icon_url': badge_info.get('sub_icon_url')
-        })
+        badge, _ = get_or_create_badge(badge_info['name'], badge_info['description'], badge_info['image_url'], badge_info.get('sub_icon_url'))
 
         if 'threshold' in badge_info:
             progress_percentage = collection_count / total_albums
@@ -116,11 +119,7 @@ def award_collection_progress_badge(sender, instance, **kwargs):
                 UserBadge.objects.filter(user=user, badge=badge).delete()
 
     # Award Top Collector badge
-    top_collector_badge, _ = Badge.objects.get_or_create(name=f"Top Collector: {artist.name}", defaults={
-        'description': f"Awarded for being the top collector for {artist.name}.",
-        'image_url': '/static/badges/top_collector.png',
-        'sub_icon_url': artist.photo_url
-    })
+    top_collector_badge, _ = get_or_create_badge(f"Top Collector: {artist.name}", f"Awarded for being the top collector for {artist.name}.", '/static/badges/top_collector.png', artist.photo_url)
 
     # Calculate ranking of users and their friends based on collection size, limited to top 3
     user_and_friends = User.objects.filter(

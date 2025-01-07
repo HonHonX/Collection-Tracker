@@ -43,15 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social_django',    # for github login
 
-    'home',
-    'friends',
     'collection',
+    'friends',
+    'integration',  
     'stats',
     'users',
-    'settings',
-    'tracker',   
+     
 ]
 
 MIDDLEWARE = [

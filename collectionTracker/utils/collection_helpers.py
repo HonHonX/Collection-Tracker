@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from collection.models import Artist, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist
+from django.db import IntegrityError
+from collection.models import Artist, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists, Album
 
 # Artist - helper functions
 def get_artist_list(user):
@@ -151,3 +152,47 @@ def filter_list_by_artist(request, list_type):
     if artist_filter:
         list_type = list_type.filter(album__artist__name=artist_filter)
     return list_type
+
+def get_user_lists(user):
+    """
+    Retrieve album IDs for the user's collection, wishlist, and blacklist.
+    
+    Args:
+        user (User): The user object.
+    
+    Returns:
+        tuple: A tuple containing lists of album IDs for collection, wishlist, and blacklist.
+    """
+    user_album_ids = UserAlbumCollection.objects.filter(user=user).values_list('album__id', flat=True)
+    user_blacklist_ids = UserAlbumBlacklist.objects.filter(user=user).values_list('album__id', flat=True)
+    user_wishlist_ids = UserAlbumWishlist.objects.filter(user=user).values_list('album__id', flat=True)
+    return user_album_ids, user_blacklist_ids, user_wishlist_ids
+
+# Followed Artists - helper functions
+def get_followed_artists(user):
+    """
+    Retrieve the list of artists followed by the user.
+    
+    Args:
+        user (User): The user object.
+    
+    Returns:
+        QuerySet: A queryset of followed artists with their albums and album count.
+    """
+    followed_artists = UserFollowedArtists.objects.filter(user=user).select_related('artist').order_by('followed_on')
+    for followed_artist in followed_artists:
+        followed_artist.albums = Album.objects.filter(artist=followed_artist.artist)
+        followed_artist.album_count = followed_artist.albums.count()
+    return followed_artists
+
+def get_newest_albums(user):
+    """
+    Retrieve the newest albums from the artists followed by the user.
+    
+    Args:
+        user (User): The user object.
+    
+    Returns:
+        QuerySet: A queryset of the newest albums.
+    """
+    return Album.objects.filter(artist__userfollowedartists__user=user).order_by('-release_date')[:20]

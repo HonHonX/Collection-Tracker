@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
 
+    # Home route
+    path('home/', views.home_view, name='index'),
+
     # Artist search
     path('search/', views.artist_search, name="artist_search"),
 

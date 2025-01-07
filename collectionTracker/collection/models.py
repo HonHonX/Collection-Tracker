@@ -17,7 +17,7 @@ class Genre(models.Model):
         return self.artists.all()
 
     def album_count(self): 
-        """Return the count of albums associated with this genre."""
+        """Return the count of albums associated with this genre.""" 
         return Album.objects.filter(artist__genres=self).count()
 
     def get_album_ids(self):

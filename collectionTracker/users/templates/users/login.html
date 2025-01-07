@@ -1,0 +1,52 @@
+<!-- from https://github.com/csev/dj4e-samples/blob/main/home/templates/registration/login_social.html -->
+
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/apps/users/login_register.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+
+  <div class="maincontent">  
+    <div class="main-block">
+
+      <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
+  
+      <h1>Login</h1>
+      {% if form.errors %}
+      Your username and password didn't match. Please try again.
+      {% endif %}
+
+      {% if next %}
+        {% if user.is_authenticated %}
+          Your account doesn't have access to this page. To proceed,
+          please login with an account that has access.
+        {% else %}
+          Please login to see this site.
+        {% endif %}
+      {% endif %}
+
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Login" class="button" />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </form>
+          
+      <p>New? <a href="{% url 'register' %}">Register</a> now!</p>
+
+      <!-- <p>Alternatively you can use your Github-Account to login:</p>
+      {% if settings.SOCIAL_AUTH_GITHUB_KEY %}
+      <a href="{% url 'social:begin' 'github' %}?next={{ next }}">
+          Login with GitHub</a>
+
+      {% else %}
+      <p>Login with Github is not available right now. Check the template.</p>    
+      {% endif %} -->
+
+    </div>
+  </div>
+
+{% endblock %}

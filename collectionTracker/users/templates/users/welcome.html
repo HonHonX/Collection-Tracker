@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Welcome
+{% endblock %}
+        
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/apps/users/welcome.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="main-block">
+        <!-- Logo -->
+        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
+        <h1>Meet your ultimate companion for managing your physical music collection!</h1>
+
+        <!-- <h1>Welcome to {{ settings.APP_NAME }}</h1> -->
+        <div id="introduction">
+            <p>
+                With Beats & Bops, you can effortlessly track and organize your entire music library.
+                Discover new music, rediscover old favorites, and never buy the same album twice. 
+                </br>   
+                Start your musical journey with Beats & Bops today!
+            </p>
+        </div>
+
+        <!-- Home button -->
+        <a href="{% url 'index' %}">
+            <img class="icon" id="home-button" src="{% static 'icons/home.svg' %}">
+        </a>
+
+        <div class="login {% if user.is_authenticated %}authenticated{% endif %}">
+            {% if user.is_authenticated %}
+                Logged in as {{ user.username }}
+                <form action="{% url 'logout' %}?next=/" method="post" id="logout">
+                    {% csrf_token %}
+                    <button type="submit" class="button" id="logout-button">Logout</button>
+                </form>
+
+            {% else %}
+                <div class="button-block">
+                    <button class="button" id="login-button">Login</button>
+                    <button class="button" id="register-button" register-url="">Register</button>
+                </div>
+            {% endif %}
+        </div>
+
+        <div id="spacer-2"></div>
+    </div>
+
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+{% endblock %}

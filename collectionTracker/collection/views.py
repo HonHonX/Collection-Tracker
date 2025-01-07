@@ -5,10 +5,36 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
-from tracker.views import get_artist_data
-from django.db import IntegrityError
+from integration.views import get_artist_data
 import json
-from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist
+from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist,get_followed_artists, get_user_lists, get_newest_albums
+from django.conf import settings
+
+@login_required
+def home_view(request):
+    """
+    Home view that displays the user's followed artists and their albums.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered home page. 
+    """
+    followed_artists = []
+    if request.user.is_authenticated:
+        followed_artists = get_followed_artists(request.user)
+    user_album_ids, user_blacklist_ids, user_wishlist_ids = get_user_lists(request.user)
+    newest_albums = get_newest_albums(request.user)
+
+    return render(request, 'collection/index.html', {  
+        'settings': settings,
+        'followed_artists': followed_artists,
+        'user_album_ids': user_album_ids, 
+        'user_blacklist_ids': user_blacklist_ids,
+        'user_wishlist_ids': user_wishlist_ids,
+        'newest_albums': newest_albums,
+    })
 
 def artist_search(request):
     """
