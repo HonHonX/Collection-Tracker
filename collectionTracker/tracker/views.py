@@ -218,33 +218,3 @@ def get_user_progress(request):
 
     except UserProgress.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Progress data not found.'})
-
-@login_required
-@csrf_exempt
-def follow_artist(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        artist_id = data.get('artist_id')
-        user = request.user
-
-        try:
-            # Check if the artist already exists in the database
-            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
-                'name': data.get('artist_name'),
-                'genres': data.get('artist_genres', []),
-                'popularity': data.get('artist_popularity', 0),
-                'photo_url': data.get('artist_photo_url', '')
-            })
-
-            follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
-
-            if not created:
-                follow_entry.delete()
-                return JsonResponse({'success': True, 'message': 'Artist unfollowed.'})
-            else:
-                return JsonResponse({'success': True, 'message': 'Artist followed.'})
-
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)

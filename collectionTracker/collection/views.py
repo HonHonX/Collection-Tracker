@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist
+from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 import json
 from django.db import IntegrityError
 
@@ -291,3 +291,33 @@ def save_description(request, album_id):
             return JsonResponse({'success': False, 'error': str(e)})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+@login_required
+@csrf_exempt
+def follow_artist(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        artist_id = data.get('artist_id')
+        user = request.user
+
+        try:
+            # Check if the artist already exists in the database
+            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
+                'name': data.get('artist_name'),
+                'genres': data.get('artist_genres', []),
+                'popularity': data.get('artist_popularity', 0),
+                'photo_url': data.get('artist_photo_url', '')
+            })
+
+            follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
+
+            if not created:
+                follow_entry.delete()
+                return JsonResponse({'success': True, 'message': 'Artist unfollowed.'})
+            else:
+                return JsonResponse({'success': True, 'message': 'Artist followed.'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
