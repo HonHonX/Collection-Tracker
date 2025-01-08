@@ -6,6 +6,11 @@ from collection.models import UserFollowedArtists, UserAlbumCollection, UserArti
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from utils.stats_helpers import get_or_create_badge, create_all_badges
+from django.dispatch import Signal, receiver
+from django.contrib import messages
+import logging
+
+logger = logging.getLogger(__name__)
 
 @receiver([post_save, post_delete], sender=Friend)
 def award_friend_badges(sender, instance, **kwargs):
@@ -132,3 +137,16 @@ def award_collection_progress_badge(sender, instance, **kwargs):
         UserBadge.objects.get_or_create(user=user, badge=top_collector_badge)
     else:
         UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
+
+
+badge_awarded = Signal()
+
+@receiver(post_save, sender=UserBadge)
+def notify_badge_award(sender, instance, created, **kwargs):
+    if created:
+        request = kwargs.get('request')
+        if request:
+            logger.info('Sending badge awarded signal for user: %s', instance.user.username)
+            badge_awarded.send(sender=sender, badge=instance)
+        else:
+            logger.error('Error sending badge awarded message: request object is None')

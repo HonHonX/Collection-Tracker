@@ -1,10 +1,12 @@
+import logging
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from friends.models import Friend
-from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
 from django.http import JsonResponse
+from django.contrib import messages
+from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from utils.stats_helpers import (
     calculate_top_genres,
     calculate_top_artists,
@@ -13,7 +15,9 @@ from utils.stats_helpers import (
     calculate_user_and_friends_ranking,
     calculate_user_rank_for_artist
 )
+from .signals import badge_awarded
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard_view(request):
@@ -100,8 +104,21 @@ def get_user_progress(request):
                 'total_wishlist_count': user_progress.total_wishlist_count,
                 'total_blacklist_count': user_progress.total_blacklist_count
             },
-            'albumStates': album_states
+            'albumStates': album_states,
+            'badge_awarded': "You've earned a new badge!"  # Add this line
         })
 
     except UserProgress.DoesNotExist:
+        logger.error('UserProgress does not exist for user: %s', user.username)
         return JsonResponse({'success': False, 'error': 'Progress data not found.'})
+
+def badge_awarded_receiver(sender, badge, request, **kwargs):
+    user = badge.user 
+    badge_name = badge.badge.name
+    try:
+        logger.info('Awarding badge: %s to user: %s', badge_name, user.username)
+        messages.success(request, f"Congratulations, {user.username}! You've earned the '{badge_name}' badge!")
+    except Exception as e:
+        logger.error('Error sending badge awarded message: %s', e)
+
+badge_awarded.connect(badge_awarded_receiver, dispatch_uid="badge_awarded_receiver")

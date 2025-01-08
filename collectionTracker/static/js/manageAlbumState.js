@@ -13,17 +13,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // Ensure that the control icon exists before using it
         if (controlIconCollection) {
             updateAlbumState(albumItem.dataset.inCollection === 'true', controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection");
-            controlIconCollection.addEventListener('click', () => handleAlbumClick(albumItem, 'collection', controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection", controlIconCollection,  controlIconWishlist));
+            controlIconCollection.addEventListener('click', () => handleAlbumClick(albumItem, 'collection', controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection", controlIconCollection, controlIconWishlist));
         }
 
         if (controlIconWishlist) {
             updateAlbumState(albumItem.dataset.inWishlist === 'true', controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist");
-            controlIconWishlist.addEventListener('click', () => handleAlbumClick(albumItem, 'wishlist', controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist", controlIconCollection,  controlIconWishlist));
+            controlIconWishlist.addEventListener('click', () => handleAlbumClick(albumItem, 'wishlist', controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist", controlIconCollection, controlIconWishlist));
         }
 
         if (controlIconBlacklist) {
             updateAlbumState(albumItem.dataset.inBlacklist === 'true', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist");
-            controlIconBlacklist.addEventListener('click', () => handleAlbumClick(albumItem, 'blacklist', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist", controlIconCollection,  controlIconWishlist));
+            controlIconBlacklist.addEventListener('click', () => handleAlbumClick(albumItem, 'blacklist', controlIconBlacklist, "/static/icons/blacklist_add.svg", "/static/icons/blacklist_remove.svg", "Add to blacklist", "Already added to blacklist", controlIconCollection, controlIconWishlist));
         }
  
         // Update background color based on the album's state
@@ -77,13 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const action = isInList ? 'remove' : 'add';
         const url = `/manage_album/${listType}/${action}/`;
-    
+
+        console.log(`Handling album click: ${action} ${listType} for album ID ${albumId}`);
+
         // Get the current page URL path
         const currentPage = window.location.pathname; 
-        const collectionType = (currentPage.match(/\/collection\/([^\/]+)-overview/))?.[1];
+        const collectionType = currentPage.match(/\/([^\/]+)\/[^\/]*$/)?.[1];
     
         // Check, what site is
-        const isCollectionPage = currentPage.includes('overview');
+        const isCollectionPage = currentPage.includes('collection');
         const isWishlistPage = currentPage.includes('wishlist');
         const isBlacklistPage = currentPage.includes('blacklist');
     
@@ -194,6 +196,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (window.location.pathname.includes('search') || window.location.pathname.includes('home')) {
                     updateProgressBars();
+                }
+
+                if (data.badge_awarded) {
+                    console.log("Badge awarded:", data.badge_awarded);
                 }
     
             } else {
@@ -308,3 +314,4 @@ document.addEventListener('DOMContentLoaded', function () {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 });
+
