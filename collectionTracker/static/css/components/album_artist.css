@@ -118,12 +118,12 @@
         max-height: 20rem;
         transition: var(--transitionStyle);
     }
-
-    .album-item:hover {
+    
+    /* .album-item:hover {
         transform: scale(1.1); /* Enlarge the album item */
         box-shadow: var(--boxShadow); /* Add a shadow on hover */
-    }
-    
+    } */
+
     .album-item.disabled {
         filter: grayscale(1);  /* Ensure grayscale has a value */
     }
@@ -157,6 +157,10 @@
         aspect-ratio: 1 / 1;
         border-radius: var(--borderRadius);
     }
+
+    .album-cover:hover {
+        transform: scale(1.1);
+    }
     
     .album-info {
         flex-grow: 1;
@@ -167,6 +171,10 @@
         line-height: 1.25rem;
         text-transform: capitalize;
     }  
+
+    .album-info:hover {
+        cursor: auto;
+    }
     
     .album-info .album-title { 
         font-size: 0.8rem;                      /* Increases the font size for the album title */

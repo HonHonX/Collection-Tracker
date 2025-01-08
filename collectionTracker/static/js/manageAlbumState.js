@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const imageUrl = albumItem.dataset.imageUrl;
 
         const action = isInList ? 'remove' : 'add';
-        const url = `/collection/manage_album/${listType}/${action}/`;
+        const url = `/manage_album/${listType}/${action}/`;
     
         // Get the current page URL path
         const currentPage = window.location.pathname; 
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         updateAlbumState(false, controlIconCollection, "/static/icons/add.svg", "/static/icons/remove.svg", "Add to collection", "Already added to collection");
     
                         // Remove from collection in the backend
-                        fetch('/collection/manage_album/collection/remove/', {
+                        fetch('/manage_album/collection/remove/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         albumItem.dataset.inWishlist = 'false';
                         updateAlbumState(false, controlIconWishlist, "/static/icons/wishlist_add.svg", "/static/icons/wishlist_remove.svg", "Add to wishlist", "Already added to wishlist");
     
-                        fetch('/collection/manage_album/wishlist/remove/', {
+                        fetch('/manage_album/wishlist/remove/', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

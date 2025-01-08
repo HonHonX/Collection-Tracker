@@ -37,9 +37,14 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    color: var(--accentVariantB100);
+    transform: translateY(-2px);
+}
+
 a:hover,
 a:visited {
-    color: var(--accentVariantB100);
+    color: var(--accent100);
 }
 
 /* Headlines */
@@ -72,6 +77,10 @@ p  {
 
 textarea {
     font-family: var(--defaultFont);
+}
+
+textarea:hover {
+    cursor: text;
 }
 
 input {
