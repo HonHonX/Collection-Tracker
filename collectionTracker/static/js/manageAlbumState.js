@@ -143,6 +143,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
 
+                // Update collection header count
+                const collectionHeader = document.querySelector('.collection-header p');
+                if (collectionHeader) {
+                    var currentCount = parseInt(collectionHeader.textContent.match(/\d+/)[0], 10);
+                    if ((listType == 'collection' && isCollectionPage) || (listType == 'wishlist' && isWishlistPage) || (listType == 'blacklist' && isBlacklistPage)) {
+                        if (action === 'add') {
+                            currentCount += 1;
+                        } else {
+                            albumItem.remove();
+                            currentCount -= 1;
+                        }
+                    }
+                    // Remove album item if blacklisted on collection or wishlist page
+                    if (listType === 'blacklist' && newState && (isCollectionPage || isWishlistPage)) {
+                        albumItem.remove();
+                        currentCount -= 1;
+                }
+                    collectionHeader.textContent = `You have ${currentCount} album(s) in your ${listType}.`;
+                }
+
+                
+
                 if (window.location.pathname.includes('search') || window.location.pathname.includes('home')) {
                     updateProgressBars();
                 }
