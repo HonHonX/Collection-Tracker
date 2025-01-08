@@ -15,7 +15,6 @@ from utils.stats_helpers import (
     calculate_user_and_friends_ranking,
     calculate_user_rank_for_artist
 )
-from .signals import badge_awarded
 
 logger = logging.getLogger(__name__)
 
