@@ -1,10 +1,11 @@
 import logging
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from friends.models import Friend
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from utils.stats_helpers import (
@@ -15,6 +16,8 @@ from utils.stats_helpers import (
     calculate_user_and_friends_ranking,
     calculate_user_rank_for_artist
 )
+from stats.models import Notification
+from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
@@ -110,3 +113,44 @@ def get_user_progress(request):
     except UserProgress.DoesNotExist:
         logger.error('UserProgress does not exist for user: %s', user.username)
         return JsonResponse({'success': False, 'error': 'Progress data not found.'})
+
+@login_required
+def fetch_notifications(request):
+    """
+    Fetch notifications for the logged-in user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        JsonResponse: A JSON response containing the notifications.
+    """
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_date')
+    notifications_data = [
+        {
+            'id': notification.id,
+            'message': notification.message,
+            'created_date': notification.created_date,
+            'badge_image_url': notification.user_badge.badge.image_url  # Include badge image URL
+        }
+        for notification in notifications
+    ]
+    return JsonResponse({'notifications': notifications_data})
+
+@login_required
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_notification(request, notification_id):
+    """
+    Delete a notification for the logged-in user.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        notification_id (int): The ID of the notification to delete.
+
+    Returns:
+        JsonResponse: A JSON response indicating success or failure.
+    """
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.delete()
+    return JsonResponse({'success': True})
