@@ -111,14 +111,3 @@ def get_user_progress(request):
     except UserProgress.DoesNotExist:
         logger.error('UserProgress does not exist for user: %s', user.username)
         return JsonResponse({'success': False, 'error': 'Progress data not found.'})
-
-def badge_awarded_receiver(sender, badge, request, **kwargs):
-    user = badge.user 
-    badge_name = badge.badge.name
-    try:
-        logger.info('Awarding badge: %s to user: %s', badge_name, user.username)
-        messages.success(request, f"Congratulations, {user.username}! You've earned the '{badge_name}' badge!")
-    except Exception as e:
-        logger.error('Error sending badge awarded message: %s', e)
-
-badge_awarded.connect(badge_awarded_receiver, dispatch_uid="badge_awarded_receiver")

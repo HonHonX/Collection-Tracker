@@ -139,14 +139,4 @@ def award_collection_progress_badge(sender, instance, **kwargs):
         UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
 
 
-badge_awarded = Signal()
 
-@receiver(post_save, sender=UserBadge)
-def notify_badge_award(sender, instance, created, **kwargs):
-    if created:
-        request = kwargs.get('request')
-        if request:
-            logger.info('Sending badge awarded signal for user: %s', instance.user.username)
-            badge_awarded.send(sender=sender, badge=instance)
-        else:
-            logger.error('Error sending badge awarded message: request object is None')
