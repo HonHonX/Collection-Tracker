@@ -25,3 +25,4 @@ urlpatterns = [
     path("album/<str:album_id>/", views.AlbumDetail.as_view(), name="album_detail"),
     
 ]
+ 

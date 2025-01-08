@@ -9,7 +9,6 @@ function updateProgressBars() {
         }
 
         const totalAlbums = parseInt(totalAlbumsElement.textContent, 10);
-        console.log("Total albums:", totalAlbums);
 
         let collectionCount = 0;
         let wishlistCount = 0;
@@ -49,11 +48,6 @@ function updateProgressBars() {
                 wishlistCount++;
             }
         });
-
-        console.log("Collection count:", collectionCount);
-        console.log("Wishlist count:", wishlistCount);
-        console.log("Collection and wishlist count:", collectionAndWishlistCount);
-        console.log("Blacklist count:", blacklistCount);
 
         // Update counters
         const collectionCounter = artistElement.querySelector(".collection-counter");
