@@ -6,6 +6,7 @@ cryptography==44.0.0
 defusedxml==0.8.0rc2
 Django==5.1.1
 docopt==0.6.2
+filelock==3.16.1
 idna==3.10
 oauthlib==3.2.2
 pillow==11.1.0
@@ -15,6 +16,7 @@ python-decouple==3.8
 python3-openid==3.2.0
 redis==5.1.1
 requests==2.32.3
+requests-file==2.1.0
 requests-oauthlib==2.0.0
 setuptools==75.1.0
 social-auth-app-django==5.4.2

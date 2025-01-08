@@ -4,21 +4,23 @@ from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, Us
 # Register the Genre model with the admin panel
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
-    list_display = ('name', 'get_artists', 'get_album_ids')
-    search_fields = ('name',)
+    list_display = ('name', 'get_artists', 'get_album_ids')  # Display name, artists, and album IDs
+    search_fields = ('name',)  # Allow searching by genre name
 
     def get_artists(self, obj):
+        """Return a comma-separated list of artists for the genre."""
         return ", ".join([artist.name for artist in obj.get_artists()])
     get_artists.short_description = 'Artists'
 
     def get_album_ids(self, obj):
+        """Return a comma-separated list of album IDs for the genre."""
         return ", ".join(obj.get_album_ids())
     get_album_ids.short_description = 'Album IDs'
 
 # Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'popularity')  # Remove the many-to-many field 'genres'
+    list_display = ('id', 'name', 'popularity')  # Display ID, name, and popularity
     search_fields = ('name',)  # Allow searching by artist's name 
     filter_horizontal = ('genres',)  # Add genres to the admin panel
 
@@ -32,7 +34,7 @@ class AlbumAdmin(admin.ModelAdmin):
 # Register the UserAlbumCollection model with custom configuration
 @admin.register(UserAlbumCollection)
 class UserAlbumCollectionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on', 'substatus')
+    list_display = ('user', 'album', 'added_on', 'substatus')  # Display user, album, date added, and substatus
     list_filter = ('added_on',)  # Filter by the date the album was added
 
 # Register the UserAlbumDescription model with custom configuration
@@ -51,7 +53,7 @@ class UserAlbumWishlistAdmin(admin.ModelAdmin):
 # Register the UserAlbumBlacklist model with custom configuration
 @admin.register(UserAlbumBlacklist)
 class UserAlbumBlacklistAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on')
+    list_display = ('user', 'album', 'added_on')  # Display user, album, and date added
     list_filter = ('added_on',)  # Filter by the date the album was added
 
 # Register the UserArtistProgress model with custom configuration

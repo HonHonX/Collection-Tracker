@@ -1,0 +1,145 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/apps/users/profile.css' %}" type="text/css">
+{% endblock %}
+
+{% block maincontent %}
+<div class="full-block">
+    <h1>{{ user.username }}'s Profile</h1>
+    <div id="settings-block">
+        <div id="first-column">
+            <div class="user-image">
+                <h2>Profile Image</h2>
+                <div id="spacer-1"></div>
+                {% if user.profile.image %}
+                
+                    <img id="profile-image-big" src="{{ user.profile.image.url }}">
+                {% else %} 
+                    <img id="profile-image-big" src="{% static 'img/default.jpg' %}">
+                {% endif %}
+                <div class="image-controls">
+                    <form id="profile-image-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="button">Upload Image</button>
+                    </form>
+                    <form id="remove-image-form" method="post" action="{% url 'remove_profile_image' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Remove Image</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+
+            <div class="logout">
+                <form action="{% url 'logout' %}?next=/" method="post" id="logout">
+                    {% csrf_token %}
+                    <button type="submit" id="logout-button" class="button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="user-settings">
+            <div id="general-settings">
+                <h2>User Information</h2>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>First Name:</strong> {{ user.first_name }}</p>
+                <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+            </div>
+
+            <div class="color-scheme-settings">
+                <form method="POST" action="{% url 'change_personal_color_scheme' %}" id="color-scheme-form">
+                    {% csrf_token %}
+                    <h2>Color Scheme</h2>
+                    <label for="color_scheme">Select Color Theme:</label>
+                    <div class="custom-select">
+                        <div class="selected-option" id="selected-option">Select Theme</div>
+                        <div class="options-container">
+                            <div class="option" data-value="spring">
+                                Spring Theme
+                                <div class="theme-swatches">
+                                    <div class="color-swatch" style="background-color: #7cb86d;"></div>
+                                    <div class="color-swatch" style="background-color: #5a8a4e;"></div>
+                                    <div class="color-swatch" style="background-color: #a869c5;"></div>
+                                    <div class="color-swatch" style="background-color: #eb8ccb;"></div>
+                                </div>
+                            </div>
+                            <div class="option" data-value="summer">
+                                Summer Theme
+                                <div class="theme-swatches">
+                                    <div class="color-swatch" style="background-color: #1651cf;"></div>
+                                    <div class="color-swatch" style="background-color: #0d40af;"></div>
+                                    <div class="color-swatch" style="background-color: #2884cf;"></div>
+                                    <div class="color-swatch" style="background-color: #42abc0;"></div>
+                                </div>
+                            </div>
+                            <div class="option" data-value="autumn">
+                                Autumn Theme
+                                <div class="theme-swatches">
+                                    <div class="color-swatch" style="background-color: #911313;"></div>
+                                    <div class="color-swatch" style="background-color: #792213;"></div>
+                                    <div class="color-swatch" style="background-color: #c75019;"></div>
+                                    <div class="color-swatch" style="background-color: #f38039;"></div>
+                                </div>
+                            </div>
+                            <div class="option" data-value="winter">
+                                Winter Theme
+                                <div class="theme-swatches">
+                                    <div class="color-swatch" style="background-color: #6467fa;"></div>
+                                    <div class="color-swatch" style="background-color: #4e50de;"></div>
+                                    <div class="color-swatch" style="background-color: #9C8185;"></div>
+                                    <div class="color-swatch" style="background-color: #E5A4CB;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="color_scheme" id="color_scheme">
+                    <button type="submit" class="button">Speichern</button>
+                </form>
+                <p>Currently active: {{ request.user.userprofile.color_scheme |capfirst }}</p>
+            </div>
+        </div>
+
+        <div class="badges-block">
+            <h2>Badges</h2>
+            <div class="badge-display">
+                {% for badge in all_badges %}
+                {% with user_badge=badges|get_item:badge.id %}
+                <div class="badge-item {% if not user_badge %}disabled{% endif %}">
+                    <div class="badge-container">
+                        <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
+                        {% if badge.sub_icon_url %}
+                            <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
+                        {% endif %}
+                    </div>
+                    <div class="badge-description">
+                        <span><strong>{{ badge.name }}</strong></span><br>
+                        {% if user_badge %}
+                            <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/selectColor.js' %}"></script>
+{% endblock %}

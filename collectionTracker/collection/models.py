@@ -6,22 +6,27 @@ from django.dispatch import receiver
 from django.db.models import JSONField
 
 class Genre(models.Model):
+    """Model representing a music genre."""
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
     def get_artists(self):
+        """Return all artists associated with this genre."""
         return self.artists.all()
 
     def album_count(self): 
+        """Return the count of albums associated with this genre.""" 
         return Album.objects.filter(artist__genres=self).count()
 
     def get_album_ids(self):
+        """Return a list of album IDs associated with this genre."""
         return Album.objects.filter(artist__genres=self).values_list('id', flat=True)
 
 class Artist(models.Model):
-    id = models.CharField(max_length=50, primary_key=True, default=0)  # Spotify ID
+    """Model representing a music artist."""
+    id = models.CharField(max_length=50, primary_key=True, default=0) 
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
     genres = models.ManyToManyField(Genre, related_name='artists')
@@ -31,11 +36,13 @@ class Artist(models.Model):
         return f"{self.name} - ID: {self.id} " 
 
     def set_genres(self, genre_names):
+        """Set genres for the artist based on a list of genre names."""
         genres = [Genre.objects.get_or_create(name=name)[0] for name in genre_names]
         self.genres.set(genres)
 
 class Album(models.Model):
-    id = models.CharField(max_length=50, primary_key=True)  # Spotify ID
+    """Model representing a music album."""
+    id = models.CharField(max_length=50, primary_key=True) 
     name = models.CharField(max_length=200)
     album_type = models.CharField(max_length=50)
     release_date = models.DateField() 
@@ -46,17 +53,18 @@ class Album(models.Model):
         return self.name 
 
 class UserAlbumDescription(models.Model):
+    """Model representing a user's description of an album."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)  # Allow null values
 
     def save(self, *args, **kwargs):
-        # Strip whitespace before saving
+        """Override save method to strip whitespace before saving."""
         self.description = self.description.strip() if self.description else None
-        
         super().save(*args, **kwargs)
 
 class UserAlbumCollection(models.Model):
+    """Model representing a user's album collection."""
     SUBSTATUS = [
         ('delivered', 'Delivered'),
         ('preordered', 'Preordered'),
@@ -79,6 +87,7 @@ class UserAlbumCollection(models.Model):
         return f"{self.user.username} - {self.album.name} (Substatus: {self.get_substatus_display()})"
 
 class UserAlbumWishlist(models.Model):
+    """Model representing a user's album wishlist."""
     PRIORITY_CHOICES = [
         (1, 'Low'),
         (2, 'Medium'),
@@ -101,6 +110,7 @@ class UserAlbumWishlist(models.Model):
         return f"{self.user.username} - Wishlist: {self.album.name} (Priority: {self.get_priority_display()})"
     
 class UserAlbumBlacklist(models.Model):
+    """Model representing a user's album blacklist."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
@@ -112,6 +122,7 @@ class UserAlbumBlacklist(models.Model):
         return f"{self.user.username} - Blacklist: {self.album.name}"
 
 class UserArtistProgress(models.Model):
+    """Model representing a user's progress with a specific artist."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     total_albums = models.IntegerField(default=0)  # Total albums of the selected artist
@@ -131,6 +142,7 @@ class UserArtistProgress(models.Model):
         return f"{self.user.username} - {self.artist.name} Progress"
 
 class UserProgress(models.Model):
+    """Model representing a user's overall progress."""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_artists = models.IntegerField(default=0)  # Number of artists the user has interacted with
     total_albums = models.IntegerField(default=0)  # Total number of albums the user has in collection, wishlist, blacklist
@@ -143,6 +155,7 @@ class UserProgress(models.Model):
         return f"{self.user.username}'s Progress" 
     
 class UserFollowedArtists(models.Model):
+    """Model representing artists followed by a user."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     followed_on = models.DateTimeField(auto_now_add=True)

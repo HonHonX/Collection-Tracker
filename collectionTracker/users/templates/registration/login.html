@@ -1,10 +1,8 @@
-<!-- from https://github.com/csev/dj4e-samples/blob/main/home/templates/registration/login_social.html -->
-
 {% extends 'base.html' %}
 
 {% block extra_css %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/apps/user/login_register.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/apps/users/login_register.css' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -36,16 +34,6 @@
       </form>
           
       <p>New? <a href="{% url 'register' %}">Register</a> now!</p>
-
-      <!-- <p>Alternatively you can use your Github-Account to login:</p>
-      {% if settings.SOCIAL_AUTH_GITHUB_KEY %}
-      <a href="{% url 'social:begin' 'github' %}?next={{ next }}">
-          Login with GitHub</a>
-
-      {% else %}
-      <p>Login with Github is not available right now. Check the template.</p>    
-      {% endif %} -->
-
     </div>
   </div>
 

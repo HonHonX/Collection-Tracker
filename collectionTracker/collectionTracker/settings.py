@@ -14,9 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
  
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
 
 # Used for a default title
 APP_NAME = 'CollectionTracker'   # Add
@@ -24,8 +22,7 @@ APP_NAME = 'CollectionTracker'   # Add
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#6w@ul$1b==qm-23*&ah*o#%_#ri*z@mc2q5y=)ki(5k_c!lh0'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,15 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social_django',    # for github login
 
-    'home',
-    'friends',
     'collection',
+    'friends',
+    'integration',  
     'stats',
     'users',
-    'settings',
-    'tracker',   
+     
 ]
 
 MIDDLEWARE = [
@@ -65,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware',    # for github login
 ]
 
 ROOT_URLCONF = 'collectionTracker.urls'
@@ -81,9 +75,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'users.context_processors.settings',    # for github login
-                'social_django.context_processors.backends',    # for github login
-                'social_django.context_processors.login_redirect',    # for github login
             ],
         },
     },
@@ -148,19 +139,9 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# https://github.com/csev/dj4e-samples/blob/main/dj4e-samples/settings.py
-# Login with Github
-try:
-    from . import github_settings 
-    SOCIAL_AUTH_GITHUB_KEY = github_settings.SOCIAL_AUTH_GITHUB_KEY
-    SOCIAL_AUTH_GITHUB_SECRET = github_settings.SOCIAL_AUTH_GITHUB_SECRET
-except:
-    print("Login with Github is not available right now. Check the settings.")
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.github.GithubOAuth2',  # GitHub social auth backend
     'django.contrib.auth.backends.ModelBackend',  # default Django auth backend
-    # social login possible for facebook / twitter
 )
 
 LOGOUT_REDIRECT_URL = '/'
@@ -168,24 +149,6 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/index/'
 
 LOGIN_URL = '/accounts/login/'
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'collection.signals': {  # Add this logger for signals.py
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'                       # SMTP-Server Gmail
