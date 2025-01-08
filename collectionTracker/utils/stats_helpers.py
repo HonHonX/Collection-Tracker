@@ -1,7 +1,9 @@
 from django.db.models import Count, Q
 from django.db.models import Count, F, ExpressionWrapper, FloatField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from collection.models import Genre, Artist, UserAlbumCollection, UserArtistProgress, Album, User
-from stats.models import Badge
+from stats.models import Badge, Notification
 
 def calculate_top_genres(user):
     """
@@ -157,3 +159,7 @@ def get_or_create_badge(name, description, image_url, sub_icon_url=None):
         'image_url': image_url,
         'sub_icon_url': sub_icon_url
     })
+
+def create_notification(user, user_badge):
+    message = f"You've earned the '{user_badge.badge.name}' badge."
+    Notification.objects.create(user=user, user_badge=user_badge, message=message)

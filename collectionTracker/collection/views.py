@@ -30,7 +30,7 @@ def home_view(request):
     return render(request, 'collection/index.html', {  
         'settings': settings,
         'followed_artists': followed_artists,
-        'user_album_ids': user_album_ids, 
+        'user_album_ids': user_album_ids,  
         'user_blacklist_ids': user_blacklist_ids,
         'user_wishlist_ids': user_wishlist_ids,
         'newest_albums': newest_albums,

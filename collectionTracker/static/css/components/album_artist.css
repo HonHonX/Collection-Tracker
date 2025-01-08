@@ -118,17 +118,21 @@
         max-height: 20rem;
         transition: var(--transitionStyle);
     }
-
-    .album-item:hover {
+    
+    /* .album-item:hover {
         transform: scale(1.1); /* Enlarge the album item */
         box-shadow: var(--boxShadow); /* Add a shadow on hover */
-    }
-    
+    } */
+
     .album-item.disabled {
         filter: grayscale(1);  /* Ensure grayscale has a value */
     }
+
+    .album-item.disabled .album-cover{
+        filter: grayscale(1);  /* Ensure grayscale has a value */
+    }
     
-    .album-item #control-icon,
+    .album-item #collection-control-icon,
     .album-item #wishlist-control-icon,
     .album-item .album-info,
     .album-item .album-cover {
@@ -143,7 +147,7 @@
         pointer-events: auto;
     }
     
-    .album-item.disabled #control-icon,
+    .album-item.disabled #collection-control-icon,
     .album-item.disabled #wishlist-control-icon,
     .album-item.disabled .album-info,
     .album-item.disabled .album-cover {
@@ -157,6 +161,10 @@
         aspect-ratio: 1 / 1;
         border-radius: var(--borderRadius);
     }
+
+    .album-cover:hover {
+        transform: scale(1.1);
+    }
     
     .album-info {
         flex-grow: 1;
@@ -167,6 +175,10 @@
         line-height: 1.25rem;
         text-transform: capitalize;
     }  
+
+    .album-info:hover {
+        cursor: auto;
+    }
     
     .album-info .album-title { 
         font-size: 0.8rem;                      /* Increases the font size for the album title */
@@ -194,18 +206,6 @@
     .album-controls .icon {
         height: 1rem;
         width: auto;
-    }
-   
-    #control-icon, #wishlist-control-icon {
-        cursor: pointer;
-        opacity: 1;
-        pointer-events: auto;
-    }
-    
-    #control-icon.disabled, #wishlist-control-icon.disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-        pointer-events: none;
     }
     
     .album-grid {

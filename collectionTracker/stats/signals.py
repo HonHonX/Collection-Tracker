@@ -1,12 +1,19 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from friends.models import Friend, FriendList
-from stats.models import Badge, UserBadge
+from stats.models import Badge, UserBadge, Notification
 from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress, Album, Artist
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from utils.stats_helpers import get_or_create_badge, create_all_badges
+from django.dispatch import Signal, receiver
+from django.contrib import messages
+from utils.stats_helpers import create_notification
+import logging
 
+logger = logging.getLogger(__name__)
+
+ 
 @receiver([post_save, post_delete], sender=Friend)
 def award_friend_badges(sender, instance, **kwargs):
     """
@@ -24,12 +31,16 @@ def award_friend_badges(sender, instance, **kwargs):
     five_friends_badge, _ = get_or_create_badge("Five Friends", "Awarded for adding five friends.", '/static/badges/five_friends.png')
 
     if friend_count >= 1:
-        UserBadge.objects.get_or_create(user=user, badge=first_friend_badge)
+        user_badge, created = UserBadge.objects.get_or_create(user=user, badge=first_friend_badge)
+        if created:
+            create_notification(user, user_badge)
     else:
         UserBadge.objects.filter(user=user, badge=first_friend_badge).delete()
 
     if friend_count >= 5:
-        UserBadge.objects.get_or_create(user=user, badge=five_friends_badge)
+        user_badge, created = UserBadge.objects.get_or_create(user=user, badge=five_friends_badge)
+        if created:
+            create_notification(user, user_badge)
     else:
         UserBadge.objects.filter(user=user, badge=five_friends_badge).delete()
 
@@ -49,7 +60,9 @@ def award_first_album_badge(sender, instance, **kwargs):
     first_album_badge, _ = get_or_create_badge("First Album", "Awarded for adding the first album to your collection.", '/static/badges/first_album.png')
 
     if album_count >= 1:
-        UserBadge.objects.get_or_create(user=user, badge=first_album_badge)
+        user_badge, created = UserBadge.objects.get_or_create(user=user, badge=first_album_badge)
+        if created:
+            create_notification(user, user_badge)
     else:
         UserBadge.objects.filter(user=user, badge=first_album_badge).delete()
 
@@ -114,7 +127,9 @@ def award_collection_progress_badge(sender, instance, **kwargs):
             progress_percentage = collection_count / total_albums
 
             if progress_percentage >= badge_info['threshold']:
-                UserBadge.objects.get_or_create(user=user, badge=badge)
+                user_badge, created = UserBadge.objects.get_or_create(user=user, badge=badge)
+                if created:
+                    create_notification(user, user_badge)
             else:
                 UserBadge.objects.filter(user=user, badge=badge).delete()
 
@@ -129,6 +144,23 @@ def award_collection_progress_badge(sender, instance, **kwargs):
     ).order_by('-collection_size')[:3]
 
     if user in user_and_friends:
-        UserBadge.objects.get_or_create(user=user, badge=top_collector_badge)
+        user_badge, created = UserBadge.objects.get_or_create(user=user, badge=top_collector_badge)
+        if created:
+            create_notification(user, user_badge)
     else:
         UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
+
+
+@receiver(post_save, sender=Notification)
+def trigger_notification_alert(sender, instance, **kwargs):
+    """
+    Signal receiver to trigger a SweetAlert2 notification when a Notification is added to the database.
+    
+    Args:
+        sender (Model): The model class that sent the signal.
+        instance (Notification): The instance of the model that triggered the signal.
+        **kwargs: Additional keyword arguments.
+    """
+    # This function will be used to trigger the SweetAlert2 notification
+    pass
+

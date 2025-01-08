@@ -44,7 +44,7 @@ select option .color-swatch {
 /* Custom Select Styles */
 .custom-select {
     position: relative;
-    width: 25rem;
+    width: 90%;
     background-color: var(--neutral90);
     border-radius: var(--borderRadius);
     cursor: pointer;
@@ -57,6 +57,7 @@ select option .color-swatch {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .options-container {

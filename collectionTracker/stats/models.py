@@ -24,3 +24,16 @@ class UserBadge(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.badge.name}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_badge = models.ForeignKey(UserBadge, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_date']
+
+    def __str__(self):
+        return f"Notification for {self.user.username} - {self.user_badge.badge.name}"
+
