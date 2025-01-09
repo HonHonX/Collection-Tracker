@@ -1,0 +1,52 @@
+<!-- integration/templates/integration/test_discogs_query.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discogs Query Test</title>
+</head>
+<body>
+    <h1>Discogs Query Test</h1>
+    <h2>Artist: {{ artist_details.name }}</h2>
+    <p><strong>ID:</strong> {{ artist_details.id }}</p>
+    <p><strong>Profile:</strong> {{ artist_details.profile }}</p>
+    <p><strong>Aliases:</strong> {{ artist_details.aliases|join:", " }}</p>
+    <p><strong>Members:</strong> {{ artist_details.members|join:", " }}</p>
+    <p><strong>URLs:</strong> 
+        <ul>
+            {% for url in artist_details.urls %}
+                <li><a href="{{ url }}">{{ url }}</a></li>
+            {% endfor %}
+        </ul>
+    </p>
+    {% if artist_details.artist_image %}
+        <img src="{{ artist_details.artist_image }}" alt="Artist Image" style="max-width: 200px;">
+    {% endif %}
+    <h3>Albums:</h3>
+    <ul>
+        {% for album in albums %}
+            <li>
+                <strong>{{ album.title }}</strong> ({{ album.year }})
+                <ul>
+                    <li><strong>ID:</strong> {{ album.id }}</li>
+                    <li><strong>Genres:</strong> {{ album.genres|join:", " }}</li>
+                    <li><strong>Styles:</strong> {{ album.styles|join:", " }}</li>
+                    <li><strong>Formats:</strong> {{ album.formats|join:", " }}</li>
+                    <li><strong>Labels:</strong> {{ album.labels|join:", " }}</li>
+                    <li><strong>Tracklist:</strong>
+                        <ul>
+                            {% for track in album.tracklist %}
+                                <li>{{ track.position }} - {{ track.title }} ({{ track.duration }})</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% if album.album_image %}
+                        <li><img src="{{ album.album_image }}" alt="Album Image" style="max-width: 200px;"></li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
