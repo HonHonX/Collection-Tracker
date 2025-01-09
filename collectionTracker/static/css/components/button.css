@@ -35,3 +35,16 @@
     cursor: not-allowed;
     opacity: 0.6;
 }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    :root {
+        --buttonWidth: 6rem; /* Reduce button width */
+        --buttonHeight: 2.5rem; /* Adjust button height */
+        --buttonPadding: 0.5rem 1rem; /* Smaller padding for mobile */
+    }
+
+    .button {
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+}

@@ -86,3 +86,35 @@ textarea:hover {
 input {
     font-family: var(--defaultFont);
 }
+
+/* Mobile Device adjustments */
+@media (max-width: 768px) {
+    body {
+        font-size: 0.875rem; /* Reduce font size for better readability */
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Adjust headline sizes */
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    p {
+        line-height: 1.4;
+    }
+
+    a {
+        font-size: 0.9rem; /* Slightly smaller links */
+    }
+
+    h1, h2, h3 {
+        text-align: center; /* Center-align headlines for better readability on smaller screens */
+    }
+}

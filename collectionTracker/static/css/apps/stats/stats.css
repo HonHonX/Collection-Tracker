@@ -154,3 +154,71 @@
     width: 2rem;
     height: 2rem;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .stats-block {
+        flex-direction: column; /* Stack the blocks vertically */
+    }
+
+    .top-block {
+        width: 100%; /* Take full width */
+    }
+
+    .full-block {
+        gap: var(--gapDistance);
+        width: 100%; /* Take full width */
+    }
+
+    .quantities-block, .competition-block {
+        flex-direction: column; /* Stack items vertically */
+        text-align: center;
+        gap: var(--gapDistance);
+    }
+
+    .quantities-block .stat, .competition-block form, #artist-rank {
+        width: 100%; /* Full width */
+    }
+
+    .top-list {
+        height: auto; /* Allow content to expand naturally */
+        padding: 0.5rem; /* Reduce padding for smaller screens */
+    }
+
+    .ranked-item {
+        flex-direction: column; /* Stack the name and value vertically */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .album-item {
+        width: 4rem; /* Reduce album item width for smaller screens */
+    }
+
+    .album-cover {
+        width: 100%; /* Maintain responsive scaling */
+    }
+
+    .friend-name {
+        flex-direction: column; /* Stack name and icon */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .user-icon {
+        width: 1.5rem; /* Reduce size for smaller screens */
+        height: 1.5rem;
+    }
+
+    #friend-collection, #similar-friends {
+        height: auto; /* Allow flexible height */
+    }
+
+    select {
+        width: 100%; /* Full-width dropdown for mobile */
+    }
+
+    #crown {
+        margin-top: 1rem; /* Add spacing for the crown */
+    }
+}
