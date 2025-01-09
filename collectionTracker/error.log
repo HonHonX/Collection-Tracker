@@ -1164,3 +1164,5 @@ Traceback (most recent call last):
     raise TemplateDoesNotExist(template_name, chain=chain)
 django.template.exceptions.TemplateDoesNotExist: collection/artist_search.html
 "GET /search/ HTTP/1.1" 500 84867
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 136
