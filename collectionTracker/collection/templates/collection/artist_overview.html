@@ -41,13 +41,15 @@
                     <p>Genres: {{ artist_info.genres|join:", " }}</p>
                 {% endif %}
 
-                <p>Popularity: {{ artist_info.popularity }}</p>
+                <p>Popularity: {{ artist_info.popularity }} / 100 </p>
                 <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
 
-                <div class="artist-bio">
-                    <h2>Bio</h2>
-                    <p>{{ artist.profile }}</p>
-                </div>
+                {% if artist.profile %}
+                    <div class="artist-bio">
+                        <h2>Bio</h2>
+                        <p>{{ artist.profile }}</p>
+                    </div>
+                {% endif %}
 
                 <div id="spacer-1"></div>
 

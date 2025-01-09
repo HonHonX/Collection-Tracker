@@ -121,7 +121,7 @@ def follow_artist(request):
             artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
                 'name': data.get('artist_name'),
                 'genres': data.get('artist_genres', []),
-                'popularity': data.get('artist_popularity', 0),
+                'popularity': int(data.get('artist_popularity', 0)),
                 'photo_url': data.get('artist_photo_url', '')
             })
 

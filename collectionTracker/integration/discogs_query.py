@@ -3,6 +3,7 @@ import discogs_client
 from django.core.cache import cache
 from django.db import transaction
 from collection.models import Artist, Album
+import bleach
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
