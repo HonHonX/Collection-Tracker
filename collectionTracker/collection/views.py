@@ -89,7 +89,8 @@ def artist_overview(request, artist_name):
     try:
         context = get_artist_data(artist_name, request.user) 
         context['artist_profile'] = context['artist'].profile
-        print(context['artist_profile'])
+        context['discogs_id'] = context['artist'].discogs_id  # Add discogs_id to context
+        print(f"Artist Profile: {context['artist_profile']}, Discogs ID: {context['discogs_id']}")
         return render(request, 'collection/artist_overview.html', context)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)

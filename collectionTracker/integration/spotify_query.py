@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists  # Import the model
 import json
+from integration.discogs_query import get_more_artist_data  # Import the function from discog_query
 
 # Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -95,7 +96,14 @@ def get_artist_data(artist_name, user):
                 )
                 if created:
                     artist.set_genres(artist_info['genres'])
-                    print(artist_info)
+                    # Fetch more artist data from Discogs
+                    more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'],user)
+                    artist.discogs_id = more_artist_data.get('discogs_id')
+                    artist.profile = more_artist_data.get('profile')
+                    artist.save()
+                    # Refresh the artist object to get the updated data
+                    artist.refresh_from_db()
+                    print(f"Artist saved with Discogs ID: {artist.discogs_id} and Profile: {artist.profile}")
 
                 for album in sorted_albums:
                     Album.objects.get_or_create(

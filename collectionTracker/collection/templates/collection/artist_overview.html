@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    Artist Overview - {{ artist_name }}
+    {{ artist_name }} - Overview
 {% endblock %}
 
 {% block site_specific_css %}
@@ -44,6 +44,10 @@
                 <p>Popularity: {{ artist_info.popularity }}</p>
                 <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
 
+                <div class="artist-bio">
+                    <h2>Bio</h2>
+                    <p>{{ artist.profile }}</p>
+                </div>
 
                 <div id="spacer-1"></div>
 

@@ -20,10 +20,17 @@ d = discogs_client.Client(
 d.set_token(DISCOGS_ACCESS_TOKEN, DISCOGS_ACCESS_SECRET)
 
 
-def get_more_artist_data(spotify_id, artist_name, user):
+def get_more_artist_data(artist_id, artist_name, user):
     """
-    Fetch artist data along with their releases using the Discogs API with authentication.
-    Results are cached for efficiency.
+    Fetch additional artist data from Discogs API.
+    
+    Args:
+        artist_id (str): The Spotify ID of the artist.
+        artist_name (str): The name of the artist.
+        user (User): The user requesting the data.
+    
+    Returns:
+        dict: A dictionary containing additional artist data.
     """
     cache_key = f"artist_data_with_releases_{artist_name.lower()}"
     cached_data = cache.get(cache_key)
@@ -32,52 +39,30 @@ def get_more_artist_data(spotify_id, artist_name, user):
         return cached_data
 
     try:
-        # Perform an authenticated search using the application-level token
-        artist_results = d.search(artist_name, type='artist', per_page=1)
-        if not artist_results:
-            raise IndexError("No artist found with the given name.")
-        
-        # Get the first matching artist
-        artist = artist_results[0]
+        results = d.search(artist_name, type='artist')
+        if results:
+            artist = results[0]
+            artist_details = {
+                'discogs_id': artist.id,
+                'profile': artist.profile,
+            }
 
-        # Extract artist details
-        artist_details = {
-            'id': artist.id,
-            'profile': getattr(artist, 'profile', 'No profile available'),
-            'aliases': [alias.name for alias in getattr(artist, 'aliases', [])],
-            'members': [member.name for member in getattr(artist, 'members', [])],
-            'urls': getattr(artist, 'urls', []),
-        }
+            # Save the artist details to the database
+            with transaction.atomic():  # Use atomic transaction for data consistency
+                artist_instance, created = Artist.objects.get_or_create(id=artist_id, defaults={
+                    'name': artist_name,
+                    'photo_url': '',
+                    'popularity': 0,
+                })
+                artist_instance.discogs_id = artist_details['discogs_id']
+                artist_instance.profile = artist_details['profile']
+                artist_instance.save()
 
-        # Save the artist details to the database
-        with transaction.atomic():  # Use atomic transaction for data consistency
-            artist_instance, created = Artist.objects.get_or_create(id=spotify_id, defaults={
-                'name': artist_name,
-                'photo_url': '',
-                'popularity': 0,
-            })
-            artist_instance.discogs_id = artist_details['id']
-            artist_instance.profile = artist_details['profile']
-            artist_instance.set_aliases(artist_details['aliases'])
-            artist_instance.set_members(artist_details['members'])
-            artist_instance.set_urls(artist_details['urls'])
-            artist_instance.save()
+            # Cache the result for 1 hour
+            cache.set(cache_key, artist_details, timeout=3600)  # Cache for 1 hour
 
-            # Set genres to an empty list if not provided
-            artist_instance.set_genres([])
-
-        # Cache the result for 1 hour
-        result = {
-            'discogs_id': artist_details['id'],
-            'profile': artist_details['profile'],
-            'aliases': artist_details['aliases'],
-            'members': artist_details['members'],
-            'urls': artist_details['urls'],
-            'error': None,
-        }
-        cache.set(cache_key, result, timeout=3600)  # Cache for 1 hour
-
-        return result
+            return artist_details
 
     except Exception as e:
-        return {'error': str(e)}
+        print(f"Error fetching data from Discogs: {e}")
+    return {}
