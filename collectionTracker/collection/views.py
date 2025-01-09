@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -6,8 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
+from integration.discogs_query import update_artist_from_discogs_url  # Import the new function
 import json
-from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist,get_followed_artists, get_user_lists, get_newest_albums
+from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
 
 @login_required
@@ -35,6 +36,27 @@ def home_view(request):
         'user_wishlist_ids': user_wishlist_ids,
         'newest_albums': newest_albums,
     })
+
+def artist_detail(request, artist_id):
+    """
+    Render the artist detail page with the specified artist ID.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+        artist_id (int): The ID of the artist to display.
+    
+    Returns:
+        HttpResponse: The rendered HTML page with artist details.
+    """
+    artist = get_object_or_404(Artist, id=artist_id)
+    
+    if request.method == 'POST':
+        discogs_url = request.POST.get('discogs_url')
+        if discogs_url:
+            update_artist_from_discogs_url(artist, discogs_url)
+            return redirect('artist_detail', artist_id=artist.id)
+    
+    return render(request, 'collection/artist_detail.html', {'artist': artist})
 
 def artist_search(request):
     """

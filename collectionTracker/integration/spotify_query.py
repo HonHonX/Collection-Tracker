@@ -97,7 +97,7 @@ def get_artist_data(artist_name, user):
                 if created:
                     artist.set_genres(artist_info['genres'])
                     # Fetch more artist data from Discogs
-                    more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'],user)
+                    more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'], user)
                     artist.discogs_id = more_artist_data.get('discogs_id')
                     artist.profile = more_artist_data.get('profile')
                     artist.save()

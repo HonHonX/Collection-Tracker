@@ -1,4 +1,3 @@
-<!-- artist_overview.html -->
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
@@ -18,7 +17,9 @@
         <!-- light column -->
             <div class="artist-detail">
                 {% if artist_photo_url %}
-                    <img id="search-artist-photo" src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                    <a href="{% url 'artist_detail' artist.id %}">
+                        <img id="search-artist-photo" src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                    </a>
                 {% endif %}
 
                 <div class="follow-block" 

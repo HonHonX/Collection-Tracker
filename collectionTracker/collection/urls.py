@@ -23,6 +23,9 @@ urlpatterns = [
 
     # Album detail
     path("album/<str:album_id>/", views.AlbumDetail.as_view(), name="album_detail"),
+
+    # Artist detail
+    path("artist_detail/<str:artist_id>/", views.artist_detail, name="artist_detail"),
     
 ]
  

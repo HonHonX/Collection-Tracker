@@ -1,0 +1,33 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}
+    {{ artist.name }} - Details
+{% endblock %}
+
+{% block site_specific_css %}
+    <!-- <link rel="stylesheet" href="{% static 'css/apps/tracker/artist_overview.css' %}" type="text/css"> -->
+{% endblock %}
+
+{% block maincontent %}
+    <a href="{% url 'artist_overview' artist.name %}">Back to {{ artist.name }}'s Overview</a>
+    <h1>Get to know {{ artist.name }}</h1>
+
+    <div id="discogs">
+        <p>Wrong {{ artist.name }}? Please enter the Discog Profile url and help to improve our database!</p>
+        <a href="https://www.discogs.com/de/search?q={{ artist.name }}&type=artist" target="_blank">Discogs search for {{ artist.name }} </a>
+        <form method="post" id="discogs-form">
+            {% csrf_token %}
+            <input type="text" name="discogs_url" id="discogs_url" placeholder="Discogs Profile URL">
+            <button type="submit" class="button">Submit</button>
+        </form>
+    </div>
+
+    <div id="artist-bio">
+        <h2>Bio</h2>
+        <p>{{ artist.profile }}</p>
+    </div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

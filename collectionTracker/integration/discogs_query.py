@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.db import transaction
 from collection.models import Artist, Album
 import bleach
+import re  # Add this import
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
@@ -40,9 +41,10 @@ def get_more_artist_data(artist_id, artist_name, user):
         return cached_data
 
     try:
-        results = d.search(artist_name, type='artist')
+        results = d.search(artist_name, type='artist', per_page=15, page=1, exact=True)
         if results:
             artist = results[0]
+            print(list(results))
             artist_details = {
                 'discogs_id': artist.id,
                 'profile': artist.profile,
@@ -67,3 +69,22 @@ def get_more_artist_data(artist_id, artist_name, user):
     except Exception as e:
         print(f"Error fetching data from Discogs: {e}")
     return {}
+
+def update_artist_from_discogs_url(artist, discogs_url):
+    """
+    Update the artist in the database based on the Discogs URL provided.
+    
+    Args:
+        artist (Artist): The artist object to update.
+        discogs_url (str): The Discogs URL provided by the user.
+    """
+    match = re.search(r'/artist/(\d+)-', discogs_url)
+    if match:
+        discogs_id = match.group(1)
+        try:
+            discogs_artist = d.artist(discogs_id)
+            artist.discogs_id = discogs_id
+            artist.profile = discogs_artist.profile
+            artist.save()
+        except Exception as e:
+            print(f"Error updating artist from Discogs: {e}")
