@@ -20,9 +20,10 @@ class GenreAdmin(admin.ModelAdmin):
 # Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'popularity')  # Display ID, name, and popularity
-    search_fields = ('name',)  # Allow searching by artist's name 
+    list_display = ('name', 'id', 'photo_url', 'popularity', 'discogs_id', 'profile')  # Display name, ID, photo URL, popularity, Discogs ID, and profile
+    search_fields = ('name', 'id', 'discogs_id')  # Allow searching by name, ID, and Discogs ID
     filter_horizontal = ('genres',)  # Add genres to the admin panel
+    readonly_fields = ('aliases', 'members', 'urls')  # Make aliases, members, and URLs readonly
 
 # Register the Album model with custom configuration
 @admin.register(Album)

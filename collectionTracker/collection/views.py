@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
-from integration.discogs_query import get_artist_data
+from integration.spotify_query import get_artist_data
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist,get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
@@ -87,7 +87,9 @@ def artist_overview(request, artist_name):
         HttpResponse: The rendered HTML page with artist details.
     """
     try:
-        context = get_artist_data(artist_name, request.user)  # Retrieve artist data through API
+        context = get_artist_data(artist_name, request.user) 
+        context['artist_profile'] = context['artist'].profile
+        print(context['artist_profile'])
         return render(request, 'collection/artist_overview.html', context)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)

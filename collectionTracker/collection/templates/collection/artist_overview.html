@@ -44,6 +44,7 @@
                 <p>Popularity: {{ artist_info.popularity }}</p>
                 <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
 
+
                 <div id="spacer-1"></div>
 
                 <!-- Add counters for Collection, Wishlist, and Blacklist -->
@@ -127,11 +128,11 @@
                         data-album-type="{{ album.album_type }}" 
                         data-release-date="{{ album.release_date }}"
                         data-image-url="{{ album.image_url }}"  
-                        data-artist-id="{{ artist_info.id }}"
-                        data-artist-name="{{ artist_name }}"
-                        data-artist-photo-url="{{ artist_photo_url }}"
-                        data-artist-genres="{{ artist_info.genres }}"
-                        data-artist-popularity="{{ artist_info.popularity }}"
+                        data-artist-id="{{ artist.id }}"
+                        data-artist-name="{{ artist.name }}"
+                        data-artist-photo-url="{{ artist.photo_url }}"
+                        data-artist-genres="{{ artist.genres }}"
+                        data-artist-popularity="{{ artist.popularity }}"
                         data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
                         data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
                         data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"

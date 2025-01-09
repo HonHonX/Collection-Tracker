@@ -17,7 +17,6 @@ client_secret = config('SPOTIFY_CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-# Create your views here.
 
 # View for searching artist and displaying albums
 def get_artist_data(artist_name, user):
@@ -33,6 +32,7 @@ def get_artist_data(artist_name, user):
     collection_count = 0 
     wishlist_count = 0
     blacklist_count = 0
+    artist = None  # Initialize artist variable
 
     try:
         # Search by name → Spotify API
@@ -95,6 +95,7 @@ def get_artist_data(artist_name, user):
                 )
                 if created:
                     artist.set_genres(artist_info['genres'])
+                    print(artist_info)
 
                 for album in sorted_albums:
                     Album.objects.get_or_create(
@@ -144,6 +145,7 @@ def get_artist_data(artist_name, user):
 
     return {
         'albums': albums,
+        'artist': artist,
         'artist_name': artist_info.get('name', 'Unknown Artist'),
         'artist_photo_url': artist_photo_url,
         'error': error,

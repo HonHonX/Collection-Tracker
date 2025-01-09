@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.db.models import JSONField
+from django.db.models import JSONField, CharField
+from django.contrib.postgres.fields import ArrayField
+import json
 
 class Genre(models.Model):
     """Model representing a music genre."""
@@ -31,14 +33,39 @@ class Artist(models.Model):
     photo_url = models.URLField(blank=True, null=True)
     genres = models.ManyToManyField(Genre, related_name='artists')
     popularity = models.IntegerField(default=0)
+
+    #Attributes provided by discogs
+    discogs_id = models.IntegerField(blank=True, null=True)
+    profile = CharField(max_length=1000, blank=True, null=True)
+    aliases = models.TextField(blank=True, null=True)
+    members = models.TextField(blank=True, null=True)
+    urls = models.TextField(blank=True, null=True)
     
     def __str__(self): 
-        return f"{self.name} - ID: {self.id} " 
+        return f"{self.name} - ID: {self.id}, Discogs: {self.discogs_id}, Profile: {self.profile} " 
 
     def set_genres(self, genre_names):
         """Set genres for the artist based on a list of genre names."""
         genres = [Genre.objects.get_or_create(name=name)[0] for name in genre_names]
         self.genres.set(genres)
+
+    def set_aliases(self, aliases):
+        self.aliases = json.dumps(aliases)
+
+    def get_aliases(self):
+        return json.loads(self.aliases) if self.aliases else []
+
+    def set_members(self, members):
+        self.members = json.dumps(members)
+
+    def get_members(self):
+        return json.loads(self.members) if self.members else []
+
+    def set_urls(self, urls):
+        self.urls = json.dumps(urls)
+
+    def get_urls(self):
+        return json.loads(self.urls) if self.urls else []
 
 class Album(models.Model):
     """Model representing a music album."""
