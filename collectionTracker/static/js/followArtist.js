@@ -5,10 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         followButton.addEventListener('click', function() {
             const artistId = block.getAttribute('data-artist-id');
-            const artistName = block.getAttribute('data-artist-name');
-            const artistGenres = block.getAttribute('data-artist-genres');
-            const artistPopularity = block.getAttribute('data-artist-popularity');
-            const artistPhotoUrl = block.getAttribute('data-artist-photo-url');
             const url = block.getAttribute('data-follow-url');
 
             fetch(url, {
@@ -18,11 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRFToken': followButton.dataset.csrf
                 },
                 body: JSON.stringify({
-                    artist_id: artistId,
-                    artist_name: artistName,
-                    artist_genres: artistGenres, 
-                    artist_popularity: artistPopularity,
-                    artist_photo_url: artistPhotoUrl
+                    artist_id: artistId
                 })
             })
             .then(response => response.json())

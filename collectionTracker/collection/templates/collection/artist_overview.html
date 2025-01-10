@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {{ artist_name }} - Overview
+    {{ artist.name }} - Overview
 {% endblock %}
 
 {% block site_specific_css %}
@@ -16,40 +16,36 @@
     {% else %}
         <!-- light column -->
             <div class="artist-detail">
-                {% if artist_photo_url %}
+                {% if artist.photo_url %}
                     <a href="{% url 'artist_detail' artist.id %}">
-                        <img id="search-artist-photo" src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                        <img id="search-artist-photo" src="{{ artist.photo_url }}" alt="{{ artist.name }}'s photo">
                     </a>
                 {% endif %}
 
                 <div class="follow-block" 
-                    data-artist-id="{{ artist_info.id }}" 
-                    data-artist-name="{{ artist_info.name }}" 
-                    data-artist-genres="{{ artist_info.genres }}"
-                    data-artist-popularity="{{ artist_info.popularity }}"
-                    data-artist-photo-url="{{ artist_photo_url }}"
+                    data-artist-id="{{ artist.id }}" 
                     data-follow-url="{% url 'follow_artist' %}">
                     <button id="follow-button" class="button">
-                        {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                        {% if artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
                     </button>
                 </div>
 
                 <div id="spacer-1"></div>
 
-                <h1>{{ artist_name }}</h1>
+                <h1>{{ artist.name }}</h1>
 
                 <div class="popularity-gauge">
                     <div class="gauge">
-                        <div class="gauge-fill" id="gauge-fill" data-popularity-value="{{ artist_info.popularity }}"></div>
-                        <div class="gauge-text" id="gauge-text">Popularity: {{ artist_info.popularity  }}/100</div>
+                        <div class="gauge-fill" id="gauge-fill" data-popularity-value="{{ artist.popularity }}"></div>
+                        <div class="gauge-text" id="gauge-text">Popularity: {{ artist.popularity  }}/100</div>
                     </div>
                 </div>
 
-                {% if artist_info.genres %}
-                    <p>Genres: {{ artist_info.genres|join:", " }}</p>
+                {% if genres %}
+                    <p>Genres: {{ genres|join:", " }}</p>
                 {% endif %}
 
-                <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
+                <p>Total Albums: <span class="total-albums">{{ total_albums }}</span></p>
 
                 <div id="spacer-1"></div>
 

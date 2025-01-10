@@ -10,7 +10,7 @@ from integration.discogs_query import update_artist_from_discogs_url
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
-from .tasks import save_album_details_in_background, start_background_task
+from .tasks import save_album_details_in_background, start_background_task, start_background_artist_update
 import logging
 
 logger = logging.getLogger(__name__)
@@ -95,6 +95,7 @@ def artist_search(request):
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
+            start_background_artist_update(context['artist'].id)
             start_background_task(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
@@ -145,15 +146,10 @@ def follow_artist(request):
             # Parse the JSON data from the request body
             data = json.loads(request.body)
             user = request.user
-            artist_id = data.get('artist_id')            
+            artist_id = data.get('artist_id')
 
-            # Check if the artist already exists in the database
-            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
-                'name': data.get('artist_name'),
-                'genres': data.get('artist_genres', []),
-                'popularity': int(data.get('artist_popularity', 0)),
-                'photo_url': data.get('artist_photo_url', '')
-            })
+            # Retrieve the artist from the database
+            artist = Artist.objects.get(id=artist_id)
 
             # Check if the user already follows the artist
             follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
@@ -165,13 +161,14 @@ def follow_artist(request):
             else:
                 # If the user does not follow the artist, follow the artist
                 return JsonResponse({'success': True, 'message': 'Artist followed.'})
-
+        except Artist.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Artist does not exist.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON data.'})
         except Exception as e:
-            # Return a JSON response with the error message if an exception occurs
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-    # Return an error response if the request method is not POST
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
+            return JsonResponse({'success': False, 'message': str(e)})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required
 def list_overview(request, list_type):

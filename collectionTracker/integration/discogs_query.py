@@ -35,19 +35,21 @@ def format_string(string):
     # Remove round brackets with only numbers inside
     formatted_string = re.sub(r'\(\d+\)', '', string)
     
-    # Replace [b] and [/b] with <strong> and </strong>
+    # Replace [b] and [/b] 
     formatted_string = re.sub(r'\[b\]', '', formatted_string)
     formatted_string = re.sub(r'\[/b\]', '', formatted_string)
 
-    # Remove the [m= parts and the surrounding brackets, replacing with "their album"
-    formatted_string = re.sub(r'\[m=\d+\]', 'release X', formatted_string)
-
     # Remove the [l= and [a= parts and the surrounding brackets
-    formatted_string = re.sub(r'\[l=|\[a=|\]', '', formatted_string)
-    
+    formatted_string = re.sub(r'\[a=', '', formatted_string)
+
+    # Remove sentences containing [] brackets
+    formatted_string = re.sub(r'under \[[a-zA-Z0-9]+\]', '', formatted_string)
+    formatted_string = re.sub(r'\.[^.]*\[[^\]]*\][^.]*\.', '. ', formatted_string)
+    formatted_string = re.sub(r'\]', '', formatted_string)
+
     return formatted_string
 
-def get_more_artist_data(artist_id, artist_name):
+def get_more_artist_data(artist_name):
     """
     Fetch additional artist data from Discogs API.
     
@@ -59,7 +61,7 @@ def get_more_artist_data(artist_id, artist_name):
     Returns:
         dict: A dictionary containing additional artist data.
     """
-    cache_key = f"artist_data_with_releases_{artist_name.lower().strip()}"
+    cache_key = f"artist_data_with_releases_{artist_name.lower().replace(' ', '_')}"
     cached_data = cache.get(cache_key)
     
     if (cached_data):
@@ -70,26 +72,12 @@ def get_more_artist_data(artist_id, artist_name):
         if (results):
             artist = results[0]
             artist_details = {
-                'discogs_id': artist.id,
-                'profile': format_string(artist.profile),  # Format the profile string
-                'aliases': [alias.name for alias in artist.aliases],  # Save as list
-                'members': [format_string(member.name) for member in artist.members],  # Save as list and format
-                'urls': [str(url) for url in artist.urls],  # Save as list
+                'discogs_id': getattr(artist, 'id', ''),
+                'profile': format_string(getattr(artist, 'profile', 'N/A')),  # Format the profile string
+                'aliases': [format_string(alias.name) for alias in getattr(artist, 'aliases', [])],  # Save as list
+                'members': [format_string(member.name) for member in getattr(artist, 'members', [])],  # Save as list and format
+                'urls': [str(url) for url in getattr(artist, 'urls', [])],  # Save as list
             }
-
-            # # Save the artist details to the database
-            # with transaction.atomic():  # Use atomic transaction for data consistency
-            #     artist_instance, created = Artist.objects.get_or_create(id=artist_id, defaults={
-            #         'name': artist_name,
-            #         'photo_url': '',
-            #         'popularity': 0,
-            #     })
-            #     artist_instance.discogs_id = artist_details['discogs_id']
-            #     artist_instance.profile = artist_details['profile']
-            #     artist_instance.aliases = artist_details['aliases']
-            #     artist_instance.members = artist_details['members']
-            #     artist_instance.urls = artist_details['urls']
-            #     artist_instance.save()
 
             # Cache the result for 1 hour
             cache.set(cache_key, artist_details, timeout=3600)  # Cache for 1 hour
@@ -115,7 +103,7 @@ def update_artist_from_discogs_url(artist, discogs_url):
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
             artist.profile = format_string(discogs_artist.profile)  # Format the profile string
-            artist.aliases = [alias.name for alias in discogs_artist.aliases]  # Save as list
+            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases]  # Save as list
             artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
             artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
             artist.save()
@@ -134,11 +122,11 @@ def fetch_basic_album_details(album_name, artist_name):
         dict: A dictionary containing basic album details.
     """
     try:
-        print(f"Fetching basic album details for {album_name}")
+        # print(f"Fetching basic album details for {album_name}")
         results = d.search(album_name, type='release', per_page=15, page=1, artist=artist_name)
         if results:
             album = results[0]
-            print(f"Album found: {album.title}")
+            # print(f"Album found: {album.title}")
             album_details = {
                 'discogs_id': album.id,
                 'genres': album.genres,
@@ -162,7 +150,7 @@ def fetch_album_tracklist_and_formats(discogs_id):
         dict: A dictionary containing the tracklist and formats of the album.
     """
     try:
-        print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
+        # print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
         album = d.release(discogs_id)
         tracklist_and_formats = {
             'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
@@ -175,14 +163,17 @@ def fetch_album_tracklist_and_formats(discogs_id):
 
 def save_basic_album_details(artist_id):
     album_results = Album.objects.filter(artist_id=artist_id)
-    print(album_results)
+    # print(album_results)
+    if (album_results.count() == 0):
+        print("No albums found")
+        return
     for album_instance in album_results:
         more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
-        print(f"More album data: {more_album_data}")
+        # print(f"More album data: {more_album_data}")
         album_instance.discogs_id = more_album_data.get('discogs_id')
         album_instance.genres = more_album_data.get('genres', [])
         album_instance.styles = more_album_data.get('styles', [])
         album_instance.labels = more_album_data.get('labels', [])
         album_instance.save()
-    # Refresh the artist object to get the updated data
-    album_instance.refresh_from_db()
+        # Refresh the artist object to get the updated data
+        album_instance.refresh_from_db()

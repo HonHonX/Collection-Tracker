@@ -36,10 +36,10 @@ class Artist(models.Model):
 
     # Attributes provided by discogs
     discogs_id = models.IntegerField(blank=True, null=True)
-    profile = CharField(max_length=1000, blank=True, null=True)
-    aliases = JSONField(default=list, blank=True)  # Store as JSON field
-    members = JSONField(default=list, blank=True)  # Store as JSON field
-    urls = JSONField(default=list, blank=True)  # Store as JSON field
+    profile = CharField(max_length=1000, default='N/A', blank=True, null=True)
+    aliases = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    members = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    urls = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     
     def __str__(self): 
         return f"{self.name} - ID: {self.id}, Discogs: {self.discogs_id}, Profile: {self.profile} " 
@@ -48,24 +48,6 @@ class Artist(models.Model):
         """Set genres for the artist based on a list of genre names."""
         genres = [Genre.objects.get_or_create(name=name)[0] for name in genre_names]
         self.genres.set(genres)
-
-    def set_aliases(self, aliases):
-        self.aliases = aliases
-
-    def get_aliases(self):
-        return self.aliases if self.aliases else []
-
-    def set_members(self, members):
-        self.members = members
-
-    def get_members(self):
-        return self.members if self.members else []
-
-    def set_urls(self, urls):
-        self.urls = urls
-
-    def get_urls(self):
-        return self.urls if self.urls else []
 
 class Album(models.Model):
     """Model representing a music album."""
@@ -84,8 +66,6 @@ class Album(models.Model):
     labels = JSONField(default=list, blank=True)  # Store as JSON field
     formats = JSONField(default=list, blank=True)  # Store as JSON field
     lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    current_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    highest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.name 
