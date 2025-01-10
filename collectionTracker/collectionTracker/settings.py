@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'integration',  
     'stats',
     'users',
+    'background_task',
      
 ]
 

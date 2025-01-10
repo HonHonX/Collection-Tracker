@@ -47,7 +47,7 @@ def format_string(string):
     
     return formatted_string
 
-def get_more_artist_data(artist_id, artist_name, user):
+def get_more_artist_data(artist_id, artist_name):
     """
     Fetch additional artist data from Discogs API.
     
@@ -122,25 +122,19 @@ def update_artist_from_discogs_url(artist, discogs_url):
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
-def get_more_album_data(spotify_id, album_name, artist_name, user):
+def fetch_basic_album_details(album_name, artist_name):
     """
-    Fetch additional album data from Discogs API.
+    Fetch basic album details from Discogs API.
     
     Args:
         album_name (str): The name of the album.
-        user (User): The user requesting the data.
+        artist_name (str): The name of the artist.
     
     Returns:
-        dict: A dictionary containing additional album data.
+        dict: A dictionary containing basic album details.
     """
-    # cache_key = f"album_data_{album_name.lower().strip()}"
-    # cached_data = cache.get(cache_key)
-    
-    # if cached_data:
-    #     return cached_data
-
     try:
-        print(f"Fetching album data for {album_name}")
+        print(f"Fetching basic album details for {album_name}")
         results = d.search(album_name, type='release', per_page=15, page=1, artist=artist_name)
         if results:
             album = results[0]
@@ -149,20 +143,46 @@ def get_more_album_data(spotify_id, album_name, artist_name, user):
                 'discogs_id': album.id,
                 'genres': album.genres,
                 'styles': album.styles,
-                'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
                 'labels': [label.name for label in album.labels],
-                # 'formats': [format.name for format in album.formats],
-                # 'lowest_price': album.lowest_price,
-                # 'current_price': album.current_price,
-                # 'highest_price': album.highest_price,
             }
-            print(f"Album details: {album_details}")
-
-            # # Cache the result for 1 hour
-            # cache.set(cache_key, album_details, timeout=3600)  # Cache for 1 hour
-
             return album_details
-
     except Exception as e:
-        print(f"Error fetching data from Discogs: {e}")
+        print(f"Error fetching basic album details from Discogs: {e}")
     return {}
+
+
+def fetch_album_tracklist_and_formats(discogs_id):
+    """
+    Fetch tracklist and formats for an album from Discogs API.
+    
+    Args:
+        discogs_id (int): The Discogs ID of the album.
+    
+    Returns:
+        dict: A dictionary containing the tracklist and formats of the album.
+    """
+    try:
+        print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
+        album = d.release(discogs_id)
+        tracklist_and_formats = {
+            'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
+            'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
+        }
+        return tracklist_and_formats
+    except Exception as e:
+        print(f"Error fetching tracklist and formats from Discogs: {e}")
+    return {}
+
+def save_basic_album_details(artist_id):
+    album_results = Album.objects.filter(artist_id=artist_id)
+    print(album_results)
+    for album_instance in album_results:
+        more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
+        print(f"More album data: {more_album_data}")
+        album_instance.discogs_id = more_album_data.get('discogs_id')
+        album_instance.genres = more_album_data.get('genres', [])
+        album_instance.styles = more_album_data.get('styles', [])
+        album_instance.labels = more_album_data.get('labels', [])
+        album_instance.save()
+    # Refresh the artist object to get the updated data
+    album_instance.refresh_from_db()

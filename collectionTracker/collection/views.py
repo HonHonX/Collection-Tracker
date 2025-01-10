@@ -6,10 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url  # Import the new function
+from integration.discogs_query import update_artist_from_discogs_url
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
+from .tasks import save_album_details_in_background, start_background_task
+import logging
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def home_view(request):
@@ -73,27 +77,31 @@ def artist_search(request):
     Returns:
         HttpResponse: The rendered HTML page or JSON response with error message.
     """
+
+    user = request.user
+
     if request.method == 'POST':
-        # Get the artist name from the POST request
         artist_name = request.POST.get('artist_name')
         
-        if not artist_name:  # Artist name is required
+        if not artist_name:
             error = "Artist name is required."
-            # Render the search page with an error message
             return render(request, 'collection/artist_search.html', {
                 'artist_name': '',
                 'error': error,
             })
         
         try:
-            # Retrieve artist data through API and render the overview page
             context = get_artist_data(artist_name, request.user)
-            return render(request, 'collection/artist_overview.html', context)
+            response = render(request, 'collection/artist_overview.html', context)
+            
+            # Start the background task
+            start_background_task(context['artist'].id)
+            logger.info(f"Started background task for artist ID: {context['artist'].id}")
+            
+            return response
         except Exception as e:
-            # Return a JSON response with the error message if an exception occurs
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
-    # Render the search page if the request method is not POST
     return render(request, 'collection/artist_search.html')
 
 def artist_overview(request, artist_name):

@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists  # Import the model
 import json
-from integration.discogs_query import get_more_artist_data, get_more_album_data
+from integration.discogs_query import get_more_artist_data, fetch_basic_album_details
 
 # Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -97,7 +97,7 @@ def get_artist_data(artist_name, user):
                 if created:
                     artist.set_genres(artist_info['genres'])
                     # Fetch more artist data from Discogs
-                    more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'], user)
+                    more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'])
                     artist.discogs_id = more_artist_data.get('discogs_id')
                     artist.profile = more_artist_data.get('profile')
                     artist.aliases = more_artist_data.get('aliases')
@@ -120,20 +120,6 @@ def get_artist_data(artist_name, user):
                     )
                     if created: 
                         print(f"Album {album_instance.name} by {album_instance.artist.name} with the id {album_instance.id} created.")
-                        more_album_data = get_more_album_data(album_instance.id, album_instance.name, album_instance.artist.name, user)
-                        print(f"More album data: {more_album_data}")
-                        album_instance.discogs_id = more_album_data.get('discogs_id')
-                        album_instance.genres = more_album_data.get('genres', [])
-                        album_instance.styles = more_album_data.get('styles', [])
-                        album_instance.tracklist = more_album_data.get('tracklist', [])
-                        album_instance.labels = more_album_data.get('labels', [])
-                        album_instance.formats = more_album_data.get('formats', [])
-                        # album_instance.lowest_price = more_album_data.get('lowest_price')
-                        # album_instance.current_price = more_album_data.get('current_price')
-                        # album_instance.highest_price = more_album_data.get('highest_price')
-                        album_instance.save()
-                        # Refresh the artist object to get the updated data
-                        album_instance.refresh_from_db()
 
             # Get the list of user albums (user_album_ids), blacklist (user_blacklist_ids) and wishlist (user_wishlist_ids)
             if user.is_authenticated:
