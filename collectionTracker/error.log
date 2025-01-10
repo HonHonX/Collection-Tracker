@@ -1592,3 +1592,5 @@ Traceback (most recent call last):
     )
 collection.models.Artist.DoesNotExist: Artist matching query does not exist.
 "POST /admin/collection/artist/ HTTP/1.1" 500 178958
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 74

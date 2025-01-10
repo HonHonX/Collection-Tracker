@@ -10,7 +10,7 @@ from integration.discogs_query import update_artist_from_discogs_url
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
-from .tasks import save_album_details_in_background, start_background_task, start_background_artist_update
+from .tasks import start_background_artist_update, start_background_album_update
 import logging
 
 logger = logging.getLogger(__name__)
@@ -96,7 +96,6 @@ def artist_search(request):
             
             # Start the background task
             start_background_artist_update(context['artist'].id)
-            start_background_task(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
             return response
@@ -293,6 +292,7 @@ class AlbumDetail(View):
         
         try:
             album = get_object_or_404(Album, id=album_id)
+            start_background_album_update(album.id)  # Start background task to update album details
             collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
             wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()

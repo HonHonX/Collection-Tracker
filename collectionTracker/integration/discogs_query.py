@@ -23,8 +23,7 @@ d.set_token(DISCOGS_ACCESS_TOKEN, DISCOGS_ACCESS_SECRET)
 
 def format_string(string):
     """
-    Format the string by removing the [] and the l= and a= parts, handling additional formatting,
-    and removing round brackets with only numbers inside.
+    Format the string by removing the formatting logic specifig to Discogs.
 
     Args:
         string (str): The original string.
@@ -40,7 +39,7 @@ def format_string(string):
     formatted_string = re.sub(r'\[/b\]', '', formatted_string)
 
     # Remove the [l= and [a= parts and the surrounding brackets
-    formatted_string = re.sub(r'\[a=', '', formatted_string)
+    formatted_string = re.sub(r'\[a=|\[l=', '', formatted_string)
 
     # Remove sentences containing [] brackets
     formatted_string = re.sub(r'under \[[a-zA-Z0-9]+\]', '', formatted_string)
@@ -110,23 +109,23 @@ def update_artist_from_discogs_url(artist, discogs_url):
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
-def fetch_basic_album_details(album_name, artist_name):
+def fetch_basic_album_details(album_id):
     """
     Fetch basic album details from Discogs API.
     
     Args:
-        album_name (str): The name of the album.
-        artist_name (str): The name of the artist.
+        album_id(str): Spotify album ID.
     
     Returns:
         dict: A dictionary containing basic album details.
     """
+    album = Album.objects.get(id=album_id)
     try:
-        # print(f"Fetching basic album details for {album_name}")
-        results = d.search(album_name, type='release', per_page=15, page=1, artist=artist_name)
+        print(f"Fetching basic album details for {album.name}")
+        results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
         if results:
             album = results[0]
-            # print(f"Album found: {album.title}")
+            print(f"Album found: {album.title}")  
             album_details = {
                 'discogs_id': album.id,
                 'genres': album.genres,
