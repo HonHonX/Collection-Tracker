@@ -28,9 +28,9 @@ class ArtistAdmin(admin.ModelAdmin):
 # Register the Album model with custom configuration
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'album_type', 'release_date', 'artist')  # Include artist in the display
-    search_fields = ('name', 'album_type')  # Allow searching by name and album type
-    list_filter = ('album_type',)  # Optionally, filter by album type
+    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price', 'current_price', 'highest_price')  # Include new fields
+    search_fields = ('name', 'album_type', 'discogs_id')  # Allow searching by name, album type, and Discogs ID
+    list_filter = ('album_type', 'release_date')  # Optionally, filter by album type and release date
 
 # Register the UserAlbumCollection model with custom configuration
 @admin.register(UserAlbumCollection)
