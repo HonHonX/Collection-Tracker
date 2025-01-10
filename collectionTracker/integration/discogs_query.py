@@ -77,20 +77,6 @@ def get_more_artist_data(artist_id, artist_name):
                 'urls': [str(url) for url in artist.urls],  # Save as list
             }
 
-            # # Save the artist details to the database
-            # with transaction.atomic():  # Use atomic transaction for data consistency
-            #     artist_instance, created = Artist.objects.get_or_create(id=artist_id, defaults={
-            #         'name': artist_name,
-            #         'photo_url': '',
-            #         'popularity': 0,
-            #     })
-            #     artist_instance.discogs_id = artist_details['discogs_id']
-            #     artist_instance.profile = artist_details['profile']
-            #     artist_instance.aliases = artist_details['aliases']
-            #     artist_instance.members = artist_details['members']
-            #     artist_instance.urls = artist_details['urls']
-            #     artist_instance.save()
-
             # Cache the result for 1 hour
             cache.set(cache_key, artist_details, timeout=3600)  # Cache for 1 hour
 
@@ -114,10 +100,10 @@ def update_artist_from_discogs_url(artist, discogs_url):
         try:
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
-            artist.profile = format_string(discogs_artist.profile)  # Format the profile string
-            artist.aliases = [alias.name for alias in discogs_artist.aliases]  # Save as list
-            artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
-            artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
+            artist.profile = format_string(discogs_artist.profile) if discogs_artist.profile else ''  # Format the profile string
+            artist.aliases = [alias.name for alias in discogs_artist.aliases] if discogs_artist.aliases else []  # Save as list
+            artist.members = [format_string(member.name) for member in discogs_artist.members] if discogs_artist.members else []  # Save as list and format
+            artist.urls = [str(url) for url in discogs_artist.urls] if discogs_artist.urls else []  # Ensure URLs are strings
             artist.save()
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
@@ -141,10 +127,11 @@ def fetch_basic_album_details(album_name, artist_name):
             print(f"Album found: {album.title}")
             album_details = {
                 'discogs_id': album.id,
-                'genres': album.genres,
-                'styles': album.styles,
-                'labels': [label.name for label in album.labels],
+                'genres': album.genres if hasattr(album, 'genres') else [],
+                'styles': album.styles if hasattr(album, 'styles') else [],
+                'labels': [label.name for label in album.labels] if hasattr(album, 'labels') else [],
             }
+            
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")
@@ -166,7 +153,7 @@ def fetch_album_tracklist_and_formats(discogs_id):
         album = d.release(discogs_id)
         tracklist_and_formats = {
             'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
-            'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
+            #'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
         }
         return tracklist_and_formats
     except Exception as e:
@@ -183,6 +170,28 @@ def save_basic_album_details(artist_id):
         album_instance.genres = more_album_data.get('genres', [])
         album_instance.styles = more_album_data.get('styles', [])
         album_instance.labels = more_album_data.get('labels', [])
+        # album_instance.lowest_price = more_album_data.get('lowest_price', 0)
         album_instance.save()
     # Refresh the artist object to get the updated data
     album_instance.refresh_from_db()
+
+
+def save_additional_album_details(album_id):
+    try:
+        album_results = Album.objects.filter(album_id=album_id)
+        if not album_results:
+            raise ValueError(f"No album found with id {album_id}")
+        
+        album_instance = album_results[0]
+        discogs_id = album_instance.discogs_id
+
+        if discogs_id:
+            more_album_data = fetch_album_tracklist_and_formats(discogs_id)
+            album_instance.tracklist = more_album_data.get('tracklist', [])
+            #album_instance.formats = more_album_data.get('formats', [])
+            album_instance.save()
+            # Refresh the artist object to get the updated data
+            album_instance.refresh_from_db()
+
+    except Exception as e:
+        print(f"An error occurred while saving additional album details: {e}")
