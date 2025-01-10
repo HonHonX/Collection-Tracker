@@ -11,6 +11,9 @@
 
 {% block maincontent %}
     <div class="album-detail">
+        <a href="{% url 'artist_overview' album.artist.name %}">
+            <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
+        </a>
         {% if album.image_url %}
             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
         {% endif %}
@@ -90,7 +93,7 @@
         <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
             {% csrf_token %}
             <label for="description">
-                <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon">
+                <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon"> 
             </label>
 
             <!-- Display the user's description if it exists -->

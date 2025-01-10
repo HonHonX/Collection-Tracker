@@ -26,7 +26,7 @@ class Genre(models.Model):
         """Return a list of album IDs associated with this genre."""
         return Album.objects.filter(artist__genres=self).values_list('id', flat=True)
 
-class Artist(models.Model):
+class Artist(models.Model): 
     """Model representing a music artist."""
     id = models.CharField(max_length=50, primary_key=True, default=0) 
     name = models.CharField(max_length=100)
@@ -34,12 +34,12 @@ class Artist(models.Model):
     genres = models.ManyToManyField(Genre, related_name='artists')
     popularity = models.IntegerField(default=0)
 
-    #Attributes provided by discogs
+    # Attributes provided by discogs
     discogs_id = models.IntegerField(blank=True, null=True)
     profile = CharField(max_length=1000, blank=True, null=True)
-    aliases = models.TextField(blank=True, null=True)
-    members = models.TextField(blank=True, null=True)
-    urls = models.TextField(blank=True, null=True)
+    aliases = JSONField(default=list, blank=True)  # Store as JSON field
+    members = JSONField(default=list, blank=True)  # Store as JSON field
+    urls = JSONField(default=list, blank=True)  # Store as JSON field
     
     def __str__(self): 
         return f"{self.name} - ID: {self.id}, Discogs: {self.discogs_id}, Profile: {self.profile} " 
@@ -50,22 +50,22 @@ class Artist(models.Model):
         self.genres.set(genres)
 
     def set_aliases(self, aliases):
-        self.aliases = json.dumps(aliases)
+        self.aliases = aliases
 
     def get_aliases(self):
-        return json.loads(self.aliases) if self.aliases else []
+        return self.aliases if self.aliases else []
 
     def set_members(self, members):
-        self.members = json.dumps(members)
+        self.members = members
 
     def get_members(self):
-        return json.loads(self.members) if self.members else []
+        return self.members if self.members else []
 
     def set_urls(self, urls):
-        self.urls = json.dumps(urls)
+        self.urls = urls
 
     def get_urls(self):
-        return json.loads(self.urls) if self.urls else []
+        return self.urls if self.urls else []
 
 class Album(models.Model):
     """Model representing a music album."""

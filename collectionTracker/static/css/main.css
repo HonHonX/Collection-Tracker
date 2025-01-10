@@ -11,5 +11,6 @@
 @import url('components/album_artist.css');
 @import url('components/progress_counter.css');
 @import url('components/notification.css');
+@import url('components/gauge.css');
 
 @import url('themes/dark_mode.css');

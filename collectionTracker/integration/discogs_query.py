@@ -4,7 +4,7 @@ from django.core.cache import cache
 from django.db import transaction
 from collection.models import Artist, Album
 import bleach
-import re  # Add this import
+import re
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
@@ -21,6 +21,31 @@ d = discogs_client.Client(
 )
 d.set_token(DISCOGS_ACCESS_TOKEN, DISCOGS_ACCESS_SECRET)
 
+def format_string(string):
+    """
+    Format the string by removing the [] and the l= and a= parts, handling additional formatting,
+    and removing round brackets with only numbers inside.
+
+    Args:
+        string (str): The original string.
+
+    Returns:
+        str: The formatted string.
+    """
+    # Remove round brackets with only numbers inside
+    formatted_string = re.sub(r'\(\d+\)', '', string)
+    
+    # Replace [b] and [/b] with <strong> and </strong>
+    formatted_string = re.sub(r'\[b\]', '', formatted_string)
+    formatted_string = re.sub(r'\[/b\]', '', formatted_string)
+
+    # Remove the [m= parts and the surrounding brackets, replacing with "their album"
+    formatted_string = re.sub(r'\[m=\d+\]', 'release X', formatted_string)
+
+    # Remove the [l= and [a= parts and the surrounding brackets
+    formatted_string = re.sub(r'\[l=|\[a=|\]', '', formatted_string)
+    
+    return formatted_string
 
 def get_more_artist_data(artist_id, artist_name, user):
     """
@@ -44,10 +69,12 @@ def get_more_artist_data(artist_id, artist_name, user):
         results = d.search(artist_name, type='artist', per_page=15, page=1, exact=True)
         if results:
             artist = results[0]
-            print(list(results))
             artist_details = {
                 'discogs_id': artist.id,
-                'profile': artist.profile,
+                'profile': format_string(artist.profile),  # Format the profile string
+                'aliases': [alias.name for alias in artist.aliases],  # Save as list
+                'members': [format_string(member.name) for member in artist.members],  # Save as list and format
+                'urls': [str(url) for url in artist.urls],  # Save as list
             }
 
             # Save the artist details to the database
@@ -59,6 +86,9 @@ def get_more_artist_data(artist_id, artist_name, user):
                 })
                 artist_instance.discogs_id = artist_details['discogs_id']
                 artist_instance.profile = artist_details['profile']
+                artist_instance.aliases = artist_details['aliases']
+                artist_instance.members = artist_details['members']
+                artist_instance.urls = artist_details['urls']
                 artist_instance.save()
 
             # Cache the result for 1 hour
@@ -84,7 +114,10 @@ def update_artist_from_discogs_url(artist, discogs_url):
         try:
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
-            artist.profile = discogs_artist.profile
+            artist.profile = format_string(discogs_artist.profile)  # Format the profile string
+            artist.aliases = [alias.name for alias in discogs_artist.aliases]  # Save as list
+            artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
+            artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
             artist.save()
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")

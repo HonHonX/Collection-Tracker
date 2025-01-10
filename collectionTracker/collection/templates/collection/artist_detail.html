@@ -6,28 +6,81 @@
 {% endblock %}
 
 {% block site_specific_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/apps/tracker/artist_overview.css' %}" type="text/css"> -->
+    <link rel="stylesheet" href="{% static 'css/apps/collection/artist_detail.css' %}" type="text/css">
 {% endblock %}
 
 {% block maincontent %}
-    <a href="{% url 'artist_overview' artist.name %}">Back to {{ artist.name }}'s Overview</a>
-    <h1>Get to know {{ artist.name }}</h1>
+    <a href="{% url 'artist_overview' artist.name %}">
+        <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
+    </a>
 
-    <div id="discogs">
-        <p>Wrong {{ artist.name }}? Please enter the Discog Profile url and help to improve our database!</p>
-        <a href="https://www.discogs.com/de/search?q={{ artist.name }}&type=artist" target="_blank">Discogs search for {{ artist.name }} </a>
-        <form method="post" id="discogs-form">
-            {% csrf_token %}
-            <input type="text" name="discogs_url" id="discogs_url" placeholder="Discogs Profile URL">
-            <button type="submit" class="button">Submit</button>
-        </form>
-    </div>
+    <div id="artist-information">
+        <div class="column-left">
 
-    <div id="artist-bio">
-        <h2>Bio</h2>
-        <p>{{ artist.profile }}</p>
+            <h1>Get to know {{ artist.name }}</h1>
+            {% if artist.aliases %}
+                also known as {{ artist.aliases|join:", " }}
+            {% endif %}
+
+            <div id="artist-bio">
+                <h2>About</h2>
+                <p>{{ artist.profile }}</p>
+        
+                {% if artist.members %}
+                    <h2>Members</h2>
+                    <p>{{ artist.members|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div id="link">
+                <h2>Web</h2>
+                <ul class="link-list">
+                    {% for url in artist.urls %}
+                        <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div> 
+
+        <div class="column-right">
+            {% if artist.photo_url %}
+                <img id="search-artist-photo" src="{{ artist.photo_url }}" alt="{{ artist.name }}'s photo">
+            {% endif %}
+
+            <div id="spacer-1"></div>
+            
+            <div class="popularity-gauge">
+                <div class="gauge">
+                    <div class="gauge-fill" id="gauge-fill" data-popularity-value="{{ artist.popularity }}"></div>
+                    <div class="gauge-text" id="gauge-text">Popularity: {{ artist.popularity  }}/100</div>
+                </div>
+            </div>
+
+            {% if artist_info.genres %}
+                <p>Genres: {{ artist.genres|join:", " }}</p>
+            {% endif %}
+
+            <div id="spacer-1"></div> 
+            
+            <div class="discogs">
+                <div id="wrong-info">
+                    <img src="{% static 'icons/question.svg' %}" alt="Question" class="icon">
+                    <p>Wrong or missing data for {{ artist.name }}?</p>
+                </div>
+
+                <p>Please enter the Discog Profile url for {{ artist.name }} and help to improve our database!</p>
+                <a href="https://www.discogs.com/de/search?q={{ artist.name }}&type=artist" target="_blank">Discogs search for {{ artist.name }} </a>
+                <form method="post" id="discogs-form">
+                    {% csrf_token %}
+                    <input type="text" name="discogs_url" id="discogs_url" placeholder="https://www.discogs.com/de/artist/{{ artist.discogs_id }}" required>
+                    <button type="submit" class="button">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
+    
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'js/gauge.js' %}"></script>
 {% endblock %}

@@ -100,6 +100,9 @@ def get_artist_data(artist_name, user):
                     more_artist_data = get_more_artist_data(artist_info['id'],artist_info['name'], user)
                     artist.discogs_id = more_artist_data.get('discogs_id')
                     artist.profile = more_artist_data.get('profile')
+                    artist.aliases = more_artist_data.get('aliases')
+                    artist.members = more_artist_data.get('members')
+                    artist.urls = more_artist_data.get('urls')
                     artist.save()
                     # Refresh the artist object to get the updated data
                     artist.refresh_from_db()

@@ -37,20 +37,19 @@
                 <div id="spacer-1"></div>
 
                 <h1>{{ artist_name }}</h1>
-                
+
+                <div class="popularity-gauge">
+                    <div class="gauge">
+                        <div class="gauge-fill" id="gauge-fill" data-popularity-value="{{ artist_info.popularity }}"></div>
+                        <div class="gauge-text" id="gauge-text">Popularity: {{ artist_info.popularity  }}/100</div>
+                    </div>
+                </div>
+
                 {% if artist_info.genres %}
                     <p>Genres: {{ artist_info.genres|join:", " }}</p>
                 {% endif %}
 
-                <p>Popularity: {{ artist_info.popularity }} / 100 </p>
                 <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
-
-                {% if artist.profile %}
-                    <div class="artist-bio">
-                        <h2>Bio</h2>
-                        <p>{{ artist.profile }}</p>
-                    </div>
-                {% endif %}
 
                 <div id="spacer-1"></div>
 
@@ -169,6 +168,7 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'js/gauge.js' %}"></script>
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
