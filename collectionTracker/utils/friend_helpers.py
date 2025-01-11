@@ -42,7 +42,24 @@ def send_invitation_email(friend, request):
     recipient_list = [friend.friend_email]
     send_email(subject, message, recipient_list)
 
-def send_friend_request_email(friend, request):
+def add_guest_friend(form, user, request):
+    """
+    Processes the addition of a guest friend. 
+    If the friend you want to add is not a registered user, 
+    they'll get a friend request in addition to an inviation to join the app.
+
+    Args:
+        form (FriendForm): The friend form.
+        user (User): The current user.
+        request (HttpRequest): The HTTP request object.
+    """
+    friend = form.save(commit=False)
+    friend.user = user
+    friend.status = 'guest'
+    friend.save()
+    send_invitation_email(friend, request)
+
+def send_friend_request_email(friend, user, request):
     """
     Sends a friend request confirmation email.
 
@@ -52,8 +69,8 @@ def send_friend_request_email(friend, request):
     """
     base_url = 'https://wtcollectiontracker.eu.pythonanywhere.com'
     subject = 'Friend Request Confirmation'
-    message = f'Hi {friend.friend_email},\n\nYou have received a friend request from {friend.user.username}. Please click the link below to confirm the request:\n\n{base_url}/friends/confirm/{friend.friend_email}/{friend.user.username}/\n\nThank you!'
-    recipient_list = [friend.friend_email]
+    message = f'Hi {friend.username},\n\nYou have received a friend request from {user.username}. Please click the link below to confirm the request:\n\n{base_url}/friends/confirm/{friend.email}/{user.username}/\n\nThank you!'
+    recipient_list = [friend.email]
     send_email(subject, message, recipient_list)
 
 def remove_friend(user, friend_email):
@@ -74,23 +91,18 @@ def remove_friend(user, friend_email):
         friend_list = get_object_or_404(FriendList, user=user)
         friend_list.friends.remove(friend)
 
-def add_guest_friend(form, user, request):
+def are_friends(user, friend_user):
     """
-    Processes the addition of a guest friend. 
-    If the friend you want to add is not a registered user, 
-    they'll get a friend request in addition to an inviation to join the app.
+    Checks if two users are friends.
 
     Args:
-        form (FriendForm): The friend form.
-        user (User): The current user.
-        request (HttpRequest): The HTTP request object.
-    """
-    friend = form.save(commit=False)
-    friend.user = user
-    friend.status = 'guest'
-    friend.save()
-    send_invitation_email(friend, request)
+        user (User): The user object.
+        friend_user (User): The friend user object.
 
+    Returns:
+        bool: True if the users are friends, False otherwise.
+    """
+    return Friend.objects.filter(user=user, friend_email=friend_user.email, status='accepted').exists()
 
 def create_reciprocal_friend(user, friend_user, status='accepted'):
     """
@@ -109,17 +121,3 @@ def create_reciprocal_friend(user, friend_user, status='accepted'):
         reciprocal_friend = Friend(user=user, friend_email=friend_user.email, friend_name=friend_user.username, status=status)
         reciprocal_friend.save()
     return reciprocal_friend
-
-def are_friends(user, friend_user):
-    """
-    Checks if two users are friends.
-
-    Args:
-        user (User): The user object.
-        friend_user (User): The friend user object.
-
-    Returns:
-        bool: True if the users are friends, False otherwise.
-    """
-    return Friend.objects.filter(user=user, friend_email=friend_user.email, status='accepted').exists()
-

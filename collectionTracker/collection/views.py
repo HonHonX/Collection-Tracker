@@ -97,6 +97,7 @@ def artist_search(request):
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
+            print(f"Starting background task for artist {context['artist'].name} with ID: {context['artist'].id}")
             start_background_artist_update(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
