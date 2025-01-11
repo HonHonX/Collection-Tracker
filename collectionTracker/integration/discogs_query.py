@@ -3,9 +3,11 @@ import discogs_client
 from django.core.cache import cache
 from django.db import transaction
 from collection.models import Artist, Album
+from stats.models import DailyAlbumPrice
 import bleach
 import re
 from integration.exchangeRate_query import usd_to_eur, fetch_and_save_usd_to_eur
+from datetime import date
 
 
 # Retrieve application-level credentials from .env
@@ -39,6 +41,8 @@ def format_string(string):
     # Replace [b] and [/b] 
     formatted_string = re.sub(r'\[b\]', '', formatted_string)
     formatted_string = re.sub(r'\[/b\]', '', formatted_string)
+    formatted_string = re.sub(r'\[i\]', '', formatted_string)
+    formatted_string = re.sub(r'\[/i\]', '', formatted_string)
 
     # Remove the [l= and [a= parts and the surrounding brackets
     formatted_string = re.sub(r'\[a=|\[l=', '', formatted_string)
@@ -154,23 +158,28 @@ def fetch_album_price(album_id):
         dict: A dictionary containing basic album details.
     """
     album = Album.objects.get(id=album_id)
+    print(f"Album Name: {album.name}")
     try:
         results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
         if results:
-            album = results[0]
-            release = d.release(album.id)
+            album_result = results[0]
+            print(f"Album Result: {album_result}")
+            release = d.release(album_result.id)
             lowest_price_usd = release.fetch('lowest_price')
             lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
+            print(f"Lowest Price: {lowest_price_eur}")
+            discogs_id = release.id
+            print(f"Discogs ID: {discogs_id}")
+            print("---------------------------------")
 
             album_details = {
-                'discogs_id': album.id,
+                'discogs_id': discogs_id,
                 'lowest_price': lowest_price_eur,
-            }            
+            }
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")
     return {}
-
 
 def update_album_price(album_id):
     """
@@ -188,9 +197,19 @@ def update_album_price(album_id):
 
     try:
         album = Album.objects.get(id=album_id)
-        album.discogs_id = album_details['discogs_id']
+        if album.discogs_id is None:
+            album.discogs_id = album_details['discogs_id']
         album.lowest_price = album_details['lowest_price']
         album.save()
+
+        # Create a new entry for DailyAlbumPrice
+        daily_price = DailyAlbumPrice(
+            album=album,
+            date=date.today(),
+            price=album_details['lowest_price']
+        )
+        daily_price.save()
+
         return True
     except Exception as e:
         print(f"Error updating album details: {e}")

@@ -85,6 +85,7 @@
                         </div>
 
                         <div class="friend-controls">
+                            {% if friend.status == 'accepted' %}
                             <a id="see-wishlist" href="{% url 'friend_wishlist' friend.friend_name %}">
                                 <img class="icon" src="{% static 'icons/wishlist.svg' %}">
                             </a>
@@ -92,7 +93,7 @@
                             <a id="see-collection" href="{% url 'friend_collection' friend.friend_name %}">
                                 <img class="icon" src="{% static 'icons/collection.svg' %}">
                             </a>
-
+                            {% endif %}
                             <form method="post" action="{% url 'friends_view' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="friend_email" value="{{ friend.friend_email }}">

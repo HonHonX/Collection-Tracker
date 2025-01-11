@@ -75,7 +75,7 @@ def calculate_top_friends(user):
         useralbumcollection__album__useralbumcollection__user=user
     ).annotate(
         common_albums=Count('useralbumcollection__album', filter=Q(useralbumcollection__album__useralbumcollection__user=user))
-    ).exclude(id=user.id).order_by('-common_albums')[:3]
+    ).exclude(id=user.id).order_by('-common_albums')[:1]
 
     for friend in top_friends:
         friend.common_album_ids = UserAlbumCollection.objects.filter(
