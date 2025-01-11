@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.db.models import JSONField
+from django.db.models import JSONField, CharField
+from django.contrib.postgres.fields import ArrayField
+import json
+from django.utils.formats import number_format
 
 class Genre(models.Model):
     """Model representing a music genre."""
@@ -24,16 +27,23 @@ class Genre(models.Model):
         """Return a list of album IDs associated with this genre."""
         return Album.objects.filter(artist__genres=self).values_list('id', flat=True)
 
-class Artist(models.Model):
+class Artist(models.Model): 
     """Model representing a music artist."""
     id = models.CharField(max_length=50, primary_key=True, default=0) 
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
     genres = models.ManyToManyField(Genre, related_name='artists')
     popularity = models.IntegerField(default=0)
+
+    # Attributes provided by discogs
+    discogs_id = models.IntegerField(blank=True, null=True)
+    profile = CharField(max_length=1000, default='N/A', blank=True, null=True)
+    aliases = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    members = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    urls = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     
     def __str__(self): 
-        return f"{self.name} - ID: {self.id} " 
+        return f"{self.name} - ID: {self.id}, Discogs: {self.discogs_id}, Profile: {self.profile} " 
 
     def set_genres(self, genre_names):
         """Set genres for the artist based on a list of genre names."""
@@ -49,8 +59,19 @@ class Album(models.Model):
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True)
 
+    # Attributes provided by Discogs
+    discogs_id = models.IntegerField(blank=True, null=True)
+    genres = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    styles = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    tracklist = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    labels = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
     def __str__(self):
         return self.name 
+
+    def formatted_lowest_price(self):
+        return f"€{number_format(self.lowest_price, decimal_pos=2)}"
 
 class UserAlbumDescription(models.Model):
     """Model representing a user's description of an album."""
@@ -77,7 +98,7 @@ class UserAlbumCollection(models.Model):
     substatus = models.CharField(
         max_length=25,
         choices=SUBSTATUS, 
-        default='unspecified',
+        default='unspecified', 
     )
 
     class Meta:
@@ -165,5 +186,3 @@ class UserFollowedArtists(models.Model):
 
     def __str__(self):
         return f"{self.user.username} follows {self.artist.name}"
-
-

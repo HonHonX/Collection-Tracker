@@ -13,7 +13,6 @@ urlpatterns = [
     path('register/', register, name='register'), # for new users
     path('', views.redirect_view, name='redirect'),
     path('welcome/', views.welcome_view, name='welcome'),
-    path('profile/', user_profile, name='user_profile'),
     path('profile/', views.user_profile, name='user_profile'),
     path('profile/remove_image/', views.remove_profile_image, name='remove_profile_image'),
     path('change-personal-color-scheme/', views.change_personal_color_scheme, name='change_personal_color_scheme'),

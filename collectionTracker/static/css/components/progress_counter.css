@@ -55,6 +55,13 @@
 }
 
 .collection-progress,
+.wishlist-progress,
+.collection-and-wishlist-progress,
+.blacklist-progress {
+    transition: width 2s ease-out; /* Animation for the fill */
+}
+
+.collection-progress,
 .legend-collection {
     background-color: var(--accent100);
 }

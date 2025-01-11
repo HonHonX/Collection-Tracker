@@ -9,17 +9,22 @@
     display: flex;
     flex-direction: column;
     gap: var(--gapDistance);
-    padding: 0 1rem 1rem 0;
     align-self: start;
-    width: 25rem; /* Fixed width for album detail */
+    width: 20%; /* Fixed width for album detail */
 }
 
 .album-detail img.album-cover {
-    width: 100%; /* Ensure the image takes up the full width of the parent */
+    width: 75%; 
     aspect-ratio: 1 / 1;
     border-radius: var(--borderRadius);
     object-fit: cover;
     margin: 0 auto;
+}
+
+.album-detail img.album-cover:hover {
+    hover: none;
+    cursor: auto;
+    transform: none;
 }
 
 .album-detail h1 {
@@ -35,11 +40,13 @@
 }
 
 .custom-detail {
+    display: flex;
+    flex-direction: column;
     background-color: var(--neutral90);
     padding: 2rem;
     flex: 1; /* Ensure it takes the remaining space */
     border-radius: var(--borderRadius);
-    gap: 1rem;
+    gap: var(--gapBigBlocks);
     width: 100%;
 }
 
@@ -56,7 +63,6 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: var(--gapDistance);
-    margin: 0 0 3.75rem 0;
 }
 
 .album-status button{
@@ -82,7 +88,6 @@ textarea {
     flex-direction: row;
     gap: var(--gapDistance);
     align-items: center;
-    margin: auto 0;
     flex-wrap: wrap;
 }
 
@@ -104,3 +109,43 @@ textarea {
     width: auto; /* Let the section take the width it needs */
 }
 
+.album-tracklist {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: var(--gapDistance);
+    font-size: 0.8rem;
+}
+
+.album-tracklist th {
+    text-align: left;
+}
+
+.spotify-player {
+    width: 100%;
+    height: auto;  
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    align-items: flex-start;
+}
+
+#spotify-player {
+    width: 100%; !important;
+    height: 5rem; !important;
+    border-radius: var(--borderRadius);
+}
+
+.bottom-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapBigBlocks);
+}
+
+.price-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance);
+    width: 60%;
+    height: 100%;
+}

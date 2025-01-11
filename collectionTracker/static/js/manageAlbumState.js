@@ -102,9 +102,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const isWishlistPage = currentPage.includes('wishlist');
         const isBlacklistPage = currentPage.includes('blacklist');
 
-        if (isInList && !confirm(`Are you sure you want to remove this album from your ${listType}?`)) {
-            return;
-        }
+        // if (isInList && !confirm(`Are you sure you want to remove this album from your ${listType}?`)) {
+        //     return;
+        // }
 
         try {
             const response = await fetch(url, {

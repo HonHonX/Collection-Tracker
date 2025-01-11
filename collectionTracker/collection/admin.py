@@ -20,16 +20,26 @@ class GenreAdmin(admin.ModelAdmin):
 # Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'popularity')  # Display ID, name, and popularity
-    search_fields = ('name',)  # Allow searching by artist's name 
+    list_display = ('name', 'id', 'photo_url', 'popularity', 'discogs_id', 'profile')  # Display name, ID, photo URL, popularity, Discogs ID, and profile
+    search_fields = ('name', 'id', 'discogs_id')  # Allow searching by name, ID, and Discogs ID
     filter_horizontal = ('genres',)  # Add genres to the admin panel
+    readonly_fields = ('aliases', 'members', 'urls')  # Make aliases, members, and URLs readonly
 
 # Register the Album model with custom configuration
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'album_type', 'release_date', 'artist')  # Include artist in the display
-    search_fields = ('name', 'album_type')  # Allow searching by name and album type
-    list_filter = ('album_type',)  # Optionally, filter by album type
+    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price')  # Include new fields
+    search_fields = ('name', 'album_type', 'discogs_id')  # Allow searching by name, album type, and Discogs ID
+    list_filter = ('album_type', 'release_date')  # Optionally, filter by album type and release date
+    readonly_fields = ('id',)
+    fieldsets = (
+        (None, {
+            'fields': ('id', 'name', 'artist', 'release_date', 'album_type', 'image_url')
+        }),
+        ('Discogs Data', {
+            'fields': ('discogs_id', 'genres', 'styles', 'tracklist', 'labels', 'lowest_price')
+        }),
+    )
 
 # Register the UserAlbumCollection model with custom configuration
 @admin.register(UserAlbumCollection)

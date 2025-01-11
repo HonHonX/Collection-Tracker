@@ -20,7 +20,7 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 # Create your views here.
 
 # View for searching artist and displaying albums
-def get_artist_data(artist_name, user):
+def get_artist_data(artist_name, user): 
     albums = []
     error = None
     artist_photo_url = None
