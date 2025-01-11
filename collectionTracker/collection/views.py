@@ -6,12 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url
+from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
-from .tasks import save_album_details_in_background, start_background_task
+from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
 import logging
+from stats.models import DailyAlbumPrice
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +97,7 @@ def artist_search(request):
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
-            start_background_task(context['artist'].id)
+            start_background_artist_update(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
             return response
@@ -105,7 +107,7 @@ def artist_search(request):
     return render(request, 'collection/artist_search.html')
 
 def artist_overview(request, artist_name):
-    """
+    """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
     
@@ -120,7 +122,7 @@ def artist_overview(request, artist_name):
         context = get_artist_data(artist_name, request.user) 
         context['artist_profile'] = context['artist'].profile
         context['discogs_id'] = context['artist'].discogs_id  # Add discogs_id to context
-        print(f"Artist Profile: {context['artist_profile']}, Discogs ID: {context['discogs_id']}")
+
         return render(request, 'collection/artist_overview.html', context)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -145,15 +147,10 @@ def follow_artist(request):
             # Parse the JSON data from the request body
             data = json.loads(request.body)
             user = request.user
-            artist_id = data.get('artist_id')            
+            artist_id = data.get('artist_id')
 
-            # Check if the artist already exists in the database
-            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
-                'name': data.get('artist_name'),
-                'genres': data.get('artist_genres', []),
-                'popularity': int(data.get('artist_popularity', 0)),
-                'photo_url': data.get('artist_photo_url', '')
-            })
+            # Retrieve the artist from the database
+            artist = Artist.objects.get(id=artist_id)
 
             # Check if the user already follows the artist
             follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
@@ -165,13 +162,14 @@ def follow_artist(request):
             else:
                 # If the user does not follow the artist, follow the artist
                 return JsonResponse({'success': True, 'message': 'Artist followed.'})
-
+        except Artist.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Artist does not exist.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON data.'})
         except Exception as e:
-            # Return a JSON response with the error message if an exception occurs
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-    # Return an error response if the request method is not POST
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
+            return JsonResponse({'success': False, 'message': str(e)})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required
 def list_overview(request, list_type):
@@ -296,13 +294,31 @@ class AlbumDetail(View):
         
         try:
             album = get_object_or_404(Album, id=album_id)
+            if album:
+                album_data = fetch_basic_album_details(album.id)       
+                album.discogs_id = album_data.get('discogs_id')
+                # album.discogs_master_id = album_data.get('master_id')
+                album.genres = album_data.get('genres')
+                album.styles = album_data.get('styles')
+                album.labels = album_data.get('labels')
+                album.tracklist = album_data.get('tracklist')
+                album.lowest_price = album_data.get('lowest_price')
+                album.save()
+
+                # Create DailyAlbumPrice entry if it doesn't exist
+                if album.lowest_price:
+                    DailyAlbumPrice.objects.get_or_create(
+                        album=album,
+                        date=timezone.now().date(),
+                        defaults={'price': album.lowest_price}
+                    )
+
             collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
             wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
 
             context = {
                 'album': album,
-                'artist': album.artist,
                 'collection_entry': collection_entry,
                 'wishlist_entry': wishlist_entry,
                 'in_collection': bool(collection_entry),

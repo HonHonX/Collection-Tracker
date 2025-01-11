@@ -24,21 +24,23 @@
 
             <div id="artist-bio">
                 <h2>About</h2>
-                <p>{{ artist.profile }}</p>
+                {{ artist.profile }}
         
                 {% if artist.members %}
                     <h2>Members</h2>
-                    <p>{{ artist.members|join:", " }}</p>
+                    {{ artist.members|join:", " }}
                 {% endif %}
             </div>
 
             <div id="link">
-                <h2>Web</h2>
-                <ul class="link-list">
-                    {% for url in artist.urls %}
-                        <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
-                    {% endfor %}
-                </ul>
+                {% if artist.urls %}
+                    <h2>Web</h2>
+                    <ul class="link-list">
+                        {% for url in artist.urls %}
+                            <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
         </div> 
 

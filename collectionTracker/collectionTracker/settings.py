@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'stats',
     'users',
     'background_task',
-     
 ]
 
 MIDDLEWARE = [

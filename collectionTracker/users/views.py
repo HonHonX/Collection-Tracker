@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from stats.models import Badge, UserBadge
 from users.models import Profile, UserProfile
 from .forms import RegisterForm, ProfileImageForm
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -73,7 +74,8 @@ def user_profile(request):
     """
     profile, created = Profile.objects.get_or_create(user=request.user)
     badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge').order_by('awarded_date')}
-    all_badges = Badge.objects.all()
+    user_artists = request.user.useralbumcollection_set.values_list('album__artist', flat=True)
+    all_badges = Badge.objects.filter(Q(associated_artist__isnull=True) | Q(associated_artist__in=user_artists))
     if request.method == 'POST':
         form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -82,7 +84,7 @@ def user_profile(request):
             image = form.cleaned_data['image']
             image.name = f"{request.user.username}_{image.name}"
             profile.image = image
-            profile.save()
+            profile.save() 
             return redirect('user_profile')
     else:
         form = ProfileImageForm()

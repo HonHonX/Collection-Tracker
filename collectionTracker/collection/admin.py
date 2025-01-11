@@ -28,7 +28,7 @@ class ArtistAdmin(admin.ModelAdmin):
 # Register the Album model with custom configuration
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price', 'current_price', 'highest_price')  # Include new fields
+    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price')  # Include new fields
     search_fields = ('name', 'album_type', 'discogs_id')  # Allow searching by name, album type, and Discogs ID
     list_filter = ('album_type', 'release_date')  # Optionally, filter by album type and release date
     readonly_fields = ('id',)
@@ -37,7 +37,7 @@ class AlbumAdmin(admin.ModelAdmin):
             'fields': ('id', 'name', 'artist', 'release_date', 'album_type', 'image_url')
         }),
         ('Discogs Data', {
-            'fields': ('discogs_id', 'genres', 'styles', 'tracklist', 'labels', 'formats', 'lowest_price', 'current_price', 'highest_price')
+            'fields': ('discogs_id', 'genres', 'styles', 'tracklist', 'labels', 'lowest_price')
         }),
     )
 

@@ -5,6 +5,8 @@ from django.db import transaction
 from collection.models import Artist, Album
 import bleach
 import re
+from integration.exchangeRate_query import usd_to_eur, fetch_and_save_usd_to_eur
+
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
@@ -23,8 +25,7 @@ d.set_token(DISCOGS_ACCESS_TOKEN, DISCOGS_ACCESS_SECRET)
 
 def format_string(string):
     """
-    Format the string by removing the [] and the l= and a= parts, handling additional formatting,
-    and removing round brackets with only numbers inside.
+    Format the string by removing the formatting logic specifig to Discogs.
 
     Args:
         string (str): The original string.
@@ -35,19 +36,21 @@ def format_string(string):
     # Remove round brackets with only numbers inside
     formatted_string = re.sub(r'\(\d+\)', '', string)
     
-    # Replace [b] and [/b] with <strong> and </strong>
+    # Replace [b] and [/b] 
     formatted_string = re.sub(r'\[b\]', '', formatted_string)
     formatted_string = re.sub(r'\[/b\]', '', formatted_string)
 
-    # Remove the [m= parts and the surrounding brackets, replacing with "their album"
-    formatted_string = re.sub(r'\[m=\d+\]', 'release X', formatted_string)
-
     # Remove the [l= and [a= parts and the surrounding brackets
-    formatted_string = re.sub(r'\[l=|\[a=|\]', '', formatted_string)
-    
+    formatted_string = re.sub(r'\[a=|\[l=', '', formatted_string)
+
+    # Remove sentences containing [] brackets
+    formatted_string = re.sub(r'under \[[a-zA-Z0-9]+\]', '', formatted_string)
+    formatted_string = re.sub(r'\.[^.]*\[[^\]]*\][^.]*\.', '. ', formatted_string)
+    formatted_string = re.sub(r'\]', '', formatted_string)
+
     return formatted_string
 
-def get_more_artist_data(artist_id, artist_name):
+def get_more_artist_data(artist_name):
     """
     Fetch additional artist data from Discogs API.
     
@@ -59,7 +62,7 @@ def get_more_artist_data(artist_id, artist_name):
     Returns:
         dict: A dictionary containing additional artist data.
     """
-    cache_key = f"artist_data_with_releases_{artist_name.lower().strip()}"
+    cache_key = f"artist_data_with_releases_{artist_name.lower().replace(' ', '_')}"
     cached_data = cache.get(cache_key)
     
     if (cached_data):
@@ -70,11 +73,11 @@ def get_more_artist_data(artist_id, artist_name):
         if (results):
             artist = results[0]
             artist_details = {
-                'discogs_id': artist.id,
-                'profile': format_string(artist.profile),  # Format the profile string
-                'aliases': [alias.name for alias in artist.aliases],  # Save as list
-                'members': [format_string(member.name) for member in artist.members],  # Save as list and format
-                'urls': [str(url) for url in artist.urls],  # Save as list
+                'discogs_id': getattr(artist, 'id', ''),
+                'profile': format_string(getattr(artist, 'profile', 'N/A')),  # Format the profile string
+                'aliases': [format_string(alias.name) for alias in getattr(artist, 'aliases', [])],  # Save as list
+                'members': [format_string(member.name) for member in getattr(artist, 'members', [])],  # Save as list and format
+                'urls': [str(url) for url in getattr(artist, 'urls', [])],  # Save as list
             }
 
             # Cache the result for 1 hour
@@ -100,51 +103,69 @@ def update_artist_from_discogs_url(artist, discogs_url):
         try:
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
+<<<<<<< HEAD
             artist.profile = format_string(discogs_artist.profile) if discogs_artist.profile else ''  # Format the profile string
             artist.aliases = [alias.name for alias in discogs_artist.aliases] if discogs_artist.aliases else []  # Save as list
             artist.members = [format_string(member.name) for member in discogs_artist.members] if discogs_artist.members else []  # Save as list and format
             artist.urls = [str(url) for url in discogs_artist.urls] if discogs_artist.urls else []  # Ensure URLs are strings
+=======
+            artist.profile = format_string(discogs_artist.profile)  # Format the profile string
+            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases]  # Save as list
+            artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
+            artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
+>>>>>>> 1ffbacfdc459f796394fc567f1bf793f59c8f2a5
             artist.save()
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
-def fetch_basic_album_details(album_name, artist_name):
+def fetch_basic_album_details(album_id):
     """
     Fetch basic album details from Discogs API.
     
     Args:
-        album_name (str): The name of the album.
-        artist_name (str): The name of the artist.
+        album_id(str): Spotify album ID.
     
     Returns:
         dict: A dictionary containing basic album details.
     """
+    album = Album.objects.get(id=album_id)
     try:
-        print(f"Fetching basic album details for {album_name}")
-        results = d.search(album_name, type='release', per_page=15, page=1, artist=artist_name)
+        results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
         if results:
             album = results[0]
-            print(f"Album found: {album.title}")
+            release = d.release(album.id)
+            lowest_price_usd = release.fetch('lowest_price')
+            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
+
             album_details = {
                 'discogs_id': album.id,
+<<<<<<< HEAD
                 'genres': album.genres if hasattr(album, 'genres') else [],
                 'styles': album.styles if hasattr(album, 'styles') else [],
                 'labels': [label.name for label in album.labels] if hasattr(album, 'labels') else [],
             }
             
+=======
+                'genres': album.genres,
+                'styles': album.styles,
+                'labels': [format_string(label.name) for label in album.labels],
+                'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
+                'lowest_price': lowest_price_eur,
+            }            
+>>>>>>> 1ffbacfdc459f796394fc567f1bf793f59c8f2a5
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")
     return {}
 
-
-def fetch_album_tracklist_and_formats(discogs_id):
-    """
-    Fetch tracklist and formats for an album from Discogs API.
+# def fetch_album_tracklist_and_formats(discogs_id):
+#     """
+#     Fetch tracklist and formats for an album from Discogs API.
     
-    Args:
-        discogs_id (int): The Discogs ID of the album.
+#     Args:
+#         discogs_id (int): The Discogs ID of the album.
     
+<<<<<<< HEAD
     Returns:
         dict: A dictionary containing the tracklist and formats of the album.
     """
@@ -195,3 +216,36 @@ def save_additional_album_details(album_id):
 
     except Exception as e:
         print(f"An error occurred while saving additional album details: {e}")
+=======
+#     Returns:
+#         dict: A dictionary containing the tracklist and formats of the album.
+#     """
+#     try:
+#         # print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
+#         album = d.release(discogs_id)
+#         tracklist_and_formats = {
+#             'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
+#             'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
+#         }
+#         return tracklist_and_formats
+#     except Exception as e:
+#         print(f"Error fetching tracklist and formats from Discogs: {e}")
+#     return {}
+
+# def save_basic_album_details(artist_id):
+#     album_results = Album.objects.filter(artist_id=artist_id)
+#     # print(album_results)
+#     if (album_results.count() == 0):
+#         print("No albums found")
+#         return
+#     for album_instance in album_results:
+#         more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
+#         # print(f"More album data: {more_album_data}")
+#         album_instance.discogs_id = more_album_data.get('discogs_id')
+#         album_instance.genres = more_album_data.get('genres', [])
+#         album_instance.styles = more_album_data.get('styles', [])
+#         album_instance.labels = more_album_data.get('labels', [])
+#         album_instance.save()
+#         # Refresh the artist object to get the updated data
+#         album_instance.refresh_from_db()
+>>>>>>> 1ffbacfdc459f796394fc567f1bf793f59c8f2a5

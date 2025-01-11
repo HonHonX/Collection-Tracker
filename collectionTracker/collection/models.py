@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.db.models import JSONField, CharField
 from django.contrib.postgres.fields import ArrayField
 import json
+from django.utils.formats import number_format
 
 class Genre(models.Model):
     """Model representing a music genre."""
@@ -36,10 +37,10 @@ class Artist(models.Model):
 
     # Attributes provided by discogs
     discogs_id = models.IntegerField(blank=True, null=True)
-    profile = CharField(max_length=1000, blank=True, null=True)
-    aliases = JSONField(default=list, blank=True)  # Store as JSON field
-    members = JSONField(default=list, blank=True)  # Store as JSON field
-    urls = JSONField(default=list, blank=True)  # Store as JSON field
+    profile = CharField(max_length=1000, default='N/A', blank=True, null=True)
+    aliases = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    members = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    urls = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     
     def __str__(self): 
         return f"{self.name} - ID: {self.id}, Discogs: {self.discogs_id}, Profile: {self.profile} " 
@@ -48,24 +49,6 @@ class Artist(models.Model):
         """Set genres for the artist based on a list of genre names."""
         genres = [Genre.objects.get_or_create(name=name)[0] for name in genre_names]
         self.genres.set(genres)
-
-    def set_aliases(self, aliases):
-        self.aliases = aliases
-
-    def get_aliases(self):
-        return self.aliases if self.aliases else []
-
-    def set_members(self, members):
-        self.members = members
-
-    def get_members(self):
-        return self.members if self.members else []
-
-    def set_urls(self, urls):
-        self.urls = urls
-
-    def get_urls(self):
-        return self.urls if self.urls else []
 
 class Album(models.Model):
     """Model representing a music album."""
@@ -78,17 +61,17 @@ class Album(models.Model):
 
     # Attributes provided by Discogs
     discogs_id = models.IntegerField(blank=True, null=True)
-    genres = JSONField(default=list, blank=True)  # Store as JSON field
-    styles = JSONField(default=list, blank=True)  # Store as JSON field
-    tracklist = JSONField(default=list, blank=True)  # Store as JSON field
-    labels = JSONField(default=list, blank=True)  # Store as JSON field
-    formats = JSONField(default=list, blank=True)  # Store as JSON field
+    genres = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    styles = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    tracklist = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    labels = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    current_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    highest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.name 
+
+    def formatted_lowest_price(self):
+        return f"€{number_format(self.lowest_price, decimal_pos=2)}"
 
 class UserAlbumDescription(models.Model):
     """Model representing a user's description of an album."""
@@ -115,7 +98,7 @@ class UserAlbumCollection(models.Model):
     substatus = models.CharField(
         max_length=25,
         choices=SUBSTATUS, 
-        default='unspecified',
+        default='unspecified', 
     )
 
     class Meta:
@@ -203,5 +186,3 @@ class UserFollowedArtists(models.Model):
 
     def __str__(self):
         return f"{self.user.username} follows {self.artist.name}"
-
-

@@ -141,7 +141,7 @@ def create_all_badges():
     for badge_info in badges:
         Badge.objects.get_or_create(name=badge_info["name"], defaults=badge_info)
 
-def get_or_create_badge(name, description, image_url, sub_icon_url=None):
+def get_or_create_badge(name, description, image_url, sub_icon_url=None, associated_artist=None):
     """
     Helper function to get or create a badge.
     
@@ -150,15 +150,21 @@ def get_or_create_badge(name, description, image_url, sub_icon_url=None):
         description (str): The description of the badge.
         image_url (str): The URL of the badge image.
         sub_icon_url (str, optional): The URL of the sub icon image. Defaults to None.
+        associated_artist (Artist, optional): The associated artist for the badge. Defaults to None.
     
     Returns:
         Badge: The badge instance.
     """
-    return Badge.objects.get_or_create(name=name, defaults={
-        'description': description,
-        'image_url': image_url,
-        'sub_icon_url': sub_icon_url
-    })
+    badge, created = Badge.objects.get_or_create(
+        name=name,
+        defaults={
+            'description': description,
+            'image_url': image_url,
+            'sub_icon_url': sub_icon_url,
+            'associated_artist': associated_artist
+        }
+    )
+    return badge, created
 
 def create_notification(user, user_badge):
     message = f"You've earned the '{user_badge.badge.name}' badge."
