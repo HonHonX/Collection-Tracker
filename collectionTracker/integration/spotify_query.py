@@ -9,6 +9,7 @@ from django.db import transaction
 from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists  # Import the model
 import json
 from integration.discogs_query import get_more_artist_data, fetch_basic_album_details
+from datetime import datetime
 
 # Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -18,7 +19,24 @@ client_secret = config('SPOTIFY_CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-
+# Helper function
+def convert_to_valid_date_format(date_value):
+    try:
+        if not date_value:
+            # If there is no release date at all, set year to 1900
+            valid_date = "1900-01-01"
+        elif len(date_value) == 4:
+            # If only a year is provided, set month and day to 01
+            valid_date = datetime.strptime(date_value, "%Y").strftime("%Y-01-01")
+        else:
+            # Assuming date_value is a string like "2018-12-31"
+            valid_date = datetime.strptime(date_value, "%Y-%m-%d").strftime("%Y-%m-%d")
+        return valid_date
+    except ValueError:
+        # Handle the case where the date_value is not in the expected format
+        print(f"Invalid date format for value: {date_value}")
+        return None        
+    
 # View for searching artist and displaying albums
 def get_artist_data(artist_name, user):
     albums, artist_info, user_album_ids, user_wishlist_ids, user_blacklist_ids, user_followed_artist_ids = [], {}, [], [], [], []
@@ -80,7 +98,7 @@ def get_artist_data(artist_name, user):
                         defaults={
                             'name': album['name'],
                             'album_type': album['album_type'],
-                            'release_date': album['release_date'],
+                            'release_date': convert_to_valid_date_format(album['release_date']),
                             'image_url': album['images'][0]['url'] if album['images'] else None,
                             'artist': artist,
                         }
