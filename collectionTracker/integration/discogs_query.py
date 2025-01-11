@@ -123,7 +123,6 @@ def fetch_basic_album_details(album_id):
     """
     album = Album.objects.get(id=album_id)
     try:
-        print(f"Fetching basic album details for {album.name}")
         results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
         if results:
             album = results[0]
@@ -138,10 +137,7 @@ def fetch_basic_album_details(album_id):
                 'labels': [format_string(label.name) for label in album.labels],
                 'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
                 'lowest_price': lowest_price_eur,
-            }
-
-            print(f"Basic album details: {album_details}")
-            
+            }            
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")

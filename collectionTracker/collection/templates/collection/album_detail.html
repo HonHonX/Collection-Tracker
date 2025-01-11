@@ -39,6 +39,11 @@
         {% if album.lowest_price %}
             <span><strong>Current lowest price:</strong> {{ album.lowest_price|floatformat:2 }} €</span>
         {% endif %}
+
+        <div class="spotify-player">
+            <iframe src="https://open.spotify.com/embed/album/{{ album.id }}"
+            id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </div>
         
     </div>
 
@@ -116,40 +121,49 @@
             <!-- Display the user's description if it exists -->
             {% csrf_token %}
             <textarea name="description" id="description">{{ user_description.description }}</textarea>           
-
             <button type="submit" id="save-button" class="button">Save Note</button>
         </form>
 
-        <div class="album-tracklist">
-            <div class="spotify-player">
-                <iframe src="https://open.spotify.com/embed/album/{{ album.id }}"
-                id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <div class="bottom-block">
+            <div class="album-tracklist">
+                {% if album.tracklist %}
+                <h2>Tracklist</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Title</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for track in album.tracklist %}
+                        <tr>
+                            <td>{{ track.position }}</td>
+                            <td>{{ track.title }}</td>
+                            <td>{{ track.duration }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
             </div>
-            {% if album.tracklist %}
-            <h2>Tracklist</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Title</th>
-                        <th>Duration</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for track in album.tracklist %}
-                    <tr>
-                        <td>{{ track.position }}</td>
-                        <td>{{ track.title }}</td>
-                        <td>{{ track.duration }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+            {% if album.lowest_price %}
+                <div class="price-stats">
+                    <h2>Price Changes</h2>
+                    <canvas id="price-chart" data-album-id="{{ album.id }}" data-url="{% url 'album_price_history' album.id %}"></canvas>
+                </div>
             {% endif %}
         </div>
+        
+        
 
 {% endblock %}
 
 {% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="{% static 'js/showPriceGraph.js' %}"></script>
     <script src="{% static 'js/albumDetail.js' %}"></script>
 {% endblock %}

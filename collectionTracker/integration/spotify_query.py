@@ -71,12 +71,6 @@ def get_artist_data(artist_name, user):
                 )
                 if created:
                     artist.set_genres(artist_info['genres'])
-                    # more_artist_data = get_more_artist_data(artist_info['id'], artist_info['name'])
-                    # artist.discogs_id = more_artist_data.get('discogs_id')
-                    # artist.profile = more_artist_data.get('profile')
-                    # artist.aliases = more_artist_data.get('aliases')
-                    # artist.members = more_artist_data.get('members')
-                    # artist.urls = more_artist_data.get('urls')
                     artist.save()
                     artist.refresh_from_db()
 
@@ -122,4 +116,4 @@ def get_artist_data(artist_name, user):
         'wishlist_count': wishlist_count,
         'blacklist_count': blacklist_count,
         'user_followed_artist_ids': user_followed_artist_ids,
-    }
+    } 

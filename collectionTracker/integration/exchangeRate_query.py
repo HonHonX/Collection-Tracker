@@ -40,6 +40,4 @@ def usd_to_eur(usd_amount):
 
     price = usd_amount * latest_rate if latest_rate else None
 
-    print(f"USD to EUR: {usd_amount} USD = {price} EUR")
-
     return price

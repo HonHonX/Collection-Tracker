@@ -18,6 +18,7 @@ from utils.stats_helpers import (
 )
 from stats.models import Notification
 from django.views.decorators.csrf import csrf_exempt
+from .models import DailyAlbumPrice
 
 logger = logging.getLogger(__name__)
 
@@ -154,3 +155,12 @@ def delete_notification(request, notification_id):
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
     notification.delete()
     return JsonResponse({'success': True})
+
+
+@login_required
+def album_price_history(request, album_id):
+    prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
+    print(f'Prices:{prices}')
+    data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
+    print(f'Data:{data}')
+    return JsonResponse(data, safe=False)

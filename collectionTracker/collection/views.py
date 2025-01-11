@@ -107,7 +107,7 @@ def artist_search(request):
     return render(request, 'collection/artist_search.html')
 
 def artist_overview(request, artist_name):
-    """
+    """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
     
@@ -122,7 +122,7 @@ def artist_overview(request, artist_name):
         context = get_artist_data(artist_name, request.user) 
         context['artist_profile'] = context['artist'].profile
         context['discogs_id'] = context['artist'].discogs_id  # Add discogs_id to context
-        print(f"Artist Profile: {context['artist_profile']}, Discogs ID: {context['discogs_id']}")
+
         return render(request, 'collection/artist_overview.html', context)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -295,8 +295,7 @@ class AlbumDetail(View):
         try:
             album = get_object_or_404(Album, id=album_id)
             if album:
-                album_data = fetch_basic_album_details(album.id)  
-                print(f"Album Data: {album_data}")         
+                album_data = fetch_basic_album_details(album.id)       
                 album.discogs_id = album_data.get('discogs_id')
                 # album.discogs_master_id = album_data.get('master_id')
                 album.genres = album_data.get('genres')

@@ -51,12 +51,29 @@
         </div>
 
         <div id="user-settings">
-            <div id="general-settings">
+            <div class="general-settings">
                 <h2>User Information</h2>
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>First Name:</strong> {{ user.first_name }}</p>
-                <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+                <p id="username">
+                    <strong>Username: </strong> {{ user.username }}
+                </p>
+                <p>
+                    <span><strong>Email: </strong> {{ user.email }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-mail" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
+                <p>
+                    <span><strong>First Name: </strong> {{ user.first_name }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-first-name" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
+                <p>
+                    <span><strong>Last Name: </strong> {{ user.last_name }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-last-name" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
             </div>
 
             <div class="color-scheme-settings">
