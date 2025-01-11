@@ -60,11 +60,10 @@ class Album(models.Model):
 
     # Attributes provided by Discogs
     discogs_id = models.IntegerField(blank=True, null=True)
-    genres = JSONField(default=list, blank=True)  # Store as JSON field
-    styles = JSONField(default=list, blank=True)  # Store as JSON field
-    tracklist = JSONField(default=list, blank=True)  # Store as JSON field
-    labels = JSONField(default=list, blank=True)  # Store as JSON field
-    formats = JSONField(default=list, blank=True)  # Store as JSON field
+    genres = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    styles = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    tracklist = JSONField(default=list, blank=True, null=True)  # Store as JSON field
+    labels = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):

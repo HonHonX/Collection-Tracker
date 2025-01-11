@@ -130,35 +130,35 @@ def fetch_basic_album_details(album_id):
                 'discogs_id': album.id,
                 'genres': album.genres,
                 'styles': album.styles,
-                'labels': [label.name for label in album.labels],
+                'labels': [format_string(label.name) for label in album.labels],
+                'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist]
             }
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")
     return {}
 
-
-def fetch_album_tracklist_and_formats(discogs_id):
-    """
-    Fetch tracklist and formats for an album from Discogs API.
+# def fetch_album_tracklist_and_formats(discogs_id):
+#     """
+#     Fetch tracklist and formats for an album from Discogs API.
     
-    Args:
-        discogs_id (int): The Discogs ID of the album.
+#     Args:
+#         discogs_id (int): The Discogs ID of the album.
     
-    Returns:
-        dict: A dictionary containing the tracklist and formats of the album.
-    """
-    try:
-        # print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
-        album = d.release(discogs_id)
-        tracklist_and_formats = {
-            'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
-            'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
-        }
-        return tracklist_and_formats
-    except Exception as e:
-        print(f"Error fetching tracklist and formats from Discogs: {e}")
-    return {}
+#     Returns:
+#         dict: A dictionary containing the tracklist and formats of the album.
+#     """
+#     try:
+#         # print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
+#         album = d.release(discogs_id)
+#         tracklist_and_formats = {
+#             'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
+#             'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
+#         }
+#         return tracklist_and_formats
+#     except Exception as e:
+#         print(f"Error fetching tracklist and formats from Discogs: {e}")
+#     return {}
 
 def save_basic_album_details(artist_id):
     album_results = Album.objects.filter(artist_id=artist_id)

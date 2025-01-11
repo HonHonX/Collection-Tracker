@@ -21,22 +21,35 @@
         <a href="{% url 'artist_overview' album.artist.name %}">
             <h2>{{ album.artist.name }}</h2>
         </a>
-        <p><strong>Release Date:</strong> {{ album.release_date }}</p>
-        <p><strong>Type:</strong> {{ album.album_type }}</p> 
+        <span><strong>Release Date:</strong> {{ album.release_date }}</span>
+        <span><strong>Type:</strong> {{ album.album_type }}</span>
+
+        {% if album.genres %}
+            <span><strong>Genres:</strong> {{ album.genres |join:", " }}</span>
+        {% endif %}
+
+        {% if album.styles %}
+            <span><strong>Styles:</strong> {{ album.styles |join:", " }}</span>
+        {% endif %}
+
+        {% if album.labels %}
+            <span><strong>Labels:</strong> {{ album.labels |join:", " }}</span>
+        {% endif %}
+        
     </div>
 
     <div class="custom-detail">
         <!-- Collection Status Section -->
         <div class="album-status">
             <div class="collection-status" 
-            data-album-id="{{ album.spotify_id }}" 
+            data-album-id="{{ album.id }}" 
             data-album-name="{{ album.name }}"
             data-album-type="{{ album.album_type }}" data-release-date="{{ album.release_date }}"
             data-image-url="{{ album.image_url }}"
-            data-artist-name="{{ artist_name }}"
+            data-artist-name="{{ album.artist.name }}"
             data-in-collection="{% if album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
-            data-in-collection-and-wishlist="{% if album.spotify_id in user_album_ids and album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}">
+            data-in-wishlist="{% if album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
+            data-in-collection-and-wishlist="{% if album.id in user_album_ids and album.id in user_wishlist_ids %}true{% else %}false{% endif %}">
                 <!-- Collection -->
                 <div class="collection">
                     {% if in_collection %}
@@ -102,7 +115,34 @@
 
             <button type="submit" id="save-button" class="button">Save Note</button>
         </form>
-    </div>
+
+        <div class="album-tracklist">
+            <div class="spotify-player">
+                <iframe src="https://open.spotify.com/embed/album/{{ album.id }}"
+                id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </div>
+            {% if album.tracklist %}
+            <h2>Tracklist</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Title</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for track in album.tracklist %}
+                    <tr>
+                        <td>{{ track.position }}</td>
+                        <td>{{ track.title }}</td>
+                        <td>{{ track.duration }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
 
 {% endblock %}
 

@@ -6,11 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url
+from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
-from .tasks import start_background_artist_update, start_background_album_update
+from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
 import logging
 
 logger = logging.getLogger(__name__)
@@ -292,14 +292,21 @@ class AlbumDetail(View):
         
         try:
             album = get_object_or_404(Album, id=album_id)
-            start_background_album_update(album.id)  # Start background task to update album details
+            if album:
+                album_data = fetch_basic_album_details(album.id)  
+                print(f"Album Data: {album_data}")         
+                album.discogs_id = album_data.get('discogs_id')
+                album.genres = album_data.get('genres')
+                album.styles = album_data.get('styles')
+                album.labels = album_data.get('labels')
+                album.tracklist = album_data.get('tracklist')
+                album.save()
             collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
             wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
 
             context = {
                 'album': album,
-                'artist': album.artist,
                 'collection_entry': collection_entry,
                 'wishlist_entry': wishlist_entry,
                 'in_collection': bool(collection_entry),

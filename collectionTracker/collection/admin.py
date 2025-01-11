@@ -37,7 +37,7 @@ class AlbumAdmin(admin.ModelAdmin):
             'fields': ('id', 'name', 'artist', 'release_date', 'album_type', 'image_url')
         }),
         ('Discogs Data', {
-            'fields': ('discogs_id', 'genres', 'styles', 'tracklist', 'labels', 'formats', 'lowest_price')
+            'fields': ('discogs_id', 'genres', 'styles', 'tracklist', 'labels', 'lowest_price')
         }),
     )
 
