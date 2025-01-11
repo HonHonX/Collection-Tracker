@@ -35,6 +35,10 @@
         {% if album.labels %}
             <span><strong>Labels:</strong> {{ album.labels |join:", " }}</span>
         {% endif %}
+
+        {% if album.lowest_price %}
+            <span><strong>Current lowest price:</strong> {{ album.lowest_price|floatformat:2 }} €</span>
+        {% endif %}
         
     </div>
 

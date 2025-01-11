@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.db.models import JSONField, CharField
 from django.contrib.postgres.fields import ArrayField
 import json
+from django.utils.formats import number_format
 
 class Genre(models.Model):
     """Model representing a music genre."""
@@ -69,6 +70,9 @@ class Album(models.Model):
     def __str__(self):
         return self.name 
 
+    def formatted_lowest_price(self):
+        return f"€{number_format(self.lowest_price, decimal_pos=2)}"
+
 class UserAlbumDescription(models.Model):
     """Model representing a user's description of an album."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -94,7 +98,7 @@ class UserAlbumCollection(models.Model):
     substatus = models.CharField(
         max_length=25,
         choices=SUBSTATUS, 
-        default='unspecified',
+        default='unspecified', 
     )
 
     class Meta:
@@ -182,5 +186,3 @@ class UserFollowedArtists(models.Model):
 
     def __str__(self):
         return f"{self.user.username} follows {self.artist.name}"
-
-

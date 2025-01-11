@@ -116,28 +116,28 @@
             <h2>Badges</h2>
             <div class="badge-display">
                 {% for badge in all_badges %}
-                {% with user_badge=badges|get_item:badge.id %}
-                <div class="badge-item {% if not user_badge %}disabled{% endif %}">
-                    <div class="badge-container">
-                        <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
-                        {% if badge.sub_icon_url %}
-                            <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
-                        {% endif %}
-                    </div>
-                    <div class="badge-description">
-                        <span><strong>{{ badge.name }}</strong></span><br>
-                        {% if user_badge %}
-                            <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endwith %}
+                    {% with user_badge=badges|get_item:badge.id %}
+                        <div class="badge-item {% if not user_badge %}disabled{% endif %}">
+                            <div class="badge-container">
+                                <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
+                                {% if badge.sub_icon_url %}
+                                    <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
+                                {% endif %}
+                            </div>
+                            <div class="badge-description">
+                                <span><strong>{{ badge.name }}</strong></span><br>
+                                {% if user_badge %}
+                                    <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
         </div>
     </div>
 
-</div>
+</div> 
 {% endblock %}
 
 {% block js %}

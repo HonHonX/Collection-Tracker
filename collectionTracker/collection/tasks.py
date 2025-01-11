@@ -36,6 +36,7 @@ def update_album_details_in_background(album_id):
         album.styles = album_data.get('styles')
         album.labels = album_data.get('labels')
         album.tracklist = album_data.get('tracklist')
+        album.lowest_price = album_data.get('lowest_price')
         album.save()
         logger.info(f"Updated artist {album.name} with new Discogs data.")
         # else:

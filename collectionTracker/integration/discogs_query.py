@@ -5,6 +5,7 @@ from django.db import transaction
 from collection.models import Artist, Album
 import bleach
 import re
+from integration.exchangeRate_query import usd_to_eur
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
@@ -125,14 +126,21 @@ def fetch_basic_album_details(album_id):
         results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
         if results:
             album = results[0]
-            print(f"Album found: {album.title}")  
+            release = d.release(album.id)
+            lowest_price_usd = release.fetch('lowest_price')
+            lowest_price_eur = usd_to_eur(lowest_price_usd)
+
             album_details = {
                 'discogs_id': album.id,
                 'genres': album.genres,
                 'styles': album.styles,
                 'labels': [format_string(label.name) for label in album.labels],
-                'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist]
+                'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
+                'lowest_price': lowest_price_eur
             }
+
+            print(f"Basic album details: {album_details}")
+            
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")
@@ -160,19 +168,19 @@ def fetch_basic_album_details(album_id):
 #         print(f"Error fetching tracklist and formats from Discogs: {e}")
 #     return {}
 
-def save_basic_album_details(artist_id):
-    album_results = Album.objects.filter(artist_id=artist_id)
-    # print(album_results)
-    if (album_results.count() == 0):
-        print("No albums found")
-        return
-    for album_instance in album_results:
-        more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
-        # print(f"More album data: {more_album_data}")
-        album_instance.discogs_id = more_album_data.get('discogs_id')
-        album_instance.genres = more_album_data.get('genres', [])
-        album_instance.styles = more_album_data.get('styles', [])
-        album_instance.labels = more_album_data.get('labels', [])
-        album_instance.save()
-        # Refresh the artist object to get the updated data
-        album_instance.refresh_from_db()
+# def save_basic_album_details(artist_id):
+#     album_results = Album.objects.filter(artist_id=artist_id)
+#     # print(album_results)
+#     if (album_results.count() == 0):
+#         print("No albums found")
+#         return
+#     for album_instance in album_results:
+#         more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
+#         # print(f"More album data: {more_album_data}")
+#         album_instance.discogs_id = more_album_data.get('discogs_id')
+#         album_instance.genres = more_album_data.get('genres', [])
+#         album_instance.styles = more_album_data.get('styles', [])
+#         album_instance.labels = more_album_data.get('labels', [])
+#         album_instance.save()
+#         # Refresh the artist object to get the updated data
+#         album_instance.refresh_from_db()
