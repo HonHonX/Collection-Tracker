@@ -134,4 +134,5 @@ def get_artist_data(artist_name, user):
         'wishlist_count': wishlist_count,
         'blacklist_count': blacklist_count,
         'user_followed_artist_ids': user_followed_artist_ids,
-    } 
+        'collection_and_wishlist_count': collection_count + wishlist_count
+    }

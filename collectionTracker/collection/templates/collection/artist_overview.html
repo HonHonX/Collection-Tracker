@@ -54,10 +54,10 @@
                     <h2>artist collection progress</h2>
                     <div class="counter-item">
                         <div class="progress-bar">
-                            <div class="collection-progress progress"></div>
-                            <div class="collection-and-wishlist-progress progress"></div>
-                            <div class="wishlist-progress progress"></div>
-                            <div class="blacklist-progress progress"></div>
+                            <div class="collection-progress progress" data-collection-count="{{ collection_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="collection-and-wishlist-progress progress" data-collection-and-wishlist-count="{{ collection_and_wishlist_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="wishlist-progress progress" data-wishlist-count="{{ wishlist_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="blacklist-progress progress" data-blacklist-count="{{ blacklist_count }}" data-total-albums="{{ total_albums }}"></div>
                         </div>
                         <span class="collection-percentage"></span>
                     </div>
