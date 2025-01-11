@@ -2000,3 +2000,17 @@ Internal Server Error: /search/
 "POST /search/ HTTP/1.1" 500 147
 Internal Server Error: /search/
 "POST /search/ HTTP/1.1" 500 147
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 39
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 66
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 74
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 43
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 54
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 48
+Internal Server Error: /artist/DPR IAN/
+"GET /artist/DPR%20IAN/ HTTP/1.1" 500 44

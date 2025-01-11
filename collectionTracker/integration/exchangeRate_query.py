@@ -1,9 +1,6 @@
 from decouple import config
 import requests
-from django.utils import timezone
 from .models import DailyExchangeRate
-import os
-import django
 from datetime import datetime
 
 def fetch_and_save_usd_to_eur():
@@ -12,10 +9,13 @@ def fetch_and_save_usd_to_eur():
     Return the fetched exchange rate.
     """
     api_key = config('EXCHANGE_RATE_API_KEY')
-    url = f"https://openexchangerates.org/api/latest.json?app_id={api_key}"
+    print (api_key)
+    url = f"https://v6.exchangerate-api.com/v6/{api_key}/latest/USD"
     response = requests.get(url)
     data = response.json()
-    usd_to_eur = data['rates']['EUR']
+    print (data)
+    usd_to_eur = data['conversion_rates']['EUR']
+    print (usd_to_eur)
 
     exchange_rate, created = DailyExchangeRate.objects.get_or_create(
         date=datetime.now().date(),

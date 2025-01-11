@@ -143,41 +143,55 @@ def fetch_basic_album_details(album_id):
         print(f"Error fetching basic album details from Discogs: {e}")
     return {}
 
-# def fetch_album_tracklist_and_formats(discogs_id):
-#     """
-#     Fetch tracklist and formats for an album from Discogs API.
+def fetch_album_price(album_id):
+    """
+    Fetch basic album details from Discogs API.
     
-#     Args:
-#         discogs_id (int): The Discogs ID of the album.
+    Args:
+        album_id(str): Spotify album ID.
     
-#     Returns:
-#         dict: A dictionary containing the tracklist and formats of the album.
-#     """
-#     try:
-#         # print(f"Fetching tracklist and formats for Discogs ID: {discogs_id}")
-#         album = d.release(discogs_id)
-#         tracklist_and_formats = {
-#             'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
-#             'formats': [{'name': f['name'], 'qty': f['qty'], 'descriptions': f.get('descriptions', [])} for f in album.formats]
-#         }
-#         return tracklist_and_formats
-#     except Exception as e:
-#         print(f"Error fetching tracklist and formats from Discogs: {e}")
-#     return {}
+    Returns:
+        dict: A dictionary containing basic album details.
+    """
+    album = Album.objects.get(id=album_id)
+    try:
+        results = d.search(album.name, type='release', per_page=15, page=1, artist=album.artist.name)
+        if results:
+            album = results[0]
+            release = d.release(album.id)
+            lowest_price_usd = release.fetch('lowest_price')
+            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
 
-# def save_basic_album_details(artist_id):
-#     album_results = Album.objects.filter(artist_id=artist_id)
-#     # print(album_results)
-#     if (album_results.count() == 0):
-#         print("No albums found")
-#         return
-#     for album_instance in album_results:
-#         more_album_data = fetch_basic_album_details(album_instance.name, album_instance.artist.name)
-#         # print(f"More album data: {more_album_data}")
-#         album_instance.discogs_id = more_album_data.get('discogs_id')
-#         album_instance.genres = more_album_data.get('genres', [])
-#         album_instance.styles = more_album_data.get('styles', [])
-#         album_instance.labels = more_album_data.get('labels', [])
-#         album_instance.save()
-#         # Refresh the artist object to get the updated data
-#         album_instance.refresh_from_db()
+            album_details = {
+                'discogs_id': album.id,
+                'lowest_price': lowest_price_eur,
+            }            
+            return album_details
+    except Exception as e:
+        print(f"Error fetching basic album details from Discogs: {e}")
+    return {}
+
+
+def update_album_price(album_id):
+    """
+    Update album price in the database with data fetched from Discogs API.
+    
+    Args:
+        album_id(str): Spotify album ID.
+    
+    Returns:
+        bool: True if update was successful, False otherwise.
+    """
+    album_details = fetch_album_price(album_id)
+    if not album_details:
+        return False
+
+    try:
+        album = Album.objects.get(id=album_id)
+        album.discogs_id = album_details['discogs_id']
+        album.lowest_price = album_details['lowest_price']
+        album.save()
+        return True
+    except Exception as e:
+        print(f"Error updating album details: {e}")
+        return False

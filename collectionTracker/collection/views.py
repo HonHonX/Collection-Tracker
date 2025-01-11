@@ -120,10 +120,8 @@ def artist_overview(request, artist_name):
     """
     try:
         context = get_artist_data(artist_name, request.user) 
-        context['artist_profile'] = context['artist'].profile
-        context['discogs_id'] = context['artist'].discogs_id  # Add discogs_id to context
-
-        return render(request, 'collection/artist_overview.html', context)
+        response = render(request, 'collection/artist_overview.html', context)
+        return response
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
@@ -295,9 +293,9 @@ class AlbumDetail(View):
         try:
             album = get_object_or_404(Album, id=album_id)
             if album:
+                logger.info(f"Album {album.name} with the id {album.id} found in database.")
                 album_data = fetch_basic_album_details(album.id)       
                 album.discogs_id = album_data.get('discogs_id')
-                # album.discogs_master_id = album_data.get('master_id')
                 album.genres = album_data.get('genres')
                 album.styles = album_data.get('styles')
                 album.labels = album_data.get('labels')
@@ -330,6 +328,7 @@ class AlbumDetail(View):
 
             return render(request, 'collection/album_detail.html', context)
         except Exception as e:
+            logger.error(f"Error fetching album details: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def post(self, request, album_id):
