@@ -75,9 +75,7 @@ def user_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     badges = {badge.badge.pk: badge for badge in UserBadge.objects.filter(user=request.user).select_related('badge').order_by('awarded_date')}
     user_artists = request.user.useralbumcollection_set.values_list('album__artist', flat=True)
-    print(user_artists)
     all_badges = Badge.objects.filter(Q(associated_artist__isnull=True) | Q(associated_artist__in=user_artists))
-    print(all_badges)
     if request.method == 'POST':
         form = ProfileImageForm(request.POST, request.FILES)
         if form.is_valid():

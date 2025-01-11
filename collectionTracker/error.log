@@ -1907,3 +1907,9 @@ Traceback (most recent call last):
     )
 django.template.exceptions.TemplateSyntaxError: Could not parse the remainder: '('album__artist',' from 'user.useralbumcollection_set.values_list('album__artist','
 "GET /profile/ HTTP/1.1" 500 307917
+Internal Server Error: /album/7jaSNQUBJbvfbZHLNFrV7P/
+"GET /album/7jaSNQUBJbvfbZHLNFrV7P/ HTTP/1.1" 500 68
+Internal Server Error: /album/7jaSNQUBJbvfbZHLNFrV7P/
+"GET /album/7jaSNQUBJbvfbZHLNFrV7P/ HTTP/1.1" 500 61
+Internal Server Error: /album/7jaSNQUBJbvfbZHLNFrV7P/
+"GET /album/7jaSNQUBJbvfbZHLNFrV7P/ HTTP/1.1" 500 61

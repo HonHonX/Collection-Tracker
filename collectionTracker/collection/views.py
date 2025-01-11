@@ -12,6 +12,8 @@ from utils.collection_helpers import get_user_album_ids, get_artist_list, add_al
 from django.conf import settings
 from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
 import logging
+from stats.models import DailyAlbumPrice
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -303,6 +305,15 @@ class AlbumDetail(View):
                 album.tracklist = album_data.get('tracklist')
                 album.lowest_price = album_data.get('lowest_price')
                 album.save()
+
+                # Create DailyAlbumPrice entry if it doesn't exist
+                if album.lowest_price:
+                    DailyAlbumPrice.objects.get_or_create(
+                        album=album,
+                        date=timezone.now().date(),
+                        defaults={'price': album.lowest_price}
+                    )
+
             collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
             wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()

@@ -5,7 +5,8 @@ from django.db import transaction
 from collection.models import Artist, Album
 import bleach
 import re
-from integration.exchangeRate_query import usd_to_eur
+from integration.exchangeRate_query import usd_to_eur, fetch_and_save_usd_to_eur
+
 
 # Retrieve application-level credentials from .env
 DISCOGS_APP_NAME = config('DISCOGS_APP_NAME')
@@ -128,7 +129,7 @@ def fetch_basic_album_details(album_id):
             album = results[0]
             release = d.release(album.id)
             lowest_price_usd = release.fetch('lowest_price')
-            lowest_price_eur = usd_to_eur(lowest_price_usd)
+            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
 
             album_details = {
                 'discogs_id': album.id,
@@ -136,7 +137,7 @@ def fetch_basic_album_details(album_id):
                 'styles': album.styles,
                 'labels': [format_string(label.name) for label in album.labels],
                 'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
-                'lowest_price': lowest_price_eur
+                'lowest_price': lowest_price_eur,
             }
 
             print(f"Basic album details: {album_details}")

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from collection.models import Artist
+from collection.models import Artist, Album
 
 class Badge(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -38,4 +38,23 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.user_badge.badge.name}"
+
+class DailyAlbumPrice(models.Model):
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    date = models.DateField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('album', 'date')
+        ordering = ['-date']
+
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.album.lowest_price
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.album.name} - {self.date}: {self.price}"
+
+
 
