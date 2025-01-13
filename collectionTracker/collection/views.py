@@ -107,7 +107,7 @@ def artist_search(request):
     
     return render(request, 'collection/artist_search.html')
 
-def artist_overview(request, artist_name):
+def artist_overview(request, artist_id):
     """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
@@ -120,7 +120,8 @@ def artist_overview(request, artist_name):
         HttpResponse: The rendered HTML page with artist details.
     """
     try:
-        context = get_artist_data(artist_name, request.user) 
+        artist = Artist.objects.get(id=artist_id)
+        context = get_artist_data(artist.name, request.user) 
         response = render(request, 'collection/artist_overview.html', context)
         return response
     except Exception as e:

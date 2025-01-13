@@ -10,7 +10,7 @@ urlpatterns = [
     path('search/', views.artist_search, name="artist_search"),
 
     # Artist overview
-    path('artist/<str:artist_name>/', views.artist_overview, name='artist_overview'),
+    path('artist/<str:artist_id>/', views.artist_overview, name='artist_overview'),
 
     # Follow artist
     path('follow_artist/', views.follow_artist, name='follow_artist'),

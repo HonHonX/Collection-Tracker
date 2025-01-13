@@ -2340,3 +2340,7 @@ Traceback (most recent call last):
     )
 django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has no userprofile.
 "POST /accounts/login/ HTTP/1.1" 500 170650
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 39
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 39

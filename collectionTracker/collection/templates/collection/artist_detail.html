@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block maincontent %}
-    <a href="{% url 'artist_overview' artist.name %}">
+    <a href="{% url 'artist_overview' artist.id %}">
         <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
     </a>
 
@@ -37,7 +37,19 @@
                     <h2>Web</h2>
                     <ul class="link-list">
                         {% for url in artist.urls %}
-                            <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                            {% if "instagram" in url %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/instagram.svg' %}" class="icon" alt="Instagram" />{{ url }}</a></li>
+                            {% elif "facebook" in url %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/facebook.svg' %}" class="icon" alt="Facebook" />{{ url }}</a></li>
+                            {% elif "twitter" in url %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/twitter_x.svg' %}" class="icon" alt="Twitter" />{{ url }}</a></li>
+                            {% elif "youtube" in url %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/youtube.svg' %}" class="icon" alt="Youtube" />{{ url }}</a></li>
+                            {% elif "soundcloud" in url %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/soundcloud.svg' %}" class="icon" alt="Soundcloud" />{{ url }}</a></li>
+                            {% else %}
+                                <li><a href="{{ url }}" target="_blank"><img src="{% static 'icons/website.svg' %}" class="icon" alt="Website" />{{ url }}</a></li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}

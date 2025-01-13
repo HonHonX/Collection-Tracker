@@ -11,14 +11,14 @@
 
 {% block maincontent %}
     <div class="album-detail">
-        <a href="{% url 'artist_overview' album.artist.name %}">
+        <a href="{% url 'artist_overview' album.artist.id %}">
             <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
         </a>
         {% if album.image_url %}
             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
         {% endif %}
             <h1>{{ album.name }}</h1>
-        <a href="{% url 'artist_overview' album.artist.name %}">
+        <a href="{% url 'artist_overview' album.artist.id %}">
             <h2>{{ album.artist.name }}</h2>
         </a>
         <span><strong>Release Date:</strong> {{ album.release_date }}</span>
@@ -42,7 +42,7 @@
 
         <div class="spotify-player">
             <iframe src="https://open.spotify.com/embed/album/{{ album.id }}"
-            id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media" class="spotify-player-iframe"></iframe>
         </div>
         
     </div>
@@ -117,7 +117,7 @@
             <label for="description">
                 <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon"> 
             </label>
-
+fpo
             <!-- Display the user's description if it exists -->
             {% csrf_token %}
             <textarea name="description" id="description">{{ user_description.description }}</textarea>           
@@ -166,4 +166,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="{% static 'js/showPriceGraph.js' %}"></script>
     <script src="{% static 'js/albumDetail.js' %}"></script>
+    <script>
+        function getBackgroundColor() {
+            const mainElement = document.querySelector('spotify-player-iframe');
+            if (mainElement) {
+                const computedStyle = window.getComputedStyle(mainElement);
+                const dynamicBackgroundBase = computedStyle.getPropertyValue('--dynamic-background-base');
+                return dynamicBackgroundBase;
+            }
+            return null;
+        }
+        console.log('Background color:', getBackgroundColor());
+    </script>
 {% endblock %}

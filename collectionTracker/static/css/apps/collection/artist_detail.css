@@ -62,6 +62,7 @@
 #artist-bio {
     display: flex;
     flex-direction: column;
+    gap: var(--gapDistance);
 }
 
 .link-list {
@@ -79,8 +80,11 @@
     color: var(--accent100);
     transition: color 0.3s ease;
     font-size: 0.8rem;
-    line-height: 1rem;
-
+    line-height: 1.25rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 .link-list a:hover {
