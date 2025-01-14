@@ -166,13 +166,21 @@ def album_price_history(request, album_id):
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
     return JsonResponse(data, safe=False)
 
-@login_required
-def album_price_prognosis(request, album_id):
+def generate_album_price_predictions(album_id):
+    """
+    Generate price predictions for the given album.
+
+    Args:
+        album_id (int): The ID of the album.
+
+    Returns:
+        list: A list of dictionaries containing the date and predicted price.
+    """
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(f"{price.price:.2f}")} for price in prices]
 
     if not data:
-        return JsonResponse({'error': 'No data available'}, status=404)
+        return []
 
     try:
         # Data Preparation
@@ -180,7 +188,7 @@ def album_price_prognosis(request, album_id):
         prognosis_data['ds'] = pd.to_datetime(prognosis_data['ds'])
         prognosis_data.set_index('ds', inplace=True)
     except KeyError as e:
-        return JsonResponse({'error': f'Error in the data processing: {str(e)}'}, status=500)
+        raise ValueError(f'Error in the data processing: {str(e)}')
 
     # Convert dates to ordinal
     prognosis_data['ds'] = prognosis_data.index.map(pd.Timestamp.toordinal)
@@ -209,9 +217,48 @@ def album_price_prognosis(request, album_id):
             last_data_point = data[-1]
             forecast_data.insert(0, {'ds': last_data_point['date'], 'yhat': last_data_point['price']})
 
-        combined_data = data + forecast_data
+        return forecast_data
+    
+    except Exception as e:
+        raise ValueError(f'Model fitting or prediction failed: {str(e)}')
 
-        # Save predictions to the database
+@login_required
+def album_price_prognosis(request, album_id):
+    """
+    Generate and return price predictions for the given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response containing the combined data and predictions.
+    """
+    try:
+        forecast_data = generate_album_price_predictions(album_id)
+        prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
+        data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(f"{price.price:.2f}")} for price in prices]
+
+        combined_data = data + forecast_data
+        return JsonResponse(combined_data, safe=False)
+    
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def save_album_price_predictions(request, album_id):
+    """
+    Save price predictions for the given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response indicating success or failure.
+    """
+    try:
+        forecast_data = generate_album_price_predictions(album_id)
         album = get_object_or_404(Album, id=album_id)
         for prediction in forecast_data:
             AlbumPricePrediction.objects.update_or_create(
@@ -219,8 +266,7 @@ def album_price_prognosis(request, album_id):
                 date=prediction['ds'],
                 defaults={'predicted_price': prediction['yhat']}
             )
-
-        return JsonResponse(combined_data, safe=False)
+        return JsonResponse({'success': True})
     
-    except Exception as e:
-        return JsonResponse({'error': f'Model fitting or prediction failed: {str(e)}'}, status=500)
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=500)
