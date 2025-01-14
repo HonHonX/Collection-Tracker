@@ -65,18 +65,27 @@
                     <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
                 </a>
             </div>
-            <div id="profile-button" data-profile-url="{% url 'user_profile' %}">
-                {% if user.profile.image %}
-                    <img id="profile-image-small" src="{{ user.profile.image.url }}">
-                {% else %}
-                    <img id="profile-image-small" src="{% static 'img/default.jpg' %}">
-                {% endif %}
-            </div>
-        </div>
+                <!-- Profile Button -->
+                <div id="mobile-profile-button"">
+                    {% if user.profile.image %}
+                        <img id="profile-image-small" src="{{ user.profile.image.url }}">
+                    {% else %}
+                        <img id="profile-image-small" src="{% static 'img/default.jpg' %}">
+                    {% endif %}
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <ul>
+                            <li><a href="{% url 'friends_view' %}">Friends</a></li>
+                            <li><a href="{% url 'dashboard' %}">Statistics</a></li>
+                            <li><a href="{% url 'user_profile' %}">Settings</a></li>
+                        </ul>
+                    </div>
+                </div>
+        </div>        
 
         <!-- Navigation Bar --> 
         <div class="navbar">
-            <div class="nav-item" id="home-button" data-home-url="{% url 'index' %}">
+            <div class="nav-item" id="mobile-home-button" data-home-url="{% url 'index' %}">
                 <img class="icon" src="{% static 'icons/home.svg' %}">
             </div>
             <div class="nav-item" id="mobile-search">
@@ -85,9 +94,9 @@
             <div class="nav-item" id="mobile-collection-button" data-collection-url="{% url 'list_overview' 'collection' %}">
                 <img class="icon" src="{% static 'icons/collection.svg' %}">
             </div>
-            <!-- <div class="nav-item">
-                <img class="icon" src="">
-            </div> -->
+            <div class="nav-item" id="mobile-wishlist-button" data-wishlist-url="{% url 'list_overview' 'wishlist' %}">
+                <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+            </div>
         </div>
 
          <!-- Backdrop -->
@@ -110,4 +119,5 @@
 
 {% block js %}
     <script src="{% static 'js/navigation.js' %}"></script>
+    
 {% endblock %}
