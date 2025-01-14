@@ -39,14 +39,21 @@
             </div>
 
             <div id="spacer-2"></div>
-            <div id="spacer-2"></div>
-            <div id="spacer-2"></div>
 
-            <div class="logout">
-                <form action="{% url 'logout' %}?next=/" method="post" id="logout">
-                    {% csrf_token %}
-                    <button type="submit" id="logout-button" class="button">Logout</button>
-                </form>
+            <div class="buttons">
+                <div class="delete-account">
+                    <form action="{% url 'delete_account' %}" method="post" id="delete-account-form">
+                        {% csrf_token %}
+                        <button type="submit" id="delete-account-button" class="button">Delete Account</button>
+                    </form>
+                </div>
+
+                <div class="logout">
+                    <form action="{% url 'logout' %}?next=/" method="post" id="logout">
+                        {% csrf_token %}
+                        <button type="submit" id="logout-button" class="button">Logout</button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -54,24 +61,33 @@
             <div class="general-settings">
                 <h2>User Information</h2>
                 <p id="username">
-                    <strong>Username: </strong> {{ user.username }}
+                    <strong>Username:&nbsp;</strong> <i>{{ user.username }}</i>
                 </p>
                 <p>
-                    <span><strong>Email: </strong> {{ user.email }}</span>
-                    <a href="{% url 'user_profile' %}">
-                        <img class="icon" id="edit-mail" src="{% static 'icons/edit.svg' %}">
-                    </a>
+                    <span><strong>Email: </strong></span>
+                    <span id="email-display">{{ user.email }}</span>
+                    <input type="text" id="email-input" style="display: none;" value="{{ user.email }}">
+                    <img class="icon" id="edit-email" src="{% static 'icons/edit.svg' %}" alt="Edit">
+                    <img class="icon" id="save-email" src="{% static 'icons/edit.svg' %}" alt="Save" style="display: none;">
                 </p>
                 <p>
-                    <span><strong>First Name: </strong> {{ user.first_name }}</span>
-                    <a href="{% url 'user_profile' %}">
-                        <img class="icon" id="edit-first-name" src="{% static 'icons/edit.svg' %}">
-                    </a>
+                    <span><strong>First Name: </strong></span>
+                    <span id="first-name-display">{{ user.first_name }}</span>
+                    <input type="text" id="first-name-input" style="display: none;" value="{{ user.first_name }}">
+                    <img class="icon" id="edit-first-name" src="{% static 'icons/edit.svg' %}" alt="Edit">
+                    <img class="icon" id="save-first-name" src="{% static 'icons/edit.svg' %}" alt="Save" style="display: none;">
                 </p>
                 <p>
-                    <span><strong>Last Name: </strong> {{ user.last_name }}</span>
-                    <a href="{% url 'user_profile' %}">
-                        <img class="icon" id="edit-last-name" src="{% static 'icons/edit.svg' %}">
+                    <span><strong>Last Name: </strong></span>
+                    <span id="last-name-display">{{ user.last_name }}</span>
+                    <input type="text" id="last-name-input" style="display: none;" value="{{ user.last_name }}">
+                    <img class="icon" id="edit-last-name" src="{% static 'icons/edit.svg' %}" alt="Edit">
+                    <img class="icon" id="save-last-name" src="{% static 'icons/edit.svg' %}" alt="Save" style="display: none;">
+                </p>
+                <p>
+                    <span><strong>Password: </strong></span><span text-align: center;>********</span>
+                    <a href="{% url 'change_password' %}">
+                        <img class="icon" id="edit-password" src="{% static 'icons/edit.svg' %}">
                     </a>
                 </p>
             </div>
@@ -123,7 +139,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="color_scheme" id="color_scheme">
-                    <button type="submit" class="button">Speichern</button>
+                    <button type="submit" class="button">Save</button>
                 </form>
                 <p>Currently active: {{ request.user.userprofile.color_scheme |capfirst }}</p>
             </div>
@@ -159,4 +175,8 @@
 
 {% block js %}
     <script src="{% static 'js/selectColor.js' %}"></script>
+    <script src="{% static 'js/delete_account.js' %}"></script>
+    <script src="{% static 'js/update_email.js' %}"></script>
+    <script src="{% static 'js/update_first_name.js' %}"></script>
+    <script src="{% static 'js/update_last_name.js' %}"></script>
 {% endblock %}

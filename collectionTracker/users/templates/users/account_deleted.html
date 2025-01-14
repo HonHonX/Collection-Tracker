@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <h1>Account deleted</h1>
+    <div>
+        <p>Your account has been successfully deleted. We are sorry to see you go.</p>
+    </div>
+    <div>
+    <!-- Home button -->
+    <a href="{% url 'index' %}">
+        <img class="icon" id="home-button" src="{% static 'icons/home.svg' %}">
+    </a>
+    </div>
+</div>
+{% endblock %}
