@@ -22,6 +22,11 @@
         margin: 0;
     }
 
+    .artist-detail a:hover {
+        transform: none;
+        cursor: auto;
+    }
+
     #search-artist-photo {
         width: 80%;
         height: auto;
@@ -156,14 +161,18 @@
         pointer-events: none;
     }
 
+
     .album-cover {
         width: 100%;
         aspect-ratio: 1 / 1;
         border-radius: var(--borderRadius);
     }
 
-    .album-cover:hover {
-        transform: scale(1.1);
+    .album-cover:hover,
+    #search-artist-photo:hover  {
+        transform: scale(1.02);
+        cursor: help;
+        box-shadow: var(--boxShadow);
     }
     
     .album-info {
@@ -223,6 +232,13 @@
     
     .album-grid::-webkit-scrollbar {
         display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+    }
+
+    #blacklist-control-icon:hover,
+    #wishlist-control-icon:hover,
+    #collection-control-icon:hover {
+
+        transform: scale(1.2);
     }
 
 

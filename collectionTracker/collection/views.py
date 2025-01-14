@@ -1,14 +1,21 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
-from integration.views import get_artist_data
+from integration.spotify_query import get_artist_data
+from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details
 import json
-from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist,get_followed_artists, get_user_lists, get_newest_albums
+from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
+from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
+import logging
+from stats.models import DailyAlbumPrice
+from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def home_view(request):
@@ -36,6 +43,27 @@ def home_view(request):
         'newest_albums': newest_albums,
     })
 
+def artist_detail(request, artist_id):
+    """
+    Render the artist detail page with the specified artist ID.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+        artist_id (int): The ID of the artist to display.
+    
+    Returns:
+        HttpResponse: The rendered HTML page with artist details.
+    """
+    artist = get_object_or_404(Artist, id=artist_id)
+    
+    if request.method == 'POST':
+        discogs_url = request.POST.get('discogs_url')
+        if discogs_url:
+            update_artist_from_discogs_url(artist, discogs_url)
+            return redirect('artist_detail', artist_id=artist.id)
+    
+    return render(request, 'collection/artist_detail.html', {'artist': artist})
+
 def artist_search(request):
     """
     Handle artist search requests.
@@ -51,31 +79,36 @@ def artist_search(request):
     Returns:
         HttpResponse: The rendered HTML page or JSON response with error message.
     """
+
+    user = request.user
+
     if request.method == 'POST':
-        # Get the artist name from the POST request
         artist_name = request.POST.get('artist_name')
         
-        if not artist_name:  # Artist name is required
+        if not artist_name:
             error = "Artist name is required."
-            # Render the search page with an error message
             return render(request, 'collection/artist_search.html', {
                 'artist_name': '',
                 'error': error,
             })
         
         try:
-            # Retrieve artist data through API and render the overview page
             context = get_artist_data(artist_name, request.user)
-            return render(request, 'collection/artist_overview.html', context)
+            response = render(request, 'collection/artist_overview.html', context)
+            
+            # Start the background task
+            print(f"Starting background task for artist {context['artist'].name} with ID: {context['artist'].id}")
+            start_background_artist_update(context['artist'].id)
+            logger.info(f"Started background task for artist ID: {context['artist'].id}")
+            
+            return response
         except Exception as e:
-            # Return a JSON response with the error message if an exception occurs
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
-    # Render the search page if the request method is not POST
     return render(request, 'collection/artist_search.html')
 
 def artist_overview(request, artist_name):
-    """
+    """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
     
@@ -87,8 +120,9 @@ def artist_overview(request, artist_name):
         HttpResponse: The rendered HTML page with artist details.
     """
     try:
-        context = get_artist_data(artist_name, request.user)  # Retrieve artist data through API
-        return render(request, 'collection/artist_overview.html', context)
+        context = get_artist_data(artist_name, request.user) 
+        response = render(request, 'collection/artist_overview.html', context)
+        return response
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
@@ -112,15 +146,10 @@ def follow_artist(request):
             # Parse the JSON data from the request body
             data = json.loads(request.body)
             user = request.user
-            artist_id = data.get('artist_id')            
+            artist_id = data.get('artist_id')
 
-            # Check if the artist already exists in the database
-            artist, created = Artist.objects.get_or_create(id=artist_id, defaults={
-                'name': data.get('artist_name'),
-                'genres': data.get('artist_genres', []),
-                'popularity': data.get('artist_popularity', 0),
-                'photo_url': data.get('artist_photo_url', '')
-            })
+            # Retrieve the artist from the database
+            artist = Artist.objects.get(id=artist_id)
 
             # Check if the user already follows the artist
             follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
@@ -132,13 +161,14 @@ def follow_artist(request):
             else:
                 # If the user does not follow the artist, follow the artist
                 return JsonResponse({'success': True, 'message': 'Artist followed.'})
-
+        except Artist.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Artist does not exist.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON data.'})
         except Exception as e:
-            # Return a JSON response with the error message if an exception occurs
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-    # Return an error response if the request method is not POST
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
+            return JsonResponse({'success': False, 'message': str(e)})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @login_required
 def list_overview(request, list_type):
@@ -263,13 +293,31 @@ class AlbumDetail(View):
         
         try:
             album = get_object_or_404(Album, id=album_id)
+            if album:
+                logger.info(f"Album {album.name} with the id {album.id} found in database.")
+                album_data = fetch_basic_album_details(album.id)       
+                album.discogs_id = album_data.get('discogs_id')
+                album.genres = album_data.get('genres')
+                album.styles = album_data.get('styles')
+                album.labels = album_data.get('labels')
+                album.tracklist = album_data.get('tracklist')
+                album.lowest_price = album_data.get('lowest_price')
+                album.save()
+
+                # Create DailyAlbumPrice entry if it doesn't exist
+                if album.lowest_price:
+                    DailyAlbumPrice.objects.get_or_create(
+                        album=album,
+                        date=timezone.now().date(),
+                        defaults={'price': album.lowest_price}
+                    )
+
             collection_entry = UserAlbumCollection.objects.filter(user=request.user, album=album).first()
             wishlist_entry = UserAlbumWishlist.objects.filter(user=request.user, album=album).first()
             user_description = UserAlbumDescription.objects.filter(user=request.user, album=album).first()
 
             context = {
                 'album': album,
-                'artist': album.artist,
                 'collection_entry': collection_entry,
                 'wishlist_entry': wishlist_entry,
                 'in_collection': bool(collection_entry),
@@ -281,6 +329,7 @@ class AlbumDetail(View):
 
             return render(request, 'collection/album_detail.html', context)
         except Exception as e:
+            logger.error(f"Error fetching album details: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     def post(self, request, album_id):

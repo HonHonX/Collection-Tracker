@@ -51,12 +51,29 @@
         </div>
 
         <div id="user-settings">
-            <div id="general-settings">
+            <div class="general-settings">
                 <h2>User Information</h2>
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>First Name:</strong> {{ user.first_name }}</p>
-                <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+                <p id="username">
+                    <strong>Username: </strong> {{ user.username }}
+                </p>
+                <p>
+                    <span><strong>Email: </strong> {{ user.email }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-mail" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
+                <p>
+                    <span><strong>First Name: </strong> {{ user.first_name }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-first-name" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
+                <p>
+                    <span><strong>Last Name: </strong> {{ user.last_name }}</span>
+                    <a href="{% url 'user_profile' %}">
+                        <img class="icon" id="edit-last-name" src="{% static 'icons/edit.svg' %}">
+                    </a>
+                </p>
             </div>
 
             <div class="color-scheme-settings">
@@ -116,28 +133,28 @@
             <h2>Badges</h2>
             <div class="badge-display">
                 {% for badge in all_badges %}
-                {% with user_badge=badges|get_item:badge.id %}
-                <div class="badge-item {% if not user_badge %}disabled{% endif %}">
-                    <div class="badge-container">
-                        <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
-                        {% if badge.sub_icon_url %}
-                            <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
-                        {% endif %}
-                    </div>
-                    <div class="badge-description">
-                        <span><strong>{{ badge.name }}</strong></span><br>
-                        {% if user_badge %}
-                            <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endwith %}
+                    {% with user_badge=badges|get_item:badge.id %}
+                        <div class="badge-item {% if not user_badge %}disabled{% endif %}">
+                            <div class="badge-container">
+                                <img src="{{ badge.image_url }}" alt="{{ badge.name }}" class="badge-icon">
+                                {% if badge.sub_icon_url %}
+                                    <img src="{{ badge.sub_icon_url }}" alt="Sub Icon" class="badge-sub-icon">
+                                {% endif %}
+                            </div>
+                            <div class="badge-description">
+                                <span><strong>{{ badge.name }}</strong></span><br>
+                                {% if user_badge %}
+                                    <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
         </div>
     </div>
 
-</div>
+</div> 
 {% endblock %}
 
 {% block js %}

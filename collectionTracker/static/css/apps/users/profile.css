@@ -203,6 +203,22 @@ input[type="file"]:hover::-webkit-file-upload-button {
     color: var(--accentVariantB100);
 }
 
+.general-settings {
+    display: flex;
+    flex-direction: column;
+}
+
+.general-settings p {
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: space-between;
+}
+
+#username {
+    display: flex;
+    flex-direction: row nowrap;
+    justify-content: start;
+}
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     #settings-block {

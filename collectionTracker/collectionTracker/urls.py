@@ -8,7 +8,7 @@ urlpatterns = [
     path('', include("collection.urls")),
     path('stats/', include("stats.urls")),
     path('', include("users.urls")),
-    path('accounts/', include('django.contrib.auth.urls')),  # Add this line to include auth URLs
+    path('accounts/', include('django.contrib.auth.urls')), 
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
 
 if settings.DEBUG:

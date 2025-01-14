@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from collection.models import Album, UserAlbumWishlist, UserAlbumCollection
 from .models import Friend, FriendList, SharingToken
 from .forms import FriendForm
-from utils.friend_helpers import get_base_url, remove_friend, add_guest_friend, send_invitation_email, create_reciprocal_friend, are_friends, send_email, send_friend_request_email
+from utils.friend_helpers import get_base_url, remove_friend, add_guest_friend, send_invitation_email, are_friends, send_email, send_friend_request_email, create_reciprocal_friend
 import uuid
 
 
@@ -40,9 +40,9 @@ def friends_view(request):
                         Friend(user=user, friend_email=friend_email, friend_name=friend_user.username, status='pending'),
                         Friend(user=friend_user, friend_email=user.email, friend_name=user.username, status='pending')
                     ])
-                    send_friend_request_email(friend_user, request)
+                    send_friend_request_email(friend_user, user, request)
                 else:
-                    handle_guest_friend(form, user, request)
+                    add_guest_friend(form, user, request)
                 return redirect('friends_view')
     else:
         form = FriendForm()

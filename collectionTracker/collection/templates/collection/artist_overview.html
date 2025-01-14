@@ -1,9 +1,8 @@
-<!-- artist_overview.html -->
 {% extends 'base_with_sidebar.html' %}
 {% load static %}
 
 {% block title %}
-    Artist Overview - {{ artist_name }}
+    {{ artist.name }} - Overview
 {% endblock %}
 
 {% block site_specific_css %}
@@ -17,32 +16,36 @@
     {% else %}
         <!-- light column -->
             <div class="artist-detail">
-                {% if artist_photo_url %}
-                    <img id="search-artist-photo" src="{{ artist_photo_url }}" alt="{{ artist_name }}'s photo">
+                {% if artist.photo_url %}
+                    <a href="{% url 'artist_detail' artist.id %}">
+                        <img id="search-artist-photo" src="{{ artist.photo_url }}" alt="{{ artist.name }}'s photo">
+                    </a>
                 {% endif %}
 
                 <div class="follow-block" 
-                    data-artist-id="{{ artist_info.id }}" 
-                    data-artist-name="{{ artist_info.name }}" 
-                    data-artist-genres="{{ artist_info.genres }}"
-                    data-artist-popularity="{{ artist_info.popularity }}"
-                    data-artist-photo-url="{{ artist_photo_url }}"
+                    data-artist-id="{{ artist.id }}" 
                     data-follow-url="{% url 'follow_artist' %}">
                     <button id="follow-button" class="button">
-                        {% if artist_info.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
+                        {% if artist.id in user_followed_artist_ids %}Unfollow{% else %}Follow{% endif %}
                     </button>
                 </div>
 
                 <div id="spacer-1"></div>
 
-                <h1>{{ artist_name }}</h1>
-                
-                {% if artist_info.genres %}
-                    <p>Genres: {{ artist_info.genres|join:", " }}</p>
+                <h1>{{ artist.name }}</h1>
+
+                <div class="popularity-gauge">
+                    <div class="gauge">
+                        <div class="gauge-fill" id="gauge-fill" data-popularity-value="{{ artist.popularity }}"></div>
+                        <div class="gauge-text" id="gauge-text">Popularity: {{ artist.popularity  }}/100</div>
+                    </div>
+                </div>
+
+                {% if genres %}
+                    <p>Genres: {{ genres|join:", " }}</p>
                 {% endif %}
 
-                <p>Popularity: {{ artist_info.popularity }}</p>
-                <p>Total Albums: <span class="total-albums">{{ artist_info.total_albums }}</span></p>
+                <p>Total Albums: <span class="total-albums">{{ total_albums }}</span></p>
 
                 <div id="spacer-1"></div>
 
@@ -51,10 +54,10 @@
                     <h2>artist collection progress</h2>
                     <div class="counter-item">
                         <div class="progress-bar">
-                            <div class="collection-progress progress"></div>
-                            <div class="collection-and-wishlist-progress progress"></div>
-                            <div class="wishlist-progress progress"></div>
-                            <div class="blacklist-progress progress"></div>
+                            <div class="collection-progress progress" data-collection-count="{{ collection_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="collection-and-wishlist-progress progress" data-collection-and-wishlist-count="{{ collection_and_wishlist_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="wishlist-progress progress" data-wishlist-count="{{ wishlist_count }}" data-total-albums="{{ total_albums }}"></div>
+                            <div class="blacklist-progress progress" data-blacklist-count="{{ blacklist_count }}" data-total-albums="{{ total_albums }}"></div>
                         </div>
                         <span class="collection-percentage"></span>
                     </div>
@@ -127,11 +130,11 @@
                         data-album-type="{{ album.album_type }}" 
                         data-release-date="{{ album.release_date }}"
                         data-image-url="{{ album.image_url }}"  
-                        data-artist-id="{{ artist_info.id }}"
-                        data-artist-name="{{ artist_name }}"
-                        data-artist-photo-url="{{ artist_photo_url }}"
-                        data-artist-genres="{{ artist_info.genres }}"
-                        data-artist-popularity="{{ artist_info.popularity }}"
+                        data-artist-id="{{ artist.id }}"
+                        data-artist-name="{{ artist.name }}"
+                        data-artist-photo-url="{{ artist.photo_url }}"
+                        data-artist-genres="{{ artist.genres }}"
+                        data-artist-popularity="{{ artist.popularity }}"
                         data-in-collection="{% if album.spotify_id in user_album_ids %}true{% else %}false{% endif %}"
                         data-in-wishlist="{% if album.spotify_id in user_wishlist_ids %}true{% else %}false{% endif %}"
                         data-in-blacklist="{% if album.spotify_id in user_blacklist_ids %}true{% else %}false{% endif %}"
@@ -161,6 +164,7 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'js/gauge.js' %}"></script>
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByAlbumType.js' %}"></script>
