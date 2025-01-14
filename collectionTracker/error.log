@@ -2402,3 +2402,9 @@ KeyError: 'ds'
 "GET /stats/api/album/4vLGHlTnlIIxMSfefCY0cU/price-prognosis/ HTTP/1.1" 500 81009
 Internal Server Error: /album/4SboBpuYojDm02qS4iFeJC/
 "GET /album/4SboBpuYojDm02qS4iFeJC/ HTTP/1.1" 500 145
+Internal Server Error: /artist/aespa/
+"GET /artist/aespa/ HTTP/1.1" 500 39
+Internal Server Error: /artist/aespa/
+"GET /artist/aespa/ HTTP/1.1" 500 39
+Internal Server Error: /artist/aespa/
+"GET /artist/aespa/ HTTP/1.1" 500 39
