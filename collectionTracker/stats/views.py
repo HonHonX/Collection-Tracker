@@ -19,6 +19,8 @@ from utils.stats_helpers import (
 from stats.models import Notification
 from django.views.decorators.csrf import csrf_exempt
 from .models import DailyAlbumPrice
+from prophet import Prophet
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +162,31 @@ def delete_notification(request, notification_id):
 @login_required
 def album_price_history(request, album_id):
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
-    print(f'Prices:{prices}')
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
-    print(f'Data:{data}')
     return JsonResponse(data, safe=False)
+
+@login_required
+def album_price_prognosis(request, album_id):
+    prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
+    data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
+
+    if not data:
+        return JsonResponse({'error': 'No data available'}, status=404)
+
+    try:
+        prognosis_data = pd.DataFrame([{'ds': item['date'], 'y': item['price']} for item in data])
+        prognosis_data['ds'] = pd.to_datetime(prognosis_data['ds'])
+    except KeyError as e:
+        return JsonResponse({'error': f'Error in the data processing: {str(e)}'}, status=500)
+
+    model = Prophet()
+    model.fit(prognosis_data)
+
+    # Make prognosis for the next 7 days
+    future = model.make_future_dataframe(periods=7)
+    forecast = model.predict(future)
+
+    forecast_data = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].to_dict(orient='records')
+
+    # Ergebnisse zurückgeben
+    return JsonResponse(forecast_data, safe=False)

@@ -152,7 +152,7 @@
             {% if album.lowest_price %}
                 <div class="price-stats">
                     <h2>Price Changes</h2>
-                    <canvas id="price-chart" data-album-id="{{ album.id }}" data-url="{% url 'album_price_history' album.id %}"></canvas>
+                    <canvas id="price-chart" data-album-id="{{ album.id }}" data-url="{% url 'album_price_history' album.id %}" data-urlpred="{% url 'album_price_prognosis' album.id %}"></canvas>
                 </div>
             {% endif %}
         </div>

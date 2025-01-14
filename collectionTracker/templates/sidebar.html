@@ -60,7 +60,18 @@
     <!-- Mobile -->
         <!-- Top Bar --> 
         <div class="topbar">
-            <h1 class="pagetitle">Home</h1>
+            <div class="topbar-logo">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+                </a>
+            </div>
+            <div id="profile-button" data-profile-url="{% url 'user_profile' %}">
+                {% if user.profile.image %}
+                    <img id="profile-image-small" src="{{ user.profile.image.url }}">
+                {% else %}
+                    <img id="profile-image-small" src="{% static 'img/default.jpg' %}">
+                {% endif %}
+            </div>
         </div>
 
         <!-- Navigation Bar --> 

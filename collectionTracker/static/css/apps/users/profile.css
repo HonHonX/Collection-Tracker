@@ -224,7 +224,43 @@ input[type="file"]:hover::-webkit-file-upload-button {
     flex-direction: row nowrap;
     justify-content: start;
 }
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    #settings-block {
+        flex-direction: column; /* Stack sections vertically */
+        gap: 1.5rem; /* Reduce spacing for mobile */
+    }
 
-.icon:hover {
-    transform: translateY(-2px);
+    #first-column,
+    #user-settings,
+    .badges-block {
+        width: 100%; /* Ensure sections take full width */
+    }
+
+    .badge-item {
+        width: 6rem;
+        height: 12rem;
+        padding: 0.2rem;
+    }
+
+    .badge-display {
+        flex-direction: row; /* Stack badges vertically */
+        align-items: center; /* Center badges */
+    }
+
+    .badge-item span {
+        display: -webkit-box;           /* Required for the line-clamp property */
+        -webkit-line-clamp: 3;          /* Number of lines to show */
+        -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+        overflow: hidden;               /* Hides the overflowing text */
+        text-overflow: ellipsis;        /* Adds '...' for overflow */
+        line-height: 1rem;              /* Line height for one line */
+        max-height: 2rem;               /* Ensures the height accommodates exactly two lines */
+        font-size: 0.7rem;              /* Ensure consistent font size */
+    }
+
+    #spacer-2{
+        display: none;
+    }
+
 }
