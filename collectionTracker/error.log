@@ -2408,3 +2408,16 @@ Internal Server Error: /artist/aespa/
 "GET /artist/aespa/ HTTP/1.1" 500 39
 Internal Server Error: /artist/aespa/
 "GET /artist/aespa/ HTTP/1.1" 500 39
+Internal Server Error: /stats/api/album/4SboBpuYojDm02qS4iFeJC/price-prognosis/
+Traceback (most recent call last):
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 204, in _get_response
+    self.check_response(response, callback)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 332, in check_response
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: The view stats.views.album_price_prognosis didn't return an HttpResponse object. It returned None instead.
+"GET /stats/api/album/4SboBpuYojDm02qS4iFeJC/price-prognosis/ HTTP/1.1" 500 76043

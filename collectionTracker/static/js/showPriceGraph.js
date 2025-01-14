@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const albumId = canvas.dataset.albumId;
     const url = canvas.dataset.url;
     const url_predict = canvas.dataset.urlpred;
-    console.log(url_predict);
 
     const colorPrices = getComputedStyle(document.documentElement).getPropertyValue('--accent100').trim();
     const colorPricesPredict = getComputedStyle(document.documentElement).getPropertyValue('--accentVariantB100').trim();
@@ -13,8 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(url_predict).then(response => response.json()) 
     ])
     .then(([data, predictData]) => {
-        console.log('Fetched original data:', data); // Debug: Log original data
-        console.log('Fetched predicted data:', predictData); // Debug: Log predicted data
 
         const labels = data.map(entry => entry.date);
         const prices = data.map(entry => parseFloat(entry.price).toFixed(2));
@@ -23,18 +20,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const today = new Date();
         const futureDates = [];
-
-        for (let i = 0; i < 7; i++) {
+ 
+        for (let i = 0; i < 8; i++) {  // Include one more day (8 days total)
             let futureDate = new Date(today);
-            futureDate.setDate(today.getDate() + i); // Generate future dates (next 7 days)
+            futureDate.setDate(today.getDate() + i); // Generate future dates (next 8 days)
             futureDates.push(futureDate.toISOString().split('T')[0]); 
         }
 
         const combinedLabels = [...labels, ...futureDates];
         const combinedPrices = [...prices, ...predictPrices]; 
-
-        console.log('Labels (combined):', combinedLabels); 
-        console.log('Prices (combined):', combinedPrices);
 
         const ctx = canvas.getContext('2d');
         const chart = new Chart(ctx, {

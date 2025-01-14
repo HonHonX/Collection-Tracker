@@ -16,7 +16,7 @@ from utils.stats_helpers import (
 )
 from stats.models import Notification
 from django.views.decorators.csrf import csrf_exempt
-from .models import DailyAlbumPrice
+from .models import DailyAlbumPrice, AlbumPricePrediction
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
@@ -170,7 +170,6 @@ def album_price_history(request, album_id):
 def album_price_prognosis(request, album_id):
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(f"{price.price:.2f}")} for price in prices]
-    print(f"Data: {data}")
 
     if not data:
         return JsonResponse({'error': 'No data available'}, status=404)
@@ -211,6 +210,15 @@ def album_price_prognosis(request, album_id):
             forecast_data.insert(0, {'ds': last_data_point['date'], 'yhat': last_data_point['price']})
 
         combined_data = data + forecast_data
+
+        # Save predictions to the database
+        album = get_object_or_404(Album, id=album_id)
+        for prediction in forecast_data:
+            AlbumPricePrediction.objects.update_or_create(
+                album=album,
+                date=prediction['ds'],
+                defaults={'predicted_price': prediction['yhat']}
+            )
 
         return JsonResponse(combined_data, safe=False)
     
