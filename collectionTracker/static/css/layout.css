@@ -94,3 +94,39 @@ body::-webkit-scrollbar {
 ::-webkit-scrollbar-track {
     background-color: var(--neutral90); 
 }
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column; /* Switch to column layout */
+        height: auto; /* Allow flexible height */
+    }
+
+    .maincontent {
+        padding-top: 4rem; /* Reduce padding for smaller screens */
+        gap: 1rem; /* Smaller gap between elements */
+    }
+
+    .main-block {
+        width: 90%; /* Expand blocks to nearly full width */
+        padding: 1rem; /* Reduce padding for smaller screens */
+        gap: 1rem; /* Adjust spacing */
+        margin: 1rem auto; /* Add margin for better spacing */
+    }
+
+    .logo {
+        width: 80%; /* Adjust logo size */
+    }
+
+    .full-block {
+        gap: 1rem; /* Reduce gap for compact layout */
+    }
+
+    #spacer-1 {
+        height: 0.5rem; /* Adjust spacer sizes */
+    }
+
+    #spacer-2 {
+        height: 1rem;
+    }
+}

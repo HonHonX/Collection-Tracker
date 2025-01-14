@@ -146,3 +146,83 @@ form {
 #remove-friend-form {
     width: var(--buttonWidth);
 }
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+    #user-block {
+        flex-direction: column;
+        gap: var(--gapDistance);
+    }
+
+    #share-userinfo {
+        width: 100%;
+    }
+
+    #add-friend {
+        width: 100%;
+    }
+
+    #add-friend-form {
+        flex-direction: row; /* Ensure row layout on mobile as well */
+        gap: var(--gapDistance); /* Keep gap between input and button */
+    }
+    
+    #friend-email {
+        flex-grow: 1;
+        height: 3.5rem; /* Increase height slightly on mobile */
+    }
+
+    #add-friend-form button {
+        height: 3.5rem; /* Same height for button on mobile */
+    }
+
+    .share-link {
+        flex-direction: column;
+        gap: var(--gapDistance);
+    }
+
+    #my-wishlist, #my-collection {
+        display: flex;
+        flex-direction: row;
+        gap: var(--gapDistance);
+        align-items: center;
+        width: 100%;
+        padding-bottom: 1rem;
+    }
+
+    #friend-page {
+        gap: var(--gapDistance);
+        flex-direction: column;
+    }
+
+    #friend-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .friend-info {
+        flex-direction: column;
+    }
+
+    .friend-username, .friend-mail, .friend-status {
+        width: 100%;
+    }
+
+    .friend-controls {
+        flex-direction: column;
+        gap: var(--gapDistance);
+        align-items: flex-start;
+    }
+
+    #remove-friend-form {
+        width: 100%;
+    }
+
+    #generate-token-button{
+        height: auto;
+    }
+
+    #token-display{
+        height: auto;
+    }
+}
