@@ -159,9 +159,17 @@ def delete_notification(request, notification_id):
     notification.delete()
     return JsonResponse({'success': True})
 
-
-@login_required
 def album_price_history(request, album_id):
+    """
+    Get the price history for a given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response containing the price history.
+    """
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
     return JsonResponse(data, safe=False)
@@ -222,7 +230,6 @@ def generate_album_price_predictions(album_id):
     except Exception as e:
         raise ValueError(f'Model fitting or prediction failed: {str(e)}')
 
-@login_required
 def album_price_prognosis(request, album_id):
     """
     Generate and return price predictions for the given album.
@@ -245,7 +252,6 @@ def album_price_prognosis(request, album_id):
     except ValueError as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-@login_required
 def save_album_price_predictions(request, album_id):
     """
     Save price predictions for the given album.
