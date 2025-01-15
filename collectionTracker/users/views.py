@@ -1,4 +1,4 @@
-from django.contrib.auth import login, get_backends, update_session_auth_hash
+from django.contrib.auth import login, get_backends, update_session_auth_hash, get_user_model
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -21,7 +21,9 @@ from django.http import JsonResponse
 from django.db import transaction
 from django.views.decorators.http import require_POST
 import json
-from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetCompleteView, PasswordResetDoneView
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetCompleteView, PasswordResetDoneView, PasswordResetConfirmView
 from django.urls import reverse_lazy
 #from collectionTracker.utils import profile_helpers
 
@@ -195,8 +197,7 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            
-            # E-Mail senden
+    
             send_mail(
                 'Password changed',
                 'Your password has been changed. If you did not request this change, please contact us immediately.',
@@ -214,12 +215,33 @@ def change_password(request):
 def password_changed(request):
     return render(request, 'users/password_changed.html')  
 
+'''
+Code for password reset with custom views below
+'''
+
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     template_name = 'users/reset_password.html'
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'users/reset_password_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.send_confirmation_email(self.user)
+        return response
+
+    def send_confirmation_email(self, user):
+        subject = 'Password successfully reset'
+        message = f'Hi {user.username}! Your password has been successfully reset. If you did not make this change, please contact support immediately.'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+        
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'users/reset_password_complete.html'
 
 @login_required
 def delete_account(request):
@@ -251,7 +273,7 @@ def confirm_delete_account(request, token):
     profile = get_object_or_404(users_models.Profile, deletion_token=token)
     user = profile.user
 
-    # Löschen der abhängigen Daten aus allen Apps
+    # Delete dependent data from all apps
     stats_models.UserBadge.objects.filter(user=user).delete()
     stats_models.Notification.objects.filter(user=user).delete()
 
@@ -267,6 +289,7 @@ def confirm_delete_account(request, token):
     collection_models.UserProgress.objects.filter(user=user).delete()
     collection_models.UserFollowedArtists.objects.filter(user=user).delete()
 
+    # Send mail to confirm account deletion success
     send_mail(
             'Account Deletion Successful',
             f'Your account deletion was successful. We are sorry to see you go. For new account creation, please visit our website.',
@@ -275,14 +298,14 @@ def confirm_delete_account(request, token):
             fail_silently=False,
         )
 
-    # Löschen des UserProfile
+    # Delete user profile 
     if hasattr(user, 'userprofile'):
         user.userprofile.delete()
     
-    # Löschen des Profile
+    # Delete profile
     profile.delete()
     
-    # Löschen des Benutzers
+    # Delete user
     user.delete()
 
     logout(request)

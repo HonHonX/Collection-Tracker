@@ -6,7 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from users.views import register, user_profile, login
 from django.contrib.auth import views as auth_views
-from .views import welcome_view, redirect_view, CustomPasswordResetView, CustomPasswordResetDoneView #, CustomPasswordResetCompleteView
+from .views import welcome_view, redirect_view, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetCompleteView, CustomPasswordResetConfirmView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,8 +26,8 @@ urlpatterns = [
     path('password-changed/', views.password_changed, name='password_changed'),
     path('reset-password/', CustomPasswordResetView.as_view(), name='password_reset'),    
     path('reset-password-done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset-password-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='users/reset_password_confirm.html'), name='password_reset_confirm'),
-    path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='users/reset_password_complete.html'), name='password_reset_complete'),
+    path('reset-password-confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(template_name='users/reset_password_confirm.html'), name='password_reset_confirm'),
+    path('reset-password-complete', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('delete-account/', views.delete_account, name='delete_account'),
     path('confirm-delete-account/<str:token>/', views.confirm_delete_account, name='confirm_delete_account'),
 ]

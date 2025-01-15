@@ -3397,3 +3397,153 @@ Traceback (most recent call last):
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'home' not found. 'home' is not a valid view function or pattern name.
 "GET /confirm-delete-account/ywGkdIjrMWesW3K9EFKLCH63JUPPU6x6/ HTTP/1.1" 500 172667
+Internal Server Error: /reset-password-complete/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 230, in get
+    self.send_mail(
+AttributeError: 'CustomPasswordResetCompleteView' object has no attribute 'send_mail'
+"GET /reset-password-complete/ HTTP/1.1" 500 87227
+Internal Server Error: /reset-password-complete/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 228, in get
+    self.send_confirmation_email(request.user)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 235, in send_confirmation_email
+    recipient_list = [user.email]
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\functional.py", line 268, in inner
+    return func(_wrapped, *args)
+AttributeError: 'AnonymousUser' object has no attribute 'email'
+"GET /reset-password-complete/ HTTP/1.1" 500 95621
+Internal Server Error: /reset-password-complete/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 228, in get
+    self.send_confirmation_email(request.user)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 235, in send_confirmation_email
+    recipient_list = [user.email]
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\functional.py", line 268, in inner
+    return func(_wrapped, *args)
+AttributeError: 'AnonymousUser' object has no attribute 'email'
+"GET /reset-password-complete/ HTTP/1.1" 500 95949
+Internal Server Error: /reset-password-confirm/Mzg/set-password/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\debug.py", line 92, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\cache.py", line 62, in _wrapper_view_func
+    response = view_func(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\contrib\auth\views.py", line 295, in dispatch
+    return super().dispatch(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 153, in post
+    return self.form_valid(form)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\contrib\auth\views.py", line 336, in form_valid
+    return super().form_valid(form)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 65, in form_valid
+    return HttpResponseRedirect(self.get_success_url())
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 59, in get_success_url
+    if not self.success_url:
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\functional.py", line 149, in __wrapper__
+    res = func(*self.__args, **self.__kw)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'password_reset_complete' with no arguments not found. 1 pattern(s) tried: ['reset\\-password\\-complete/(?P<uidb64>[^/]+)/\\Z']
+"POST /reset-password-confirm/Mzg/set-password/ HTTP/1.1" 500 141071
+Internal Server Error: /reset-password-confirm/Mzg/set-password/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\debug.py", line 92, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\cache.py", line 62, in _wrapper_view_func
+    response = view_func(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\contrib\auth\views.py", line 295, in dispatch
+    return super().dispatch(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 153, in post
+    return self.form_valid(form)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\contrib\auth\views.py", line 336, in form_valid
+    return super().form_valid(form)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 65, in form_valid
+    return HttpResponseRedirect(self.get_success_url())
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 59, in get_success_url
+    if not self.success_url:
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\functional.py", line 149, in __wrapper__
+    res = func(*self.__args, **self.__kw)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'password_reset_complete' with no arguments not found. 1 pattern(s) tried: ['reset\\-password\\-complete/(?P<uidb64>[^/]+)/\\Z']
+"POST /reset-password-confirm/Mzg/set-password/ HTTP/1.1" 500 141071
+Internal Server Error: /reset-password-confirm/Mzg/set-password/
+Traceback (most recent call last):
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\debug.py", line 92, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\utils\decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\decorators\cache.py", line 62, in _wrapper_view_func
+    response = view_func(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\contrib\auth\views.py", line 295, in dispatch
+    return super().dispatch(*args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\reide\anaconda3\envs\webtech\lib\site-packages\django\views\generic\edit.py", line 153, in post
+    return self.form_valid(form)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 232, in form_valid
+    self.send_confirmation_email(self.user)
+  File "C:\Users\reide\Documents\1_Magenta-Cloud-Local\FOM\05 Web Technologie\MC_Collection_Tracker\Collection-Tracker\collectionTracker\users\views.py", line 237, in send_confirmation_email
+    message = f'Hi {user.name}! Your password has been successfully reset. If you did not make this change, please contact support immediately.'
+AttributeError: 'User' object has no attribute 'name'
+"POST /reset-password-confirm/Mzg/set-password/ HTTP/1.1" 500 121249
