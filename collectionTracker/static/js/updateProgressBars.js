@@ -72,6 +72,7 @@ function updateProgressBars() {
 
         // Calculate the progress based on the remaining albums (excluding blacklisted albums)
         const totalNonBlacklistedAlbums = totalAlbums - blacklistCount;  // Exclude blacklisted albums from the total
+        console.log("totalNonBlacklistedAlbums", totalNonBlacklistedAlbums);
 
         // If there are no non-blacklisted albums, set progress to 0% to avoid division by 0
         var collectionProgress = totalNonBlacklistedAlbums > 0 ? (collectionCount / totalNonBlacklistedAlbums) * 100 : 0;

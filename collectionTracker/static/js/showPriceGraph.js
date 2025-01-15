@@ -63,10 +63,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         type: 'time',
                         time: {
                             unit: 'day'
+                        },
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat',
+                            }
                         }
                     },
                     y: {
-                        beginAtZero: false
+                        beginAtZero: false,
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat', 
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat',
+                            }
+                        }
                     }
                 }
             }

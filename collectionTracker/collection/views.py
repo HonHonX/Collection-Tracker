@@ -203,6 +203,7 @@ def list_overview(request, list_type):
             return JsonResponse({'success': False, 'error': 'Invalid list type'}, status=400)
 
         artist_list = get_artist_list(request.user)  # Retrieve artist list
+        user_albums = Album.objects.filter(useralbumcollection__user=request.user)  # Retrieve user albums
 
         return render(request, template, {
             'user_blacklist': user_blacklist,
@@ -213,6 +214,7 @@ def list_overview(request, list_type):
             'user_album_ids': user_album_ids,
             'artist_list': artist_list,
             'user_list': user_list,
+            'albums': user_albums,  # Include user albums in the context
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -449,7 +451,6 @@ class AlbumDetail(View):
 
 @login_required
 def album_carousel(request):
-    logger.debug("Fetching albums for user: %s", request.user.username)
     user_albums = Album.objects.filter(useralbumcollection__user=request.user)
     logger.debug("Found %d albums in user's collection", user_albums.count())
     for album in user_albums:

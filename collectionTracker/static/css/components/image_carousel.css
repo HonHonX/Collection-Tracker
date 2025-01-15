@@ -2,10 +2,11 @@
 
 .carousel-container {
     position: relative;
-    width: 75%;
-    margin: 2rem auto;
+    width: 100%;
+    margin: 0 auto;
     perspective: 1000px; /* Creates a 3D perspective */
     overflow: hidden;
+    height: 30rem;
 }
 
 .carousel {
@@ -16,15 +17,15 @@
 
 .carousel-item {
     position: relative;
-    flex: 0 0 20%; /* Adjust this for the number of items visible */
-    margin: 0 10px;
+    flex: 0 0 15%;
+    margin: 0 0.8rem;
     transform-origin: center center;
-    transform: scale(0.8) rotateY(10deg); /* Shrinks and rotates inactive items */
+    transform: scale(0.8) rotateY(10deg);
     transition: transform 0.8s ease-in-out;
 }
 
 .carousel-item.active {
-    transform: scale(1) rotateY(0); /* Enlarges the active item */
+    transform: scale(1) rotateY(0);
 }
 
 .carousel-item img {
@@ -36,19 +37,22 @@
 
 .reflection {
     position: absolute;
-    bottom: 0.5rem; /* Start at the bottom edge of the image */
+    bottom: -6.5rem; 
     width: 100%;
-    height: 30%;
+    height: 35%; 
     overflow: hidden;
-    transform: scaleY(-1); /* Flips the image vertically */
-    opacity: 0.4; /* Creates a reflective look */
-    transform-origin: bottom; /* Start the reflection from the bottom */
+    transform-origin: bottom;
+    opacity: 1;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)); 
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 
 .reflection img {
-    width: 100%;
-    height: auto;
-    filter: blur(2px);
+    opacity: 0.5; /* Make the reflection semi-transparent */
+    width: 100%; /* Match the width of the parent */
+    height: auto; /* Maintain aspect ratio */
+    filter: blur(2px); /* Add subtle blur to the reflection */
+    transform: scaleY(-1); /* Flip the image vertically for the reflection */
 }
 
 /* Navigation buttons */
@@ -56,14 +60,15 @@
     position: relative;
     top: 0;
     z-index: 100;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
     border: none;
-    padding: 10px;
+    padding: 0.8rem;
     cursor: pointer;
-    font-size: 18px;
     border-radius: 50%;
-    width: auto
+    width: auto;
+    height: 3rem;
+    aspect-ratio: 1;
 }
 
 .prev {
@@ -75,47 +80,26 @@
 }
 
 .carousel-container button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--accentVariantA100);
 }
 
 /* Indicators (dots) */
 .indicators {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 1.25rem;
     position: relative;
 }
 
 .indicator {
     display: inline-block;
-    width: 10px;
-    height: 10px;
-    margin: 0 5px;
-    background: gray;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin: 0 0.5rem;
+    background: var(--neutral70);
     border-radius: 50%;
     cursor: pointer;
 }
 
 .indicator.active {
-    background: black;
+    background: var(--accent100);
 }
-
-.album-details {
-    margin-left: 1rem;
-    margin-bottom: 1rem;
-    text-align: left;
-    margin-top: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.album-details h2 {
-    font-size: 24px;
-    color: #333;
-    text-align: left;
-}
-
-.album-details p {
-    font-size: 18px;
-    margin: 0;
-    color: #666;
-}
-
