@@ -33,3 +33,9 @@
 .gauge-fill.low { background: var(--accentVariantA100); }
 .gauge-fill.medium { background: var(--accentVariantB100); }
 .gauge-fill.high { background: var(--accent100); }
+
+@media (max-width: 768px) {
+    .popularity-gauge {
+        width: 100%;
+    }    
+}

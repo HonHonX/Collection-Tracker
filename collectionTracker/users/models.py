@@ -3,11 +3,15 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     """
-    Profile model that extends the User model with a profile image field.
+    Profile model that extends the User model with additional fields:
+    - a profile image field
+    - a deletion token field
+    - an email verified field 
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     deletion_token = models.CharField(max_length=32, blank=True, null=True)
+    email_verified = models.BooleanField(default=False)
 
     def __str__(self):
         """

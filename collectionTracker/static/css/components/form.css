@@ -25,6 +25,15 @@ form input, form textarea {
     color: var(--neutral0);
 }
 
+input {
+    width: 50%;
+    padding: 1rem;
+    border-radius: var(--borderRadius);
+    box-sizing: border-box;
+    background-color: var(--neutral70);
+    color: var(--neutral0);
+}
+
 /* Input/textarea focus styles */
 form input:focus, form textarea:focus {
     border-color: var(--accent100); /* Highlight color when focused */
@@ -85,12 +94,12 @@ form input.error, form textarea.error {
 /* Mobile Adjustments */
 @media (max-width: 768px) {
     form input, form textarea {
-        font-size: 0.9rem; /* Smaller font for inputs/textarea */
-        padding: 0.75rem; /* Adjust padding for mobile */
+        font-size: 0.9rem;
+        padding: 0.75rem; 
     }
 
     form input[type="file"] {
-        font-size: 0.9rem; /* Smaller font for inputs/textarea */
+        transform: scale(0.9);
     }
 
     form input[type="submit"] {
@@ -105,5 +114,9 @@ form input.error, form textarea.error {
 
     form .errorlist {
         font-size: 0.9rem; /* Smaller font for error messages */
+    }
+
+    input {
+        padding: 0.5rem;
     }
 }
