@@ -59,12 +59,12 @@ def artist_detail(request, artist_id):
     if request.method == 'POST':
         discogs_url = request.POST.get('discogs_url')
         if discogs_url:
-            update_artist_from_discogs_url(artist, discogs_url)
+            update_artist_from_discogs_url(artist, discogs_url) 
             return redirect('artist_detail', artist_id=artist.id)
     
     return render(request, 'collection/artist_detail.html', {'artist': artist})
 
-def artist_search(request):
+def artist_search(request, artist_name=None):
     """
     Handle artist search requests.
     
@@ -75,6 +75,7 @@ def artist_search(request):
     
     Args:
         request (HttpRequest): The HTTP request object.
+        artist_name (str): The name of the artist to search for.
     
     Returns:
         HttpResponse: The rendered HTML page or JSON response with error message.
@@ -82,8 +83,9 @@ def artist_search(request):
 
     user = request.user
 
-    if request.method == 'POST':
-        artist_name = request.POST.get('artist_name')
+    if request.method == 'POST' or artist_name:
+        if not artist_name:
+            artist_name = request.POST.get('artist_name')
         
         if not artist_name:
             error = "Artist name is required."
@@ -107,22 +109,23 @@ def artist_search(request):
     
     return render(request, 'collection/artist_search.html')
 
-def artist_overview(request, artist_name):
+def artist_overview(request, artist_id):
     """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
     
     Args:
         request (HttpRequest): The HTTP request object.
-        artist_name (str): The name of the artist to display.
+        artist_id (str): The id of the artist to display.
     
     Returns:
         HttpResponse: The rendered HTML page with artist details.
     """
     try:
-        context = get_artist_data(artist_name, request.user) 
-        response = render(request, 'collection/artist_overview.html', context)
-        return response
+        artist = Artist.objects.get(id=artist_id)
+        artist_name = artist.name
+        # Redirect to the search page with the artist name
+        return redirect('artist_search', artist_name=artist_name)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     

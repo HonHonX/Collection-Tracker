@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
+from friends.models import Friend
 from utils.stats_helpers import (
     calculate_top_genres,
     calculate_top_artists,
@@ -22,6 +23,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from django.contrib.auth.models import User  # Add this import
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +38,7 @@ def dashboard_view(request):
     Returns:
         HttpResponse: The rendered dashboard view.
     """
-    user = request.user
+    user = User.objects.get(id=request.user.id)
     selected_artist_id = request.GET.get('selected_artist_id')
     user_rank = None
     users_with_more_albums = 0

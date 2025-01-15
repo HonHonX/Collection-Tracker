@@ -93,7 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgressBars();
 
     // Add event listener for icon clicks inside maincontent
-    document.querySelector('.icon').addEventListener('click', function(event) {
-        updateProgressBars();
+    document.querySelectorAll('.icon').forEach(icon => {
+        icon.addEventListener('click', function(event) {
+            // Simulate a delay for the update to complete
+            setTimeout(updateProgressBars, 100);
+        });
     });
 });

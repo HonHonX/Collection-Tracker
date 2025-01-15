@@ -8,9 +8,10 @@ urlpatterns = [
 
     # Artist search
     path('search/', views.artist_search, name="artist_search"),
+    path('search/<str:artist_name>/', views.artist_search, name="artist_search"),
 
     # Artist overview
-    path('artist/<str:artist_name>/', views.artist_overview, name='artist_overview'),
+    path('artist_overview/<str:artist_id>/', views.artist_overview, name='artist_overview'),
 
     # Follow artist
     path('follow_artist/', views.follow_artist, name='follow_artist'),
@@ -28,4 +29,3 @@ urlpatterns = [
     path("artist_detail/<str:artist_id>/", views.artist_detail, name="artist_detail"), 
     
 ]
- 
