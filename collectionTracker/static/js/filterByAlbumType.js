@@ -23,3 +23,4 @@ document.addEventListener('DOMContentLoaded', function() {
         albumTypeFilter.addEventListener('change', filterByAlbumType);
     }
 });
+ 

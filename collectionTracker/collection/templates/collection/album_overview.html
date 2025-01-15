@@ -49,6 +49,15 @@
     </div>
 
     <div class="sorting-controls">
+
+        <label for="substatus-filter">Filter by Substatus:</label>
+        <select id="substatus-filter">
+            <option value="">All</option>
+            {% for substatus in user_album_substatuses %}
+                <option value="{{ substatus|lower }}">{{ substatus }}</option>
+            {% endfor %}
+        </select>
+
         <label for="artist-filter">Filter by Artist:</label>
         <select id="artist-filter">
             <option value="">All Artists</option> 
@@ -76,6 +85,7 @@
             data-album-type="{{ collection_entry.album.album_type }}" 
             data-release-date="{{ collection_entry.album.release_date }}" 
             data-album-id="{{ collection_entry.album.id }}"
+            data-substatus="{{ collection_entry.substatus|lower }}"
             data-in-collection="{% if collection_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
             data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
             data-in-blacklist="{% if collection_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
@@ -108,6 +118,7 @@
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
 <script src="{% static 'js/imageCarousel.js' %}"></script>
+<script src="{% static 'js/filterBySubstatus.js' %}"></script>
 <script>
     function toggleCarousel() {
         const carouselContainer = document.getElementById('carousel-container');

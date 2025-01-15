@@ -8,7 +8,7 @@ api_key = config('TICKETMASTER_API_KEY')
 def fetch_artist_events(request, artist_name):
     events = []
 
-    if artist_name:
+    if (artist_name):
         base_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
         
         params = {
@@ -34,10 +34,14 @@ def fetch_artist_events(request, artist_name):
                         }
                         event['address'] = venue.get('address', {}).get('line1')
                         event['city'] = venue.get('city', {}).get('name')
-                        event['state'] = venue.get('state', {}).get('stateCode')
+                        event['state'] = venue.get('state', {}).get('stateCode') if venue.get('state', {}).get('stateCode') else None
                         event['country'] = venue.get('country', {}).get('countryCode')
                     
-                    event['start_time'] = event.get('dates', {}).get('start', {}).get('localTime')
+                    start_time = event.get('dates', {}).get('start', {}).get('localTime')
+                    if start_time:
+                        event['start_time'] = start_time[:5]  # Exclude seconds
+                    else:
+                        event['start_time'] = None
                     event['start_date'] = event.get('dates', {}).get('start', {}).get('localDate')
                     event['timezone'] = event.get('dates', {}).get('timezone')
                     event['image'] = event.get('images', [])[0].get('url') if event.get('images') else None

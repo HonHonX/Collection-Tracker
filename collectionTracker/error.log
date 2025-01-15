@@ -2893,3 +2893,9 @@ Traceback (most recent call last):
                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'list' object has no attribute 'get'
 "GET /fetch-artist-events/aespa/ HTTP/1.1" 500 87463
+Internal Server Error: /overview/collection/
+"GET /overview/collection/ HTTP/1.1" 500 101
+Internal Server Error: /overview/collection/
+"GET /overview/collection/ HTTP/1.1" 500 101
+Internal Server Error: /overview/collection/
+"GET /overview/collection/ HTTP/1.1" 500 101

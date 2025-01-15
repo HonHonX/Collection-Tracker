@@ -106,6 +106,10 @@ class UserAlbumCollection(models.Model):
         default='unspecified', 
     )
 
+    def save(self, *args, **kwargs):
+        self.substatus = self.substatus.lower()
+        super().save(*args, **kwargs)
+
     class Meta:
         unique_together = ('user', 'album')
 

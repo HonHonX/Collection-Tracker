@@ -203,6 +203,7 @@ def list_overview(request, list_type):
             return JsonResponse({'success': False, 'error': 'Invalid list type'}, status=400)
 
         artist_list = get_artist_list(request.user)  # Retrieve artist list
+        user_album_substatuses = UserAlbumCollection.SUBSTATUS
         user_albums = Album.objects.filter(useralbumcollection__user=request.user)  # Retrieve user albums
 
         return render(request, template, {
@@ -214,7 +215,8 @@ def list_overview(request, list_type):
             'user_album_ids': user_album_ids,
             'artist_list': artist_list,
             'user_list': user_list,
-            'albums': user_albums,  # Include user albums in the context
+            'albums': user_albums,
+            'user_album_substatuses': [choice[1] for choice in user_album_substatuses],
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -456,3 +458,6 @@ def album_carousel(request):
     for album in user_albums:
         logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
     return render(request, 'collection/album_carousel.html', {'albums': user_albums})
+
+from django.shortcuts import render
+from .models import Album, UserAlbumCollection
