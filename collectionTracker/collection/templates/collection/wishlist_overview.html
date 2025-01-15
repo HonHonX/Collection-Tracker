@@ -21,6 +21,14 @@
                 <option value="{{ artist.name }}">{{ artist.name }}</option>
             {% endfor %} 
         </select>
+
+        <label for="priority-filter">Filter by Priority:</label>
+        <select id="priority-filter">
+            <option value="">All</option>
+            {% for priority in user_album_priorities %}
+                <option value="{{ priority|lower }}">{{ priority }}</option>
+            {% endfor %}
+        </select>
          
         <label for="sort-criteria">Sort by:</label>
         <select id="sort-criteria">
@@ -41,6 +49,7 @@
             data-album-type="{{ wishlist_entry.album.album_type }}" 
             data-release-date="{{ wishlist_entry.album.release_date }}" 
             data-album-id="{{ wishlist_entry.album.id }}"
+            data-priority="{{ wishlist_entry.get_priority_display|lower }}"
             data-in-collection="{% if wishlist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
             data-in-wishlist="{% if wishlist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
             data-in-blacklist="{% if wishlist_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
@@ -72,4 +81,5 @@
     <script src="{% static 'js/manageAlbumState.js' %}"></script>
     <script src="{% static 'js/sortAlbums.js' %}"></script>
     <script src="{% static 'js/filterByArtist.js' %}"></script>
+    <script src="{% static 'js/filterByPriority.js' %}"></script>
 {% endblock %}

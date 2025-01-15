@@ -204,6 +204,7 @@ def list_overview(request, list_type):
 
         artist_list = get_artist_list(request.user)  # Retrieve artist list
         user_album_substatuses = UserAlbumCollection.SUBSTATUS
+        user_album_priorities = UserAlbumWishlist.PRIORITY_CHOICES
         user_albums = Album.objects.filter(useralbumcollection__user=request.user)  # Retrieve user albums
 
         return render(request, template, {
@@ -217,6 +218,7 @@ def list_overview(request, list_type):
             'user_list': user_list,
             'albums': user_albums,
             'user_album_substatuses': [choice[1] for choice in user_album_substatuses],
+            'user_album_priorities': [choice[1] for choice in user_album_priorities],
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
