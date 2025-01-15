@@ -91,7 +91,7 @@ p {
     padding: 0 0.5rem;
 }
 
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
 
         .artist-card{
             flex-direction: column;
@@ -120,3 +120,5 @@ p {
             height: 5rem;
             width: 5rem;
         }
+
+    }

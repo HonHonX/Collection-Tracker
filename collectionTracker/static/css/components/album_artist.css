@@ -121,6 +121,7 @@
         border-radius: var(--borderRadius);
         filter: grayscale(0);
         max-height: 20rem;
+        max-width: 10rem;
         transition: var(--transitionStyle);
     }
     
@@ -241,15 +242,6 @@
         transform: scale(1.2);
     }
 
-
-
-
-
-
-
-
-
-
 /* Controls */
 /* .controls {
     width: 100%;
@@ -269,18 +261,75 @@
 
 /* Album Overview */
 
-
-
-
-
-
-
-
-
-
-
 #save-button:disabled {
     cursor: not-allowed;  /* Change the cursor to indicate the button is disabled */
     opacity: 0.5;  /* Dim the button */
 }
 
+
+@media (max-width: 768px) {
+
+    .album-item {
+        width: 8rem;   
+        transform: scale(0.8);          
+    }
+
+    .album-grid {
+        width: 100%;       
+    }
+
+    .sorting-controls {
+        transform: scale(0.7);
+        justify-content: center;
+        font-size-adjust: -1;
+    }
+
+    .collection-header p{
+        text-align: center;
+    }
+
+    .overview-content{
+        flex-direction: row;
+    }
+
+    .artist-album-container {
+        display: flex; 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 1rem; 
+        margin: 0 auto; 
+    }
+
+    /* Artist Detail */
+    .artist-detail {
+        flex: none; 
+        width: 100%; 
+    }
+
+    .artist-detail img{
+        transform: scale(0.8);
+    }
+
+    .control-block {
+        gap: 0;
+        padding: 0;
+        width: 100%;
+        transform: scale(0.9);
+        justify-content: center;
+    }
+
+    .control-block .filter-block .sort-block{
+        width: 50%;
+        transform: scale(0.8);
+    }
+
+    .control-block label {
+        font-size: 0.8rem;
+    }
+
+    .control-block select {
+        width: 6rem;
+        font-size: 0.8rem;
+    }
+
+}

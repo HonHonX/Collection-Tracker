@@ -149,3 +149,34 @@ textarea {
     width: 60%;
     height: 100%;
 }
+
+@media (max-width: 768px) {
+    .maincontent {
+        flex-direction: row; 
+        padding: 0 1rem; 
+    }
+
+    .album-detail{
+        width: 100%; /* Full width for mobile screens */
+        margin-top: 3rem;
+        transform: scale(0.9);
+    }
+    .custom-detail {
+        transform: scale(0.9);
+    }
+
+    .album-detail img.album-cover {
+        width: 100%; /* Album cover scales to full width */
+        max-width: 300px; /* Optional: Limit max size for readability */
+    }
+
+    .bottom-block {
+        flex-direction: column; /* Stack price stats and tracklist vertically */
+        gap: var(--gapDistance);
+    }
+
+    .album-tracklist,
+    .price-stats {
+        width: 100%; /* Full width for mobile screens */
+    }
+}
