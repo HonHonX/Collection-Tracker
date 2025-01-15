@@ -2,11 +2,12 @@ from decouple import config
 import requests
 from django.http import JsonResponse
 
-# Get the API key from environment variables using decouple
 api_key = config('TICKETMASTER_API_KEY')
 
 def fetch_artist_events(request, artist_name):
     events = []
+
+    print('Fetching events for artist:', artist_name)
 
     if (artist_name):
         base_url = 'https://app.ticketmaster.com/discovery/v2/events.json'
@@ -17,8 +18,9 @@ def fetch_artist_events(request, artist_name):
             'size': 10,       
             'classificationName': 'music'        
         }
-
+        print('Params:', params)
         response = requests.get(base_url, params=params)
+        print('Response:', response.status_code)
         if response.status_code == 200:
             data = response.json()
             if '_embedded' in data:
@@ -39,12 +41,14 @@ def fetch_artist_events(request, artist_name):
                     
                     start_time = event.get('dates', {}).get('start', {}).get('localTime')
                     if start_time:
-                        event['start_time'] = start_time[:5]  # Exclude seconds
+                        event['start_time'] = start_time[:5]
                     else:
                         event['start_time'] = None
                     event['start_date'] = event.get('dates', {}).get('start', {}).get('localDate')
                     event['timezone'] = event.get('dates', {}).get('timezone')
                     event['image'] = event.get('images', [])[0].get('url') if event.get('images') else None
                     event['url'] = event.get('url') if event.get('url') else None
+
+                    print('Event:', event['name'], event['start_date'], event['start_time'], event['city'], event['state'], event['country'])
 
     return JsonResponse({'events': events})

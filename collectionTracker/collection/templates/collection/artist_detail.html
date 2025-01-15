@@ -34,24 +34,39 @@
             </div>
             
             <div class="bottom-block">
-                <div id="link">
-                    {% if artist.urls %}
-                        <h2>Web</h2>
-                        <ul class="link-list">
-                            {% for url in artist.urls %}
-                                <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
 
                 <div id="artist-events-block" data-artist-name="{{ artist.name }}">
-                    <h2>Upcoming Events for {{ artist.name }}</h2>
+                    <h2>Upcoming Events</h2>
                     <div id="events-slider" class="slider">
-                        <div class="slider-item">Loading events...</div>
+                        <div class="slider-item">Loading...</div>
                     </div>
                 </div>
 
+                <div id="link-block">
+                    <h2>Web</h2>
+                    <ul class="link-list">
+                        {% for url in artist.urls %}
+                            <li class="link">
+                                <a href="{{ url }}" target="_blank">
+                                    {% if 'instagram' in url %}
+                                        <img src="{% static 'icons/instagram.svg' %}" alt="Instagram" class="icon">
+                                    {% elif 'facebook' in url %}
+                                        <img src="{% static 'icons/facebook.svg' %}" alt="Facebook" class="icon">
+                                    {% elif 'twitter' in url %}
+                                        <img src="{% static 'icons/twitter_x.svg' %}" alt="Twitter" class="icon">
+                                    {% elif 'youtube' in url %}
+                                        <img src="{% static 'icons/youtube.svg' %}" alt="YouTube" class="icon">
+                                    {% elif 'soundcloud' in url %}
+                                        <img src="{% static 'icons/soundcloud.svg' %}" alt="SoundCloud" class="icon">
+                                    {% else %}
+                                        <img src="{% static 'icons/website.svg' %}" alt="Website" class="icon">
+                                    {% endif %}
+                                    <span class="link-text">{{ url }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div> 
 

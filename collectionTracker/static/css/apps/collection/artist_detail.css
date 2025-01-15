@@ -62,6 +62,8 @@
 #artist-bio {
     display: flex;
     flex-direction: column;
+    gap: var(--gapDistance);
+    line-height: 1.5rem;
 }
 
 .link-list {
@@ -72,6 +74,8 @@
 
 .link-list li {
     margin: 0.5rem 0;
+    display: flex;
+    align-items: center; /* Center vertically */
 }
 
 .link-list a {
@@ -93,9 +97,9 @@
     flex-direction: row;
     overflow: hidden;
     gap: var(--gapDistance);
-    overflow-x: auto;                /* Enable horizontal scrolling */
-    overflow-y: hidden;              /* Disable vertical scrolling*/
-    scroll-behavior: smooth;         /* Smooth scrolling */
+    overflow-x: auto;               
+    overflow-y: hidden;             
+    scroll-behavior: smooth;         
     box-sizing: border-box;          
     margin: 0;       
 
@@ -130,16 +134,16 @@
 }
 
 #events-slider::-webkit-scrollbar {
-    height: 8px;                     /* Custom scrollbar height */
+    height: 0.5rem;                    
 }
 
 #events-slider::-webkit-scrollbar-thumb {
-    background-color: var(--neutral70); /* Scrollbar thumb color */
-    border-radius: 4px;              /* Rounded scrollbar thumb */
-}
+    background-color: var(--neutral70); 
+    border-radius: 0.25rem;      
+}      
 
 #events-slider::-webkit-scrollbar-track {
-    background-color: var(--neutral90); /* Scrollbar track color */
+    background-color: var(--neutral90); 
 }  
 
 .bottom-block {
@@ -147,4 +151,41 @@
     flex-direction: row;
     gap: var(--gapDistance);
     justify-content: space-between;
+}
+
+#artist-events-block {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 50%;
+    max-width: 55%;
+    overflow: hidden;
+}
+
+#link-block {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 40%;
+}
+
+.link-list {
+    list-style-type: none; /* Entfernt die Standardpunkte von der Liste */
+    padding: 0;
+    margin: 0;
+    gap: var(--gapDistance);
+}
+
+.link {
+    display: flex;
+    align-items: center; 
+height: 2rem;;
+}
+
+.link a {
+    display: flex;
+    align-items: center; 
+    text-decoration: none;
+}
+
+.link img {
+    margin-right: 0.5rem;
 }
