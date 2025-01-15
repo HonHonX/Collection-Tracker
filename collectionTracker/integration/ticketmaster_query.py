@@ -14,7 +14,8 @@ def fetch_artist_events(request, artist_name):
         params = {
             'keyword': artist_name,  
             'apikey': api_key,       
-            'size': 10               
+            'size': 10,       
+            'classificationName': 'music'        
         }
 
         response = requests.get(base_url, params=params)
@@ -22,6 +23,7 @@ def fetch_artist_events(request, artist_name):
             data = response.json()
             if '_embedded' in data:
                 events = data['_embedded'].get('events', [])
+                
                 for event in events:
                     venues = event.get('_embedded', {}).get('venues', [])
                     if venues:
@@ -30,5 +32,15 @@ def fetch_artist_events(request, artist_name):
                             'latitude': venue.get('location', {}).get('latitude'),
                             'longitude': venue.get('location', {}).get('longitude')
                         }
-    
+                        event['address'] = venue.get('address', {}).get('line1')
+                        event['city'] = venue.get('city', {}).get('name')
+                        event['state'] = venue.get('state', {}).get('stateCode')
+                        event['country'] = venue.get('country', {}).get('countryCode')
+                    
+                    event['start_time'] = event.get('dates', {}).get('start', {}).get('localTime')
+                    event['start_date'] = event.get('dates', {}).get('start', {}).get('localDate')
+                    event['timezone'] = event.get('dates', {}).get('timezone')
+                    event['image'] = event.get('images', [])[0].get('url') if event.get('images') else None
+                    event['url'] = event.get('url') if event.get('url') else None
+
     return JsonResponse({'events': events})

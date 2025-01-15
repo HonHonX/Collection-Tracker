@@ -13,8 +13,9 @@ django.setup()
 from django.core.wsgi import get_wsgi_application
 from stats.models import AlbumPricePrediction
 from stats.views import save_album_price_predictions
-from collection.models import Album
+from collection.models import Album, Artist
 from integration.discogs_query import update_album_price
+from integration.spotify_query import get_artist_data
 import time
 
 application = get_wsgi_application()
@@ -37,3 +38,9 @@ for album in updated_albums:
     save_album_price_predictions(None, album.id)
     print(f"Saved price predictions for album {album.name} (ID: {album.id})")
 
+# Update Artist data
+artistList = Artist.objects.all()
+for artist in artistList:
+    artist_name = artist.name  
+    get_artist_data(user=None,artist_name=artist_name) 
+    print(f"Updated artist data for {artist.name} (ID: {artist.id})")
