@@ -1,5 +1,6 @@
 :root {
     --sliderHeight: 18rem;
+    --sliderHeightMobile: 4rem;
 }
 
 p {
@@ -89,3 +90,33 @@ p {
 .collection-percentage {
     padding: 0 0.5rem;
 }
+
+    @media (max-width: 768px) {
+
+        .artist-card{
+            flex-direction: column;
+            height: 50rem;
+        }
+        .artist-block{
+            display: flex;
+            flex-direction: row;
+            flex: 0;
+            padding: 5%;
+        }
+
+        #artist-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 5%;
+         }
+         #artist-info h2{
+            text-align: left !important;
+         }
+         #artist-info button {
+            width: 50%;
+         }
+
+        #artist-image {
+            height: 5rem;
+            width: 5rem;
+        }
