@@ -15,15 +15,22 @@
       <h1>Login</h1>
       {% if form.errors %}
       Your username and password didn't match. Please try again.
+      <br>Maybe you have to verify your account first. Check your email for the verification link.
       {% endif %}
 
       {% if next %}
-        {% if user.is_authenticated %}
-          Your account doesn't have access to this page. To proceed,
-          please login with an account that has access.
-        {% else %}
-          Please login to see this site.
-        {% endif %}
+      {% if user.is_authenticated %}
+      {% if not user.profile.email_verified %}
+        Your email address has not been verified. Please check your email for the verification link.
+      {% elif next %}
+        Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.
+      {% endif %}
+      {% else %}
+      {% if next %}
+        Please login to see this site.
+      {% endif %}
+      {% endif %}
       {% endif %}
 
       <form method="post" action="{% url 'login' %}">
