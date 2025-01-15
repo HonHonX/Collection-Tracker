@@ -7,6 +7,7 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    deletion_token = models.CharField(max_length=32, blank=True, null=True)
 
     def __str__(self):
         """

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Handle login button click
     document.getElementById('login-button').addEventListener('click', function() {
         var nextUrl = "/";
-        window.location.href = "/accounts/login/?next=" + encodeURIComponent(nextUrl);
+        window.location.href = "/login/?next=" + encodeURIComponent(nextUrl);
     });
 
     // Handle register button click

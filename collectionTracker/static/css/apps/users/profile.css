@@ -97,6 +97,11 @@ input[type="file"]:hover::-webkit-file-upload-button {
     margin-bottom: 1rem;
 }
 
+#delete-account-button {
+    background-color: var(--accent100);
+    margin-bottom: 1rem;
+}
+
 #first-column {
     height: 100%;
     display: flex;
