@@ -13,8 +13,11 @@
 
 {% block content %}
     {% include "sidebar.html" %}
-    <div class="maincontent">
-        {% block maincontent %}
-        {% endblock %}
+    <div class="content">
+        <div class="maincontent">
+            {% block maincontent %}
+            {% endblock %}  
+        </div>
+       <div class="buffer"></div>
     </div>
 {% endblock %}

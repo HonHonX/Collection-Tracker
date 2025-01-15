@@ -13,12 +13,17 @@ main {
     flex-direction: row;
     justify-content: flex-start;
     width: 100vw; 
-    height: 100vh;
+    height: auto;
     box-sizing: border-box; /* Include padding and border in dimensions */
 }
 
 body::-webkit-scrollbar {
     display: none; /* Hide vertical scrollbar*/
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
 }
 
 .maincontent {
@@ -30,7 +35,11 @@ body::-webkit-scrollbar {
     box-sizing: border-box;
     gap: var(--gapBigBlocks);
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: hidden;
+}
+
+.buffer{
+    height: 10rem;
 }
 
 /* used for sites without a sidebar */
@@ -100,6 +109,7 @@ body::-webkit-scrollbar {
     main {
         flex-direction: column; /* Switch to column layout */
         height: auto; /* Allow flexible height */
+        overflow-x: none;
     }
 
     .maincontent {

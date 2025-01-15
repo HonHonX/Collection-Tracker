@@ -86,3 +86,12 @@
 .link-list a:hover {
     color: var(--accentVariantA100);
 }
+
+
+@media (max-width: 768px) {
+    #artist-information {
+        flex-direction: column;
+        transform: scale(0.9);
+    }
+
+}

@@ -15,6 +15,7 @@
         <p>{{ error }}</p>
     {% else %}
         <!-- light column -->
+         <div class="overview-content">
             <div class="artist-detail">
                 {% if artist.photo_url %}
                     <a href="{% url 'artist_detail' artist.id %}">
@@ -160,6 +161,7 @@
                     {% endfor %}
                 </div>
             </div>
+        </div>
     {% endif %} 
 {% endblock %}
 
