@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/apps/users/login_register.css' %}" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="maincontent">  
+    <div class="main-block">
+
+      <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
+
+    <h2>Account Activation invalid</h2>
+    <p>Please try again to register.</p>
+
+    <!-- Home button -->
+    <a href="{% url 'welcome' %}">
+        <img class="icon" id="home-button" src="{% static 'icons/home.svg' %}">
+    </a>
+    
+    </div>
+</div>
+{% endblock %}

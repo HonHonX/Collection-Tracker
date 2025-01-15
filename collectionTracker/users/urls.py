@@ -13,6 +13,8 @@ urlpatterns = [
     #path('accounts/', include('django.contrib.auth.urls')), # for logout, causes trouble with custom views    
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'), # for new users
+    path('activate/<uidb64>/<token>/', views.ActivateAccount.as_view(), name='activate'), 
+    path('account-activation-sent/', views.account_activation_sent, name='account_activation_sent'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('', views.redirect_view, name='redirect'),
     path('welcome/', views.welcome_view, name='welcome'),
