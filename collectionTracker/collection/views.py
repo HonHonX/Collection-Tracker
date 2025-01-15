@@ -446,3 +446,12 @@ class AlbumDetail(View):
             'message': 'Substatus updated successfully',
             'substatus_display': collection_entry.get_substatus_display()
         }, status=200)
+
+@login_required
+def album_carousel(request):
+    logger.debug("Fetching albums for user: %s", request.user.username)
+    user_albums = Album.objects.filter(useralbumcollection__user=request.user)
+    logger.debug("Found %d albums in user's collection", user_albums.count())
+    for album in user_albums:
+        logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
+    return render(request, 'collection/album_carousel.html', {'albums': user_albums})

@@ -12,5 +12,6 @@
 @import url('components/progress_counter.css');
 @import url('components/notification.css');
 @import url('components/gauge.css');
+@import url('components/image_carousel.css');
 
 @import url('themes/dark_mode.css');

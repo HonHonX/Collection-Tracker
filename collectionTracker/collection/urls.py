@@ -27,5 +27,8 @@ urlpatterns = [
 
     # Artist detail
     path("artist_detail/<str:artist_id>/", views.artist_detail, name="artist_detail"), 
+
+    # Album carousel
+    path('album-carousel/', views.album_carousel, name='album_carousel'),
     
 ]
