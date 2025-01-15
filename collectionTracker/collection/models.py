@@ -67,8 +67,13 @@ class Album(models.Model):
     labels = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.genres:
+            self.genres = ["N/A"]
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.name 
+        return self.name  
 
     def formatted_lowest_price(self):
         return f"€{number_format(self.lowest_price, decimal_pos=2)}"

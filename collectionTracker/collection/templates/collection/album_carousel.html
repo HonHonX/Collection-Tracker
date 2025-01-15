@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="carousel-container">
+         <!-- Album details display -->
+         <div class="album-details">
+            <h2 id="album-title"></h2>
+            <p id="album-artist"></p>
+        </div>
+        
+        <div class="carousel">
+            {% for album in albums %}
+            <div class="carousel-item" data-title="{{ album.name }}" data-artist="{{ album.artist.name }}">
+                <img src="{{ album.image_url }}" alt="{{ album.title }}">
+                <div class="reflection">
+                    <img src="{{ album.image_url }}" alt="{{ album.title }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="indicators">
+            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+            {% for album in albums %}
+            <span class="indicator" onclick="moveSlide({{ forloop.counter0 }} - currentIndex)"></span>
+            {% endfor %}
+            <button class="next" onclick="moveSlide(1)">&#10095;</button>e
+        </div>
+
+    </div>
+
+<script src="{% static 'js/imageCarousel.js' %}"></script>
+{% endblock %}

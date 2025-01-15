@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    if (window.location.pathname.includes('search') || window.location.pathname.includes('home')) {
+    if (window.location.pathname.includes('search') || window.location.pathname.includes('home') || window.location.pathname.includes('artist_overview')) {
         updateProgressBars();
     }
 
@@ -82,31 +82,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle the click event for adding/removing albums from collection, wishlist, or blacklist
     async function handleAlbumClick(albumItem, listType, iconElement, addIcon, removeIcon, altAdd, altRemove) {
-        const isInList = albumItem.dataset[`in${capitalize(listType)}`] === 'true';
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        const albumId = albumItem.dataset.albumId;
-        const albumName = albumItem.dataset.albumName;
-        const albumType = albumItem.dataset.albumType;
-        const releaseDate = albumItem.dataset.releaseDate;
-        const imageUrl = albumItem.dataset.imageUrl;
-
-        const action = isInList ? 'remove' : 'add';
-        const url = `/manage_album/${listType}/${action}/`;
-
-        // Get the current page URL path
-        const currentPage = window.location.pathname;
-
-        // Check, what site is
-        const isCollectionPage = currentPage.includes('collection');
-        const isWishlistPage = currentPage.includes('wishlist');
-        const isBlacklistPage = currentPage.includes('blacklist');
-
-        // if (isInList && !confirm(`Are you sure you want to remove this album from your ${listType}?`)) {
-        //     return;
-        // }
-
         try {
+            const isInList = albumItem.dataset[`in${capitalize(listType)}`] === 'true';
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const albumId = albumItem.dataset.albumId;
+            const albumName = albumItem.dataset.albumName;
+            const albumType = albumItem.dataset.albumType;
+            const releaseDate = albumItem.dataset.releaseDate;
+            const imageUrl = albumItem.dataset.imageUrl;
+
+            const action = isInList ? 'remove' : 'add';
+            const url = `/manage_album/${listType}/${action}/`;
+
+            // Get the current page URL path
+            const currentPage = window.location.pathname;
+
+            // Check, what site is
+            const isCollectionPage = currentPage.includes('collection');
+            const isWishlistPage = currentPage.includes('wishlist');
+            const isBlacklistPage = currentPage.includes('blacklist');
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -159,13 +155,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (listType === 'blacklist' && newState && (isCollectionPage || isWishlistPage)) {
                         albumItem.remove();
                         currentCount -= 1;
-                }
+                    }
                     collectionHeader.textContent = `You have ${currentCount} album(s) in your ${listType}.`;
                 }
 
-                
-
-                if (window.location.pathname.includes('search') || window.location.pathname.includes('home')) {
+                if (window.location.pathname.includes('search') || window.location.pathname.includes('home') || window.location.pathname.includes('artist_overview')) {
                     updateProgressBars();
                 }
 
@@ -322,3 +316,60 @@ document.addEventListener('DOMContentLoaded', function () {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.icon').forEach(icon => {
+        icon.addEventListener('click', function(event) {
+            const albumItem = event.target.closest('.album-item');
+            const albumId = albumItem.dataset.albumId;
+            const action = event.target.id.includes('add') ? 'add' : 'remove';
+            const listType = event.target.id.includes('wishlist') ? 'wishlist' : event.target.id.includes('blacklist') ? 'blacklist' : 'collection';
+
+            fetch(`/manage_album/${listType}/${action}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    album_id: albumId,
+                    album_name: albumItem.dataset.albumName,
+                    album_type: albumItem.dataset.albumType,
+                    release_date: albumItem.dataset.releaseDate,
+                    image_url: albumItem.dataset.imageUrl
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the data attributes
+                    if (action === 'add') {
+                        albumItem.dataset[`in${listType.charAt(0).toUpperCase() + listType.slice(1)}`] = 'true';
+                    } else {
+                        albumItem.dataset[`in${listType.charAt(0).toUpperCase() + listType.slice(1)}`] = 'false';
+                    }
+                    // Call updateProgressBars to refresh the progress bars
+                    updateProgressBars();
+                } else {
+                    console.error(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

@@ -57,5 +57,16 @@ class DailyAlbumPrice(models.Model):
     def __str__(self):
         return f"{self.album.name} - {self.date}: {self.price}"
 
+class AlbumPricePrediction(models.Model):
+    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    date = models.DateField()
+    predicted_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('album', 'date')
+
+    def __str__(self):
+        return f"{self.album.name} - {self.date} - {self.predicted_price}"
+
 
 

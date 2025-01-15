@@ -1,13 +1,12 @@
 import logging
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from friends.models import Friend
 from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
+from friends.models import Friend
 from utils.stats_helpers import (
     calculate_top_genres,
     calculate_top_artists,
@@ -18,9 +17,13 @@ from utils.stats_helpers import (
 )
 from stats.models import Notification
 from django.views.decorators.csrf import csrf_exempt
-from .models import DailyAlbumPrice
-from prophet import Prophet
+from .models import DailyAlbumPrice, AlbumPricePrediction
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
 import pandas as pd
+from django.contrib.auth.models import User  # Add this import
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +38,7 @@ def dashboard_view(request):
     Returns:
         HttpResponse: The rendered dashboard view.
     """
-    user = request.user
+    user = User.objects.get(id=request.user.id)
     selected_artist_id = request.GET.get('selected_artist_id')
     user_rank = None
     users_with_more_albums = 0
@@ -158,35 +161,120 @@ def delete_notification(request, notification_id):
     notification.delete()
     return JsonResponse({'success': True})
 
-
-@login_required
 def album_price_history(request, album_id):
+    """
+    Get the price history for a given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response containing the price history.
+    """
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
     data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
     return JsonResponse(data, safe=False)
 
-@login_required
-def album_price_prognosis(request, album_id):
+def generate_album_price_predictions(album_id):
+    """
+    Generate price predictions for the given album.
+
+    Args:
+        album_id (int): The ID of the album.
+
+    Returns:
+        list: A list of dictionaries containing the date and predicted price.
+    """
     prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
-    data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(price.price)} for price in prices]
+    data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(f"{price.price:.2f}")} for price in prices]
 
     if not data:
-        return JsonResponse({'error': 'No data available'}, status=404)
+        return []
 
     try:
+        # Data Preparation
         prognosis_data = pd.DataFrame([{'ds': item['date'], 'y': item['price']} for item in data])
         prognosis_data['ds'] = pd.to_datetime(prognosis_data['ds'])
+        prognosis_data.set_index('ds', inplace=True)
     except KeyError as e:
-        return JsonResponse({'error': f'Error in the data processing: {str(e)}'}, status=500)
+        raise ValueError(f'Error in the data processing: {str(e)}')
 
-    model = Prophet()
-    model.fit(prognosis_data)
+    # Convert dates to ordinal
+    prognosis_data['ds'] = prognosis_data.index.map(pd.Timestamp.toordinal)
+    X = prognosis_data[['ds']]
+    y = prognosis_data['y']
 
-    # Make prognosis for the next 7 days
-    future = model.make_future_dataframe(periods=7)
-    forecast = model.predict(future)
+    # Create the pipeline: PolynomialFeatures -> LinearRegression
+    model_pipeline = Pipeline([
+        ('poly_features', PolynomialFeatures(degree=5)),
+        ('linear_regression', LinearRegression())
+    ])
 
-    forecast_data = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].to_dict(orient='records')
+    try:
+        # Fit the model using the pipeline
+        model_pipeline.fit(X, y)
 
-    # Ergebnisse zurückgeben
-    return JsonResponse(forecast_data, safe=False)
+        # Adjust future dates to start from tomorrow
+        tomorrow = pd.Timestamp.today().normalize() + pd.Timedelta(days=1)
+        future_dates = pd.date_range(start=tomorrow, periods=7, freq='D')
+        future_dates_ordinal = pd.DataFrame(future_dates.map(pd.Timestamp.toordinal), columns=['ds'])
+        forecast = model_pipeline.predict(future_dates_ordinal)
+
+        forecast_data = [{'ds': date.strftime('%Y-%m-%d'), 'yhat': float(f"{price:.2f}")} for date, price in zip(future_dates, forecast)]
+
+        if data:
+            last_data_point = data[-1]
+            forecast_data.insert(0, {'ds': last_data_point['date'], 'yhat': last_data_point['price']})
+
+        return forecast_data
+    
+    except Exception as e:
+        raise ValueError(f'Model fitting or prediction failed: {str(e)}')
+
+def album_price_prognosis(request, album_id):
+    """
+    Generate and return price predictions for the given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response containing the combined data and predictions.
+    """
+    try:
+        forecast_data = generate_album_price_predictions(album_id)
+        prices = DailyAlbumPrice.objects.filter(album_id=album_id).order_by('date')
+        data = [{'date': price.date.strftime('%Y-%m-%d'), 'price': float(f"{price.price:.2f}")} for price in prices]
+
+        combined_data = data + forecast_data
+        return JsonResponse(combined_data, safe=False)
+    
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def save_album_price_predictions(request, album_id):
+    """
+    Save price predictions for the given album.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        album_id (int): The ID of the album.
+
+    Returns:
+        JsonResponse: A JSON response indicating success or failure.
+    """
+    try:
+        forecast_data = generate_album_price_predictions(album_id)
+        album = get_object_or_404(Album, id=album_id)
+        for prediction in forecast_data:
+            AlbumPricePrediction.objects.update_or_create(
+                album=album,
+                date=prediction['ds'],
+                defaults={'predicted_price': prediction['yhat']}
+            )
+        return JsonResponse({'success': True})
+    
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=500)

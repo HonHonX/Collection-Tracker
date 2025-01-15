@@ -11,40 +11,43 @@
 
 {% block maincontent %}
     <div class="album-detail">
-        <a href="{% url 'artist_overview' album.artist.name %}">
+        <a href="{% url 'artist_overview' album.artist.id %}">
             <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
         </a>
         {% if album.image_url %}
             <img src="{{ album.image_url }}" alt="Album cover" class="album-cover">
-        {% endif %}
-            <h1>{{ album.name }}</h1>
-        <a href="{% url 'artist_overview' album.artist.name %}">
-            <h2>{{ album.artist.name }}</h2>
-        </a>
-        <span><strong>Release Date:</strong> {{ album.release_date }}</span>
-        <span><strong>Type:</strong> {{ album.album_type }}</span>
-
-        {% if album.genres %}
-            <span><strong>Genres:</strong> {{ album.genres |join:", " }}</span>
-        {% endif %}
-
-        {% if album.styles %}
-            <span><strong>Styles:</strong> {{ album.styles |join:", " }}</span>
-        {% endif %}
-
-        {% if album.labels %}
-            <span><strong>Labels:</strong> {{ album.labels |join:", " }}</span>
-        {% endif %}
-
-        {% if album.lowest_price %}
-            <span><strong>Current lowest price:</strong> {{ album.lowest_price|floatformat:2 }} €</span>
         {% endif %}
 
         <div class="spotify-player">
             <iframe src="https://open.spotify.com/embed/album/{{ album.id }}"
             id="spotify-player" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         </div>
-        
+
+        <div class="album-title"> 
+            <h1>{{ album.name }}</h1>
+            <a href="{% url 'artist_overview' album.artist.id %}">
+                <h2>{{ album.artist.name }}</h2>
+            </a>
+        </div>
+
+        <div class="album-data">
+            <p>
+                <strong>Release Date:</strong> {{ album.release_date }}</br>
+                <strong>Type:</strong> {{ album.album_type }}</br>
+                {% if album.genres %}
+                    <strong>Genres:</strong> {{ album.genres |join:", " }}</br>
+                {% endif %}
+                {% if album.styles %}
+                    <strong>Styles:</strong> {{ album.styles |join:", " }}</br>
+                {% endif %}
+                {% if album.labels %}
+                    <strong>Labels:</strong> {{ album.labels |join:", " }}</br>
+                {% endif %}
+                {% if album.lowest_price %}
+                    <strong>Current lowest price:</strong> {{ album.lowest_price|floatformat:2 }} €</br>
+                {% endif %}
+            </p>
+        </div>        
     </div>
 
     <div class="custom-detail">

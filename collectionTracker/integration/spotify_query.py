@@ -39,6 +39,7 @@ def convert_to_valid_date_format(date_value):
     
 # View for searching artist and displaying albums
 def get_artist_data(artist_name, user):
+
     albums, artist_info, user_album_ids, user_wishlist_ids, user_blacklist_ids, user_followed_artist_ids = [], {}, [], [], [], []
     error, artist_photo_url, latest_album, artist = None, None, None, None
     collection_count, wishlist_count, blacklist_count = 0, 0, 0
@@ -134,5 +135,12 @@ def get_artist_data(artist_name, user):
         'wishlist_count': wishlist_count,
         'blacklist_count': blacklist_count,
         'user_followed_artist_ids': user_followed_artist_ids,
-        'collection_and_wishlist_count': collection_count + wishlist_count
+        'collection_and_wishlist_count': collection_count + wishlist_count,
+        'progress_data': {
+            'collection_count': collection_count,
+            'wishlist_count': wishlist_count,
+            'blacklist_count': blacklist_count,
+            'collection_and_wishlist_count': collection_count + wishlist_count,
+            'total_albums': artist_info['total_albums']
+        }
     }
