@@ -9,13 +9,21 @@
 <div class="full-block">
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
-        <p>You have {{ user_collection.count }} album(s) in your collection.</p>
-    </div>
+        <span class="album-details-header">
+            You have {{ user_collection.count }} album(s) in your collection.
+            <span>
+                <img id="arrow-carousel" class="icon" src="{% static 'icons/caret-down.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
+                <img id="toggle-carousel" class="icon" src="{% static 'icons/hide.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
+            </span>
+        </span>
+    </div>   
 
     <!-- Image Carousel -->
-    <div class="carousel-container">
+    <div class="carousel-container" id="carousel-container">
         <div class="album-details">
-            <h2 id="album-title"></h2>
+            <span>
+                <h2 id="album-title"></h2>
+            </span>
             <p id="album-artist"></p>
         </div>
         
@@ -100,4 +108,22 @@
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
 <script src="{% static 'js/imageCarousel.js' %}"></script>
+<script>
+    function toggleCarousel() {
+        const carouselContainer = document.getElementById('carousel-container');
+        const toggleIcon = document.getElementById('toggle-carousel');
+        const arrowIcon = document.getElementById('arrow-carousel');
+        if (carouselContainer.classList.contains('hidden')) {
+            carouselContainer.classList.remove('hidden');
+            carouselContainer.classList.add('visible');
+            toggleIcon.src = '{% static "icons/hide.svg" %}';
+            arrowIcon.src = '{% static "icons/caret-down.svg" %}';
+        } else {
+            carouselContainer.classList.add('hidden');
+            carouselContainer.classList.remove('visible');
+            toggleIcon.src = '{% static "icons/show.svg" %}';
+            arrowIcon.src = '{% static "icons/caret-up.svg" %}';
+        }
+    }
+</script>
 {% endblock %}

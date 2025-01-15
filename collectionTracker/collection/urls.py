@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from integration.ticketmaster_query import fetch_artist_events
 
 urlpatterns = [
 
@@ -30,5 +31,8 @@ urlpatterns = [
 
     # Album carousel
     path('album-carousel/', views.album_carousel, name='album_carousel'),
+
+    #Fetch artist events
+    path('fetch-artist-events/<str:artist_name>/', fetch_artist_events, name='fetch_artist_events'),
     
 ]

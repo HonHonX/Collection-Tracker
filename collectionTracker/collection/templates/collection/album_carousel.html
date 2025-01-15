@@ -2,9 +2,14 @@
 {% load static %}
 
 {% block content %}
-    <div class="carousel-container">
-         <!-- Album details display -->
-         <div class="album-details">
+    <span>
+        show/hide carousel
+        <img id="toggle-carousel" src="{% static 'icons/hide.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
+    </span>
+    
+    <div class="carousel-container" id="carousel-container">
+        <!-- Album details display -->
+        <div class="album-details">
             <h2 id="album-title"></h2>
             <p id="album-artist"></p>
         </div>
@@ -29,8 +34,20 @@
             {% endfor %}
             <button class="next" onclick="moveSlide(1)">&#10095;</button>
         </div>
-
     </div>
 
 <script src="{% static 'js/imageCarousel.js' %}"></script>
+<script>
+    function toggleCarousel() {
+        const carouselContainer = document.getElementById('carousel-container');
+        const toggleIcon = document.getElementById('toggle-carousel');
+        if (carouselContainer.style.display === 'none' || carouselContainer.style.display === '') {
+            carouselContainer.style.display = 'block';
+            toggleIcon.src = '{% static "icons/hide.svg" %}';
+        } else {
+            carouselContainer.style.display = 'none';
+            toggleIcon.src = '{% static "icons/show.svg" %}';
+        }
+    }
+</script>
 {% endblock %}
