@@ -21,7 +21,7 @@ from django.http import JsonResponse
 from django.db import transaction
 from django.views.decorators.http import require_POST
 import json
-from django.contrib.auth.views import PasswordChangeView, PasswordResetView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetCompleteView, PasswordResetDoneView
 from django.urls import reverse_lazy
 #from collectionTracker.utils import profile_helpers
 
@@ -216,7 +216,10 @@ def password_changed(request):
 
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
-    template_name = 'users/password_reset.html'
+    template_name = 'users/reset_password.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'users/reset_password_done.html'
 
 @login_required
 def delete_account(request):
