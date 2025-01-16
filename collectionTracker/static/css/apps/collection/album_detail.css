@@ -154,6 +154,7 @@ textarea {
     .maincontent {
         flex-direction: row; 
         padding: 0 1rem; 
+        gap: 0;
     }
 
     .album-detail{
@@ -163,6 +164,9 @@ textarea {
     }
     .custom-detail {
         transform: scale(0.9);
+        justify-content: center;
+        flex: auto;
+        margin-top: 0;
     }
 
     .album-detail img.album-cover {
@@ -178,5 +182,33 @@ textarea {
     .album-tracklist,
     .price-stats {
         width: 100%; /* Full width for mobile screens */
+    }
+
+    .wishlist{
+        flex-direction: column;
+    }
+
+    .collection{
+         flex-direction: row;
+         width: 100%;
+    }
+
+    #substatus-form select{
+        padding: 1rem;
+        width: 10rem;
+
+    }
+    #substatus-form button{
+        width: 14rem;
+    }
+
+    #priority-form{
+        justify-content: center;
+    }
+    
+    #spotify-player {
+        height: 8rem; !important;
+        width: 100%;
+        margin: 0;
     }
 }

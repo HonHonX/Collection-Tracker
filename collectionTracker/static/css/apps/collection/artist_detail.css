@@ -91,7 +91,10 @@
 @media (max-width: 768px) {
     #artist-information {
         flex-direction: column;
-        transform: scale(0.9);
+    }
+
+    .discogs button{
+        width: 10rem;
     }
 
 }

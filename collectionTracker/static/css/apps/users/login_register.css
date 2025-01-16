@@ -12,3 +12,11 @@
     margin: auto;
     box-sizing: border-box;
 }
+
+@media (max-width: 768px) {
+    
+.maincontent {
+    height: auto !important;
+    padding-top: 0 !important;
+    }
+}

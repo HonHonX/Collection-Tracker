@@ -95,3 +95,10 @@
     margin: 0 auto;
 }
 
+@media (max-width: 768px) {
+    
+    .collection-percentage{
+        width: 1rem;
+        flex: auto;
+    }
+}

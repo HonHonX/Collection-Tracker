@@ -23,3 +23,11 @@
 .album-slider::-webkit-scrollbar-track {
     background-color: var(--neutral90); /* Scrollbar track color */
 }
+
+
+@media (max-width: 768px) {
+
+    .album-slider{
+        gap: 0.6rem;
+    }
+}

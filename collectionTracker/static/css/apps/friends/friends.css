@@ -163,35 +163,35 @@ form {
     }
 
     #add-friend-form {
-        flex-direction: row; /* Ensure row layout on mobile as well */
-        gap: var(--gapDistance); /* Keep gap between input and button */
+        flex-direction: row;
+        gap: 0.6rem;
     }
     
     #friend-email {
         flex-grow: 1;
-        height: 3.5rem; /* Increase height slightly on mobile */
+        height: 3.5rem; 
     }
 
     #add-friend-form button {
-        height: 3.5rem; /* Same height for button on mobile */
+        height: 3.5rem; 
     }
 
     .share-link {
         flex-direction: column;
-        gap: var(--gapDistance);
+        gap: 0.6rem;
     }
 
     #my-wishlist, #my-collection {
         display: flex;
         flex-direction: row;
-        gap: var(--gapDistance);
+        gap: 0.6rem;
         align-items: center;
         width: 100%;
         padding-bottom: 1rem;
     }
 
     #friend-page {
-        gap: var(--gapDistance);
+        gap: 0.6rem;
         flex-direction: column;
     }
 
@@ -224,5 +224,10 @@ form {
 
     #token-display{
         height: auto;
+    }
+    
+    #token-box{
+        gap: 0.6rem;
+        width: 100%;
     }
 }

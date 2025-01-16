@@ -39,7 +39,8 @@ body::-webkit-scrollbar {
 }
 
 .buffer{
-    height: 10rem;
+    height: 8rem;
+    background-color: var(--neutral100);
 }
 
 /* used for sites without a sidebar */

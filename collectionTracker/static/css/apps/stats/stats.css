@@ -186,9 +186,13 @@
     }
 
     .ranked-item {
-        flex-direction: column; /* Stack the name and value vertically */
+        flex-direction: row; /* Stack the name and value vertically */
         align-items: flex-start;
         gap: 0.5rem;
+    }
+
+    .friend-name{
+        display: inline;
     }
 
     .album-item {
