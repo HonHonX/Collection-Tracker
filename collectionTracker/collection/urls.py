@@ -36,3 +36,4 @@ urlpatterns = [
     path('fetch-artist-events/<str:artist_name>/', fetch_artist_events, name='fetch_artist_events'),
     
 ]
+ 

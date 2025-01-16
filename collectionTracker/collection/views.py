@@ -12,8 +12,9 @@ from utils.collection_helpers import get_user_album_ids, get_artist_list, add_al
 from django.conf import settings
 from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
 import logging
-from stats.models import DailyAlbumPrice
+from stats.models import DailyAlbumPrice, AlbumPricePrediction
 from django.utils import timezone
+from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
 
@@ -188,6 +189,9 @@ def list_overview(request, list_type):
     try:
         # Retrieve user album IDs and lists
         user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
+        recommended_album = None
+        avg_predicted_price = None
+        current_price = None
 
         # Determine the list type and corresponding template
         if list_type == 'collection':
@@ -196,6 +200,24 @@ def list_overview(request, list_type):
         elif list_type == 'wishlist':
             user_list = filter_list_by_artist(request, user_wishlist)
             template = 'collection/wishlist_overview.html'
+            if user_wishlist.exists():
+                best_price_change = None
+
+                for wishlist_entry in user_wishlist:
+                    album = wishlist_entry.album
+                    daily_prices = DailyAlbumPrice.objects.filter(album=album).order_by('-date')[:7]
+
+                    if daily_prices.exists():
+                        predicted_prices = AlbumPricePrediction.objects.filter(album=album).order_by('-date')[:7]
+                        if predicted_prices.exists():
+                            avg_predicted_price = round(sum([price.predicted_price for price in predicted_prices]) / len(predicted_prices), 2)
+                            current_price = daily_prices.first().price
+                            price_change = avg_predicted_price - current_price
+
+                            if best_price_change is None or price_change > best_price_change:
+                                best_price_change = price_change
+                                recommended_album = album
+
         elif list_type == 'blacklist':
             user_list = filter_list_by_artist(request, user_blacklist)
             template = 'collection/blacklist_overview.html'
@@ -205,9 +227,10 @@ def list_overview(request, list_type):
         artist_list = get_artist_list(request.user)  # Retrieve artist list
         user_album_substatuses = UserAlbumCollection.SUBSTATUS
         user_album_priorities = UserAlbumWishlist.PRIORITY_CHOICES
-        user_albums = Album.objects.filter(useralbumcollection__user=request.user)  # Retrieve user albums
+        user_albums = Album.objects.filter(useralbumcollection__user=request.user)  
 
         return render(request, template, {
+            'user': request.user,
             'user_blacklist': user_blacklist,
             'user_blacklist_ids': user_blacklist_ids,
             'user_wishlist': user_wishlist,
@@ -219,6 +242,9 @@ def list_overview(request, list_type):
             'albums': user_albums,
             'user_album_substatuses': [choice[1] for choice in user_album_substatuses],
             'user_album_priorities': [choice[1] for choice in user_album_priorities],
+            'recommended_album': recommended_album,
+            'avg_predicted_price': avg_predicted_price,
+            'current_price': current_price,
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -461,5 +487,12 @@ def album_carousel(request):
         logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
     return render(request, 'collection/album_carousel.html', {'albums': user_albums})
 
-from django.shortcuts import render
-from .models import Album, UserAlbumCollection
+
+# for albums in user's wishlist:
+# check if there is a daily price entry for the album
+# if not return, if yes:
+# sort the predicted prices by date and fetch the newest 7
+# calculate the average of the 7 newest prices
+# return the album with the best positive price change
+
+

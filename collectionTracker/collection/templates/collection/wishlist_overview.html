@@ -13,6 +13,44 @@
         <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
     </div>
 
+    <div class="main-block">
+
+        <div class="left-column">
+                <!-- to be filled -->
+        </div>
+
+        <div class="right-column">
+            <div class="wishlist-summary">
+                <!-- to be filled -->
+            </div>
+
+        </div>
+
+    <div>
+
+    <div class="recommended-purchase">
+        <h2>Recommended Next Purchase</h2>
+        {% if recommended_album %}
+            <div class="album-item">
+                <a href="{% url 'album_detail' recommended_album.id %}">
+                    {% if recommended_album.image_url %}
+                        <img src="{{ recommended_album.image_url }}" alt="Album cover" class="album-cover">
+                    {% endif %}
+                    <div class="album-info">
+                        <div class="album-title"><strong>{{ recommended_album.name }} <br></strong></div>
+                        <em>Artist: {{ recommended_album.artist.name }}</em><br>
+                        <em>Released: {{ recommended_album.release_date }}</em><br>
+                        <em>Type: {{ recommended_album.album_type }}</em><br>
+                        <em>Current Price: {{ current_price }}€</em><br>
+                        <em>Predicted Price: {{ avg_predicted_price }}€</em>
+                    </div>
+                </a>
+            </div>
+        {% else %}
+            <p>No recommended album at the moment.</p>
+        {% endif %}
+    </div>
+
     <div class="sorting-controls">
         <label for="artist-filter">Filter by Artist:</label>
         <select id="artist-filter">
@@ -43,7 +81,7 @@
     </div>
 
     <div class="album-grid">
-        {% for wishlist_entry in user_wishlist %}
+        {% for wishlist_entry in user_wishlist %} 
         <div class="album-item" 
             data-artist-name="{{ wishlist_entry.album.artist.name }}"
             data-album-type="{{ wishlist_entry.album.album_type }}" 
@@ -68,7 +106,9 @@
                     <div class="album-title"><strong>{{ wishlist_entry.album.name }} <br></strong></div>
                     <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
                     <em>Released: {{ wishlist_entry.album.release_date }}</em><br>
-                    <em>Type: {{ wishlist_entry.album.album_type }}</em>
+                    <em>Type: {{ wishlist_entry.album.album_type }}</em><br>
+                    <em>Current Price: {{ wishlist_entry.album.current_price }}</em><br>
+                    <em>Predicted Price: {{ wishlist_entry.album.predicted_price }}</em>
                 </div>
             </a>
         </div>

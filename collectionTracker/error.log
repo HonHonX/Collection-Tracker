@@ -2917,3 +2917,7 @@ Internal Server Error: /artist_overview/aespa/
 "GET /artist_overview/aespa/ HTTP/1.1" 500 68
 Internal Server Error: /search/
 "POST /search/ HTTP/1.1" 500 39
+Internal Server Error: /overview/wishlist/
+"GET /overview/wishlist/ HTTP/1.1" 500 119
+Internal Server Error: /overview/wishlist/
+"GET /overview/wishlist/ HTTP/1.1" 500 85
