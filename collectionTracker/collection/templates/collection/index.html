@@ -131,14 +131,20 @@
 
         <h1>Recommended Artists</h1>
         <div class="artist-recommendation">
-            <!-- for artist in recommended artist -->
-                <div class="recommended-artist-item">
-                    <img id="recommended-artist-image" src="{% static 'img/default.jpg'}" alt="">
-                    <div id="recommended-artist-info">
-                        <!-- placeholder -->
-                         Placeholder </br>
-                    </div>
-                </div>
+            {% if not recommended_artists %}
+                <p>No recommendations available.</p>
+            {% else %}
+                {% for artist in recommended_artists %}
+                    <a href="{% url 'artist_overview' artist.id %}" class="recommended-artist-link">
+                        <div class="recommended-artist-item">
+                            <img class="recommended-artist-image" src="{{ artist.image_url|default:'/static/img/default.jpg' }}" alt="{{ artist.name }}">
+                            <div id="recommended-artist-info">
+                                <strong>{{ artist.name }}</strong>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
         </div>
 
         <h1>Followed Artists</h1>

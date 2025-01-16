@@ -15,6 +15,9 @@ import logging
 from stats.models import DailyAlbumPrice, AlbumPricePrediction
 from django.utils import timezone
 from django.shortcuts import render
+from integration.lastfm_query import artist_recommendations
+from utils.stats_helpers import calculate_top_genres
+import requests  
 
 logger = logging.getLogger(__name__)
 
@@ -30,14 +33,20 @@ def home_view(request):
         HttpResponse: The rendered home page. 
     """
     followed_artists = []
+    recommended_artists = []
     if request.user.is_authenticated:
         followed_artists = get_followed_artists(request.user)
+        # Fetch recommended artists
+        response = get_recommendations(request)
+        if response.status_code == 200:
+            recommended_artists = json.loads(response.content).get('recommended_artists', [])
     user_album_ids, user_blacklist_ids, user_wishlist_ids = get_user_lists(request.user)
     newest_albums = get_newest_albums(request.user)
 
     return render(request, 'collection/index.html', {  
         'settings': settings,
         'followed_artists': followed_artists,
+        'recommended_artists': recommended_artists,
         'user_album_ids': user_album_ids,  
         'user_blacklist_ids': user_blacklist_ids,
         'user_wishlist_ids': user_wishlist_ids,
@@ -59,7 +68,7 @@ def artist_detail(request, artist_id):
     
     if request.method == 'POST':
         discogs_url = request.POST.get('discogs_url')
-        if discogs_url:
+        if (discogs_url):
             update_artist_from_discogs_url(artist, discogs_url) 
             return redirect('artist_detail', artist_id=artist.id)
     
@@ -489,12 +498,54 @@ def album_carousel(request):
         logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
     return render(request, 'collection/album_carousel.html', {'albums': user_albums})
 
+@login_required
+def get_recommendations(request):
+    # Fetch top genres
+    top_genres = calculate_top_genres(request.user)
+    genres = [genre.name for genre in top_genres]
+    print(genres)
+    
+    try:
+        response = artist_recommendations(genres)
+        data = response.json() if isinstance(response, requests.Response) else json.loads(response.content)
+        artists = data.get('artists', [])
+        error = None
 
-# for albums in user's wishlist:
-# check if there is a daily price entry for the album
-# if not return, if yes:
-# sort the predicted prices by date and fetch the newest 7
-# calculate the average of the 7 newest prices
-# return the album with the best positive price change
+        # Fetch artist data from Spotify and save to the database
+        artist_objects = []
+        for name in artists:
+            artist_data = get_artist_data(name, request.user)
+            artist_objects.append(artist_data['artist'])
+
+        # Check if the artist IDs are in the user's followed artist list
+        followed_artist_ids = UserFollowedArtists.objects.filter(user=request.user).values_list('artist_id', flat=True)
+        recommended_artists = [
+            {
+                'id': artist.id,
+                'name': artist.name,
+                'image_url': artist.photo_url or '/static/img/default.jpg'
+            }
+            for artist in artist_objects if artist.id not in followed_artist_ids
+        ]
+
+    except requests.exceptions.RequestException as e:
+        artists = []
+        artist_objects = []
+        recommended_artists = []
+        error = f"Error fetching data from Last.fm API: {str(e)}"
+    
+    return JsonResponse({
+        'recommended_artists': recommended_artists,
+        'error': error
+    })
+
+
+
+
+
+
+
+
+
 
 
