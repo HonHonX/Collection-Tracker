@@ -32,7 +32,7 @@ class Artist(models.Model):
     id = models.CharField(max_length=50, primary_key=True, default=0) 
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
-    genres = models.ManyToManyField(Genre, related_name='artists')
+    genres = models.ManyToManyField(Genre, related_name='artists', blank=True)
     popularity = models.IntegerField(default=0)
 
     # Attributes provided by discogs

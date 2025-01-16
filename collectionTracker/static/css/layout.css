@@ -24,6 +24,9 @@ body::-webkit-scrollbar {
 .content{
     display: flex;
     flex-direction: column;
+    flex: 1 0 auto%;
+    box-sizing: border-box; 
+    width: 100%;
 }
 
 .maincontent {
@@ -39,7 +42,7 @@ body::-webkit-scrollbar {
 }
 
 .buffer{
-    height: 10rem;
+    height: 2rem;
 }
 
 /* used for sites without a sidebar */

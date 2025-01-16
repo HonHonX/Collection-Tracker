@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block maincontent %}
-    <a href="{% url 'artist_overview' artist.name %}">
+    <a href="{% url 'artist_search' artist.name %}">
         <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
     </a>
 
@@ -75,7 +75,6 @@
                 <img id="search-artist-photo" src="{{ artist.photo_url }}" alt="{{ artist.name }}'s photo">
             {% endif %}
 
-            <div id="spacer-1"></div>
             
             <div class="popularity-gauge">
                 <div class="gauge">
@@ -84,12 +83,13 @@
                 </div>
             </div>
 
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+
             {% if artist_info.genres %}
                 <p>Genres: {{ artist.genres|join:", " }}</p>
             {% endif %}
-
-            <div id="spacer-1"></div> 
-            
+                        
             <div class="discogs">
                 <div id="wrong-info">
                     <img src="{% static 'icons/question.svg' %}" alt="Question" class="icon">

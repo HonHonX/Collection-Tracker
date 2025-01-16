@@ -315,6 +315,12 @@
     opacity: 0.5;  /* Dim the button */
 }
 
+@media (min-width: 768px) {
+    .overview-content{
+        display: flex;
+        flex-direction: row;
+    }
+}
 
 @media (max-width: 768px) {
 
