@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from integration.ticketmaster_query import fetch_artist_events
+from integration.spotify_query import get_recommendations
 
 urlpatterns = [
 
@@ -35,5 +36,7 @@ urlpatterns = [
     #Fetch artist events
     path('fetch-artist-events/<str:artist_name>/', fetch_artist_events, name='fetch_artist_events'),
     
+    #Fetch recommended artists
+    path('fetch-recommendations/', get_recommendations, name="get_recommendations"),
 ]
  

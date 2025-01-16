@@ -6,10 +6,15 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists  # Import the model
+from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 import json
 from integration.discogs_query import get_more_artist_data, fetch_basic_album_details
 from datetime import datetime
+import requests
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
@@ -144,3 +149,52 @@ def get_artist_data(artist_name, user):
             'total_albums': artist_info['total_albums']
         }
     }
+
+@login_required
+def get_recommendations(request):
+    user = request.user
+    recommended_artists = []
+    error = None
+
+    try:
+        user_album_ids = list(UserAlbumCollection.objects.filter(user=user).values_list('album__id', flat=True))
+        similar_users = UserAlbumCollection.objects.filter(album__id__in=user_album_ids).exclude(user=user).values_list('user', flat=True).distinct()
+
+        similar_user_album_ids = UserAlbumCollection.objects.filter(user__in=similar_users).values_list('album__id', flat=True).distinct()
+        logger.debug(f"Similar user album IDs: {similar_user_album_ids}")
+
+        similar_user_artists = Album.objects.filter(id__in=similar_user_album_ids).values_list('artist', flat=True).distinct()
+        logger.debug(f"Similar user artists: {similar_user_artists}")
+
+        if not similar_user_artists:
+            # If no similar artists found, recommend any artist
+            all_artists = Artist.objects.all()[:10]  # Limit to 10 artists for simplicity
+            for artist in all_artists:
+                recommended_artists.append({
+                    'id': artist.id,
+                    'name': artist.name,
+                    'photo_url': artist.photo_url,
+                    'popularity': artist.popularity,
+                    'genres': artist.genres,
+                    'followed': UserFollowedArtists.objects.filter(user=user, artist=artist).exists()
+                })
+        else:
+            for artist_id in similar_user_artists:
+                artist = Artist.objects.get(id=artist_id)
+                recommended_artists.append({
+                    'id': artist.id,
+                    'name': artist.name,
+                    'photo_url': artist.photo_url,
+                    'popularity': artist.popularity,
+                    'genres': artist.genres,
+                    'followed': UserFollowedArtists.objects.filter(user=user, artist=artist).exists()
+                })
+
+    except Exception as e:
+        error = str(e)
+        logger.error(f"Error in get_recommendations: {error}")
+
+    return JsonResponse({
+        'recommended_artists': recommended_artists,
+        'error': error
+    })
