@@ -51,6 +51,9 @@
     #follow-button, #register-button, #login-button, #save-button{
         width: 10rem !important;
     }
+    .friend-controls button{
+        width: 10rem !important;
+    }
     #change-password{
         width: 15rem;
     }

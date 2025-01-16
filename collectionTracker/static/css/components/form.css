@@ -119,4 +119,9 @@ form input.error, form textarea.error {
     input {
         padding: 0.5rem;
     }
+
+    .friend-controls form{
+        background-color: var(--neutral90);
+        width: 10rem;
+    }
 }
