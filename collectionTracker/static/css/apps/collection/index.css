@@ -91,6 +91,27 @@ p {
     padding: 0 0.5rem;
 }
 
+/* Artist Recommendation */
+.artist-recommendation {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    height: var(--sliderHeight);
+    background-color: red;
+    border-radius: var(--borderRadius);
+}
+
+.recommended-artist-item {
+    height: 100%;
+}
+
+.recommended-artist-info {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+}
+
 @media (max-width: 768px) {
 
         .artist-card{

@@ -129,6 +129,18 @@
             </div>
         </div>
 
+        <h1>Recommended Artists</h1>
+        <div class="artist-recommendation">
+            <!-- for artist in recommended artist -->
+                <div class="recommended-artist-item">
+                    <img id="recommended-artist-image" src="{% static 'img/default.jpg'}" alt="">
+                    <div id="recommended-artist-info">
+                        <!-- placeholder -->
+                         Placeholder </br>
+                    </div>
+                </div>
+        </div>
+
         <h1>Followed Artists</h1>
         {% if not followed_artists %}
             <p>Follow your favorite artists to keep an eye on their releases.</p>

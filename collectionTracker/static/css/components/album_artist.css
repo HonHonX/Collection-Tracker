@@ -116,10 +116,10 @@
         margin-bottom: var(--gapDistance);
         background-color: var(--neutral100);
         box-sizing: border-box;
-        padding: 0.5rem;
+        padding: 0.5rem 0.5rem 1rem 0.5rem; 
         border-radius: var(--borderRadius);
         filter: grayscale(0);
-        max-height: 20rem;
+        max-height: 25rem;
         max-width: 10rem;
         transition: var(--transitionStyle);
     }

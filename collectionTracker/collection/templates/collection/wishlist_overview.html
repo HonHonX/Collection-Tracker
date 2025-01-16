@@ -6,6 +6,10 @@
     {{ user.first_name }}'s Wishlist
 {% endblock %}
 
+{% block site_specific_css %}
+    <link rel="stylesheet" href="{% static 'css/apps/collection/wishlist_overview.css' %}" type="text/css">
+{% endblock %}
+
 {% block maincontent %}
 <div class="full-block">
     <div class="collection-header">
@@ -13,107 +17,108 @@
         <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
     </div>
 
-    <div class="main-block">
-
+    <div class="wishlist-block">
         <div class="left-column">
-                <!-- to be filled -->
+            <div class="recommended-purchase">
+                <h2>Recommended Next Purchase</h2>
+                {% if recommended_album %}
+                    <div class="recommendation-item">
+                        <a href="{% url 'album_detail' recommended_album.id %}">
+                            <span id="recommendation-description">
+                                Based collected data for the releases in your wishlist, the following one is recommended to be the next one purchased.<br>
+                                The calculation is based on the current price and the predicted price development.
+                            </span>
+                            {% if recommended_album.image_url %}
+                                <img src="{{ recommended_album.image_url }}" alt="Album cover" class="album-cover">
+                            {% endif %}
+                            <div class="recommendation-info">
+                                <div class="album-title"><strong>{{ recommended_album.name }} <br></strong></div>
+                                <em>Artist: {{ recommended_album.artist.name }}</em><br>
+                                <em>Released: {{ recommended_album.release_date }}</em><br>
+                                <em>Type: {{ recommended_album.album_type }}</em><br>
+                                <strong>Current Price: {{ current_price }}€</em><br></strong>
+                                <strong>Predicted Price: {{ avg_predicted_price }}€</em></strong>
+                            </div>
+                        </a>
+                    </div>
+                {% else %}
+                    <p>No recommended album at the moment.</p>
+                {% endif %}
+            </div>
         </div>
 
         <div class="right-column">
             <div class="wishlist-summary">
-                <!-- to be filled -->
+                <div class="sorting-controls">
+                    <label for="artist-filter">Filter by Artist:</label>
+                    <select id="artist-filter">
+                        <option value="">All Artists</option>
+                        {% for artist in artist_list %}
+                            <option value="{{ artist.name }}">{{ artist.name }}</option>
+                        {% endfor %} 
+                    </select>
+            
+                    <label for="priority-filter">Filter by Priority:</label>
+                    <select id="priority-filter">
+                        <option value="">All</option>
+                        {% for priority in user_album_priorities %}
+                            <option value="{{ priority|lower }}">{{ priority }}</option>
+                        {% endfor %}
+                    </select>
+                     
+                    <label for="sort-criteria">Sort by:</label>
+                    <select id="sort-criteria">
+                        <option value="artist">Artist</option>
+                        <option value="album_type">Album Type</option>
+                        <option value="release_date">Release Date</option>
+                    </select>
+                    <img id="sort-toggle" class="sort-icon" 
+                        src="{% static 'icons/sort-asc.svg' %}" 
+                        alt="Sort toggle" 
+                        data-sort-order="asc">
+                </div>
+            
+                <div class="album-grid">
+                    {% for wishlist_entry in user_wishlist %} 
+                    <div class="album-item" 
+                        data-artist-name="{{ wishlist_entry.album.artist.name }}"
+                        data-album-type="{{ wishlist_entry.album.album_type }}" 
+                        data-release-date="{{ wishlist_entry.album.release_date }}" 
+                        data-album-id="{{ wishlist_entry.album.id }}"
+                        data-priority="{{ wishlist_entry.get_priority_display|lower }}"
+                        data-in-collection="{% if wishlist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
+                        data-in-wishlist="{% if wishlist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
+                        data-in-blacklist="{% if wishlist_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
+                        <div class="album-controls">
+                            <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
+                            <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
+                            <img id="collection-control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">
+                        </div>
+                
+                        <a href="{% url 'album_detail' wishlist_entry.album.id %}">
+                            {% if wishlist_entry.album.image_url %}
+                                <img src="{{ wishlist_entry.album.image_url }}" alt="Album cover" class="album-cover">
+                            {% endif %}
+                
+                            <div class="album-info">
+                                <div class="album-title"><strong>{{ wishlist_entry.album.name }} <br></strong></div>
+                                <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
+                                <em>Released: {{ wishlist_entry.album.release_date }}</em><br>
+                                <em>Type: {{ wishlist_entry.album.album_type }}</em><br>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
         </div>
 
     <div>
 
-    <div class="recommended-purchase">
-        <h2>Recommended Next Purchase</h2>
-        {% if recommended_album %}
-            <div class="album-item">
-                <a href="{% url 'album_detail' recommended_album.id %}">
-                    {% if recommended_album.image_url %}
-                        <img src="{{ recommended_album.image_url }}" alt="Album cover" class="album-cover">
-                    {% endif %}
-                    <div class="album-info">
-                        <div class="album-title"><strong>{{ recommended_album.name }} <br></strong></div>
-                        <em>Artist: {{ recommended_album.artist.name }}</em><br>
-                        <em>Released: {{ recommended_album.release_date }}</em><br>
-                        <em>Type: {{ recommended_album.album_type }}</em><br>
-                        <em>Current Price: {{ current_price }}€</em><br>
-                        <em>Predicted Price: {{ avg_predicted_price }}€</em>
-                    </div>
-                </a>
-            </div>
-        {% else %}
-            <p>No recommended album at the moment.</p>
-        {% endif %}
-    </div>
-
-    <div class="sorting-controls">
-        <label for="artist-filter">Filter by Artist:</label>
-        <select id="artist-filter">
-            <option value="">All Artists</option>
-            {% for artist in artist_list %}
-                <option value="{{ artist.name }}">{{ artist.name }}</option>
-            {% endfor %} 
-        </select>
-
-        <label for="priority-filter">Filter by Priority:</label>
-        <select id="priority-filter">
-            <option value="">All</option>
-            {% for priority in user_album_priorities %}
-                <option value="{{ priority|lower }}">{{ priority }}</option>
-            {% endfor %}
-        </select>
-         
-        <label for="sort-criteria">Sort by:</label>
-        <select id="sort-criteria">
-            <option value="artist">Artist</option>
-            <option value="album_type">Album Type</option>
-            <option value="release_date">Release Date</option>
-        </select>
-        <img id="sort-toggle" class="sort-icon" 
-            src="{% static 'icons/sort-asc.svg' %}" 
-            alt="Sort toggle" 
-            data-sort-order="asc">
-    </div>
-
-    <div class="album-grid">
-        {% for wishlist_entry in user_wishlist %} 
-        <div class="album-item" 
-            data-artist-name="{{ wishlist_entry.album.artist.name }}"
-            data-album-type="{{ wishlist_entry.album.album_type }}" 
-            data-release-date="{{ wishlist_entry.album.release_date }}" 
-            data-album-id="{{ wishlist_entry.album.id }}"
-            data-priority="{{ wishlist_entry.get_priority_display|lower }}"
-            data-in-collection="{% if wishlist_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
-            data-in-wishlist="{% if wishlist_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
-            data-in-blacklist="{% if wishlist_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
-            <div class="album-controls">
-                <img id="blacklist-control-icon" class="icon" src="{% static 'icons/blacklist_add.svg' %}" alt="Edit blacklist status">
-                <img id="wishlist-control-icon" class="icon" src="{% static 'icons/wishlist_add.svg' %}" alt="Edit wishlist status">
-                <img id="collection-control-icon" class="icon" src="{% static 'icons/add.svg' %}" alt="Edit collection status">
-            </div>
     
-            <a href="{% url 'album_detail' wishlist_entry.album.id %}">
-                {% if wishlist_entry.album.image_url %}
-                    <img src="{{ wishlist_entry.album.image_url }}" alt="Album cover" class="album-cover">
-                {% endif %}
+
     
-                <div class="album-info">
-                    <div class="album-title"><strong>{{ wishlist_entry.album.name }} <br></strong></div>
-                    <em>Artist: {{ wishlist_entry.album.artist.name }}</em><br>
-                    <em>Released: {{ wishlist_entry.album.release_date }}</em><br>
-                    <em>Type: {{ wishlist_entry.album.album_type }}</em><br>
-                    <em>Current Price: {{ wishlist_entry.album.current_price }}</em><br>
-                    <em>Predicted Price: {{ wishlist_entry.album.predicted_price }}</em>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
 </div>
 {% endblock %}
 

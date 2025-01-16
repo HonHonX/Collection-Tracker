@@ -204,8 +204,10 @@ def list_overview(request, list_type):
                 best_price_change = None
 
                 for wishlist_entry in user_wishlist:
+                    print(wishlist_entry)
                     album = wishlist_entry.album
                     daily_prices = DailyAlbumPrice.objects.filter(album=album).order_by('-date')[:7]
+                    print(daily_prices)
 
                     if daily_prices.exists():
                         predicted_prices = AlbumPricePrediction.objects.filter(album=album).order_by('-date')[:7]
@@ -217,7 +219,7 @@ def list_overview(request, list_type):
                             if best_price_change is None or price_change > best_price_change:
                                 best_price_change = price_change
                                 recommended_album = album
-
+                                print(recommended_album.name)
         elif list_type == 'blacklist':
             user_list = filter_list_by_artist(request, user_blacklist)
             template = 'collection/blacklist_overview.html'
