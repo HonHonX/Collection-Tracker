@@ -104,7 +104,6 @@ p {
     scroll-behavior: smooth;
     height: auto;
     min-height: 15rem; 
-    width: auto;
 }
 
 .artist-recommendation::-webkit-scrollbar {
@@ -143,6 +142,13 @@ p {
     height: auto;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
+}
+
+#recommend-header {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+    align-items: center;
 }
 
 @media (max-width: 768px) {

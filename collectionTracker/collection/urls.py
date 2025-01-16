@@ -38,4 +38,7 @@ urlpatterns = [
     
     #Fetch recommended artists
     path('fetch-recommendations/', views.get_recommendations, name="get_recommendations"),
+
+    # Reload recommendations
+    path('reload-recommendations/', views.reload_recommendations, name='reload_recommendations'),
 ]

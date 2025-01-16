@@ -93,7 +93,6 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    overflow-y: hidden;
 }
 
 .link-list li {
@@ -142,6 +141,9 @@
     line-height: 1.25rem;
     width: 31%;
     flex: 1 0 auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
 }
 
 .slider-item strong {
@@ -157,6 +159,7 @@
 
 .event-image {
     width: 100%;
+    max-width: 20rem;
     height: auto;
     object-fit: cover;
     aspect-ratio: 3 / 2;
@@ -206,6 +209,7 @@
     padding: 0;
     margin: 0;
     gap: var(--gapDistance);
+    overflow-y: hidden;
 }
 
 .link {

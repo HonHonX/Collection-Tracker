@@ -18,6 +18,7 @@ from django.shortcuts import render
 from integration.lastfm_query import artist_recommendations
 from utils.stats_helpers import calculate_top_genres
 import requests  
+from .models import RecommendedArtist
 
 logger = logging.getLogger(__name__)
 
@@ -500,8 +501,25 @@ def album_carousel(request):
 
 @login_required
 def get_recommendations(request):
-    # Fetch top genres
-    top_genres = calculate_top_genres(request.user)
+    user = request.user
+    recommended_artists = RecommendedArtist.objects.filter(user=user)
+
+    if not recommended_artists.exists():
+        recommended_artists = fetch_and_save_recommendations(user)
+
+    return JsonResponse({
+        'recommended_artists': [
+            {
+                'id': rec.artist.id,
+                'name': rec.artist.name,
+                'image_url': rec.artist.photo_url or '/static/img/default.jpg'
+            }
+            for rec in recommended_artists
+        ]
+    })
+
+def fetch_and_save_recommendations(user):
+    top_genres = calculate_top_genres(user)
     genres = [genre.name for genre in top_genres]
     print(genres)
     
@@ -514,29 +532,38 @@ def get_recommendations(request):
         # Fetch artist data from Spotify and save to the database
         artist_objects = []
         for name in artists:
-            artist_data = get_artist_data(name, request.user)
+            artist_data = get_artist_data(name, user)
             artist_objects.append(artist_data['artist'])
 
         # Check if the artist IDs are in the user's followed artist list
-        followed_artist_ids = UserFollowedArtists.objects.filter(user=request.user).values_list('artist_id', flat=True)
+        followed_artist_ids = UserFollowedArtists.objects.filter(user=user).values_list('artist_id', flat=True)
         recommended_artists = [
-            {
-                'id': artist.id,
-                'name': artist.name,
-                'image_url': artist.photo_url or '/static/img/default.jpg'
-            }
-            for artist in artist_objects if artist.id not in followed_artist_ids
+            artist for artist in artist_objects if artist.id not in followed_artist_ids
         ]
 
+        # Save recommended artists to the database
+        RecommendedArtist.objects.filter(user=user).delete()
+        for artist in recommended_artists:
+            RecommendedArtist.objects.create(user=user, artist=artist)
+
+        return RecommendedArtist.objects.filter(user=user)
+
     except requests.exceptions.RequestException as e:
-        artists = []
-        artist_objects = []
-        recommended_artists = []
-        error = f"Error fetching data from Last.fm API: {str(e)}"
-    
+        return []
+
+@login_required
+def reload_recommendations(request):
+    user = request.user
+    recommended_artists = fetch_and_save_recommendations(user)
     return JsonResponse({
-        'recommended_artists': recommended_artists,
-        'error': error
+        'recommended_artists': [
+            {
+                'id': rec.artist.id,
+                'name': rec.artist.name,
+                'image_url': rec.artist.photo_url or '/static/img/default.jpg'
+            }
+            for rec in recommended_artists
+        ]
     })
 
 

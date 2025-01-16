@@ -129,7 +129,10 @@
             </div>
         </div>
 
-        <h1>Recommended Artists</h1>
+        <span id="recommend-header">
+            <h1>Recommended Artists</h1>
+            <img id="reload-recommendations-icon" src="{% static 'icons/refresh.svg' %}" alt="Reload Recommendations" class="icon">
+        </span>
         <div class="artist-recommendation">
             {% if not recommended_artists %}
                 <p>No recommendations available.</p>
@@ -248,4 +251,5 @@
     <script src="{% static 'js/slider.js' %}"></script>
     <script src="{% static 'js/updateProgressBars.js' %}"></script>
     <script src="{% static 'js/loginNotification.js' %}"></script>
+    <script src="{% static 'js/reloadRecommendations.js' %}"></script>
 {% endblock %}
