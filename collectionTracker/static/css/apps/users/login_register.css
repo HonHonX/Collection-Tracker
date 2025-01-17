@@ -6,13 +6,14 @@
     border-radius: var(--borderRadius);
     flex-direction: column;
     align-items: center;
-    padding: 2rem 5rem; /* Added padding for better spacing */
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    padding: 2rem 5rem;
+    box-sizing: border-box; 
     gap: var(--gapBigBlocks);
     margin: auto;
     box-sizing: border-box;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     
 .maincontent {

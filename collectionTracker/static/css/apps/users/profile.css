@@ -164,14 +164,14 @@ input[type="file"]:hover::-webkit-file-upload-button {
 }
 
 .badge-item span {
-    display: -webkit-box;           /* Required for the line-clamp property */
-    -webkit-line-clamp: 3;          /* Number of lines to show */
-    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
-    overflow: hidden;               /* Hides the overflowing text */
-    text-overflow: ellipsis;        /* Adds '...' for overflow */
-    line-height: 1rem;              /* Line height for one line */
-    max-height: 3rem;               /* Ensures the height accommodates exactly two lines */
-    font-size: 0.8rem;              /* Ensure consistent font size */
+    display: -webkit-box; 
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    line-height: 1rem; 
+    max-height: 3rem; 
+    font-size: 0.8rem;
 }
 
 .badge-container {
@@ -225,6 +225,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
     flex-direction: row nowrap;
     justify-content: start;
 }
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     #settings-block {
