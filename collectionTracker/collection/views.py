@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details
+from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details, update_album_from_discogs_url
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
@@ -342,14 +342,7 @@ class AlbumDetail(View):
             album = get_object_or_404(Album, id=album_id)
             if album:
                 logger.info(f"Album {album.name} with the id {album.id} found in database.")
-                album_data = fetch_basic_album_details(album.id)       
-                album.discogs_id = album_data.get('discogs_id')
-                album.genres = album_data.get('genres')
-                album.styles = album_data.get('styles')
-                album.labels = album_data.get('labels')
-                album.tracklist = album_data.get('tracklist')
-                album.lowest_price = album_data.get('lowest_price')
-                album.save()
+                album_data = fetch_basic_album_details(album.id)   
 
                 # Create DailyAlbumPrice entry if it doesn't exist
                 if album.lowest_price:
@@ -404,6 +397,12 @@ class AlbumDetail(View):
 
             if 'substatus' in request.POST:
                 return self.update_substatus(request, album)
+
+            if 'discogs_url' in request.POST:
+                discogs_url = request.POST.get('discogs_url')
+                if discogs_url:
+                    update_album_from_discogs_url(album, discogs_url)
+                    return redirect('album_detail', album_id=album.id)
 
             return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
         except Exception as e:

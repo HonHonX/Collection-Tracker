@@ -14,7 +14,7 @@
 <div class="full-block">
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Wishlist</h1>
-        <p>You have {{ user_wishlist.count }} album(s) in your wishlist.</p>
+        <p>You have {{ user_wishlist.count }} release{% if user_wishlist.count == 1 %}{% else %}s{% endif %} in your wishlist.</p>
     </div>
 
     <div class="wishlist-block">
@@ -25,8 +25,8 @@
                     <div class="recommendation-item">
                         <a href="{% url 'album_detail' recommended_album.id %}">
                             <span id="recommendation-description">
-                                Based collected data for the releases in your wishlist, the following one is recommended to be the next one purchased.<br>
-                                The calculation is based on the current price and the predicted price development.
+                                Based on collected wishlist data, 
+                                this release is recommended as your next purchase, considering the current price and predicted price trends.
                             </span>
                             {% if recommended_album.image_url %}
                                 <img src="{{ recommended_album.image_url }}" alt="Album cover" class="album-cover">
@@ -37,7 +37,7 @@
                                 <em>Released: {{ recommended_album.release_date }}</em><br>
                                 <em>Type: {{ recommended_album.album_type }}</em><br>
                                 <strong>Current Price: {{ current_price }}€</em><br></strong>
-                                <strong>Predicted Price: {{ avg_predicted_price }}€</em></strong>
+                                <strong>Predicted Price (&oslash;): {{ avg_predicted_price }}€</em></strong>
                             </div>
                         </a>
                     </div>

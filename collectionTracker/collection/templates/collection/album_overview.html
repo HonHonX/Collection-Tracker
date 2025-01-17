@@ -10,7 +10,7 @@
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
         <span class="album-details-header">
-            You have {{ user_collection.count }} album(s) in your collection.
+            <p>You have {{ user_wishlist.count }} release{% if user_wishlist.count == 1 %}{% else %}s{% endif %} in your collection.</p>
             <span>
                 <img id="arrow-carousel" class="icon" src="{% static 'icons/caret-down.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
                 <img id="toggle-carousel" class="icon" src="{% static 'icons/hide.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">

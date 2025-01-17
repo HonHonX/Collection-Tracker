@@ -120,6 +120,7 @@ p {
 }  
 
 .recommended-artist-item {
+    flex-shrink: 0;
     height: 100%;
     width: 8rem;
     display: flex;

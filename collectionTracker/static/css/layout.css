@@ -2,10 +2,8 @@
 :root {
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
-    --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
     --gapBigBlocks: 2rem;
-    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;   
 }
 
 main {

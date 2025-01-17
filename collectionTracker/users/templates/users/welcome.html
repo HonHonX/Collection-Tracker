@@ -11,17 +11,16 @@
 
 {% block content %}
     <div class="main-block">
-        <!-- Logo -->
-        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
-        <h1>Meet your ultimate companion for managing your physical music collection!</h1>
-
-        <!-- <h1>Welcome to {{ settings.APP_NAME }}</h1> -->
+        <div id="logo-block">
+            <img src="{% static 'img/bopsy.png' %}" alt="bopsy" class="bopsy">
+            <img src="{% static 'img/logo.gif' %}" alt="Logo" class="logo">
+        </div>
+        
         <div id="introduction">
+            <h1>Meet your new companion for managing your physical music collection!</h1>
             <p>
-                With Beats & Bops, you can effortlessly track and organize your entire music library.
-                Discover new music, rediscover old favorites, and never buy the same album twice. 
-                </br>   
-                Start your musical journey with Beats & Bops today!
+                With Beats & Bops, you can track and organize your entire music library.</br>
+                Discover new artists, rediscover old favorites, and never buy the same album twice. 
             </p>
         </div>
 

@@ -47,7 +47,11 @@
                     <strong>Current lowest price:</strong> {{ album.lowest_price|floatformat:2 }} €</br>
                 {% endif %}
             </p>
-        </div>        
+        </div>   
+        
+        {% if album.discogs_id %}
+            <img id="edit-discogs-button" class="icon" src="{% static 'icons/edit.svg' %}" alt="Edit">
+        {% endif %}
     </div>
 
     <div class="custom-detail">
@@ -128,40 +132,69 @@
         </form>
 
         <div class="bottom-block">
-            <div class="album-tracklist">
                 {% if album.tracklist %}
-                <h2>Tracklist</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Position</th>
-                            <th>Title</th>
-                            <th>Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for track in album.tracklist %}
-                        <tr>
-                            <td>{{ track.position }}</td>
-                            <td>{{ track.title }}</td>
-                            <td>{{ track.duration }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% endif %}
-            </div>
+                <div class="album-tracklist" id="album-tracklist">                
+                    <h2>Tracklist</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Title</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for track in album.tracklist %}
+                            <tr>
+                                <td>{{ track.position }}</td>
+                                <td>{{ track.title }}</td>
+                                <td>{{ track.duration }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}    
+                </div>
+            {% if album.discogs_id %}
+                <div id="discogs-div" style="display: none;">
+                    <div class="discogs">
+                        <div id="wrong-info">
+                            <img src="{% static 'icons/question.svg' %}" alt="Question" class="icon">
+                            <p>Missing data for {{ album.name }}?</p>
+                        </div>
 
-            {% if album.lowest_price %}
-                <div class="price-stats">
-                    <h2>Price Changes</h2>
-                    <canvas id="price-chart" data-album-id="{{ album.id }}" data-url="{% url 'album_price_history' album.id %}" data-urlpred="{% url 'album_price_prognosis' album.id %}"></canvas>
+                        <p>Please enter the Discogs Profile url for {{ album.name }} and help to improve our database!</p>
+                        <a href="https://www.discogs.com/de/search?q={{ album.name }}&type=release" target="_blank">Discogs search for {{ album.name }} </a>
+                        <form method="post" id="discogs-form">
+                            {% csrf_token %}
+                            <input type="text" name="discogs_url" id="discogs_url" placeholder="https://www.discogs.com/de/release/{{ album.discogs_id }}" required>
+                            <button type="submit" class="button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                {% if album.lowest_price %}
+                    <div class="price-stats" id="price-stats">
+                        <h2>Price Changes</h2>
+                        <canvas id="price-chart" data-album-id="{{ album.id }}" data-url="{% url 'album_price_history' album.id %}" data-urlpred="{% url 'album_price_prognosis' album.id %}"></canvas>
+                    </div>
+                {% endif %}
+            {% else %} 
+                <div class="discogs">
+                    <div id="wrong-info">
+                        <img src="{% static 'icons/question.svg' %}" alt="Question" class="icon">
+                        <p>Missing data for {{ album.name }}?</p>
+                    </div>
+
+                    <p>Please enter the Discogs Profile url for {{ album.name }} and help to improve our database!</p>
+                    <a href="https://www.discogs.com/de/search?q={{ album.name }}&type=release" target="_blank">Discogs search for {{ album.name }} </a>
+                    <form method="post" id="discogs-form">
+                        {% csrf_token %}
+                        <input type="text" name="discogs_url" id="discogs_url" placeholder="https://www.discogs.com/de/release/{{ album.discogs_id }}" required>
+                        <button type="submit" class="button">Submit</button>
+                    </form>
                 </div>
             {% endif %}
         </div>
-        
-        
-
 {% endblock %}
 
 {% block js %} 
@@ -169,4 +202,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="{% static 'js/showPriceGraph.js' %}"></script>
     <script src="{% static 'js/albumDetail.js' %}"></script>
+    <script>
+        document.getElementById('edit-discogs-button').addEventListener('click', function() {
+            var discogsDiv = document.getElementById('discogs-div');
+            var tracklistDiv = document.getElementById('album-tracklist');
+            var priceStatsDiv = document.getElementById('price-stats');
+            if (discogsDiv.style.display === 'none') {
+                discogsDiv.style.display = 'block';
+                if (tracklistDiv) tracklistDiv.style.display = 'none';
+                if (priceStatsDiv) priceStatsDiv.style.display = 'none';
+            } else {
+                discogsDiv.style.display = 'none';
+                if (tracklistDiv) tracklistDiv.style.display = 'block';
+                if (priceStatsDiv) priceStatsDiv.style.display = 'block';
+            }
+        });
+    </script>
 {% endblock %}

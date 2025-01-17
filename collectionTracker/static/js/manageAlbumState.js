@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         albumItem.remove();
                         currentCount -= 1;
                     }
-                    collectionHeader.textContent = `You have ${currentCount} album(s) in your ${listType}.`;
+                    collectionHeader.textContent = `You have ${currentCount} release${currentCount === 1 ? '' : 's'} in your ${listType}.`;
                 }
 
                 if (window.location.pathname.includes('search') || window.location.pathname.includes('home') || window.location.pathname.includes('artist_overview')) {

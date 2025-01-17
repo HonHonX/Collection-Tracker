@@ -3970,3 +3970,28 @@ Traceback (most recent call last):
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'artist_overview' with arguments '('',)' not found. 1 pattern(s) tried: ['artist_overview/(?P<artist_id>[^/]+)/\\Z']
 "GET /home/ HTTP/1.1" 500 280795
+Internal Server Error: /reload-recommendations/
+Traceback (most recent call last):
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 557, in reload_recommendations
+    recommended_artists = fetch_and_save_recommendations(user)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 535, in fetch_and_save_recommendations
+    artist_data = get_artist_data(name, user)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\integration\spotify_query.py", line 133, in get_artist_data
+    'genres': artist_info['genres'],
+              ~~~~~~~~~~~^^^^^^^^^^
+KeyError: 'genres'
+"GET /reload-recommendations/ HTTP/1.1" 500 92381
+Internal Server Error: /album/6FLiJ4318RtpA5lYWJt2cL/
+"POST /album/6FLiJ4318RtpA5lYWJt2cL/ HTTP/1.1" 500 8848
+Internal Server Error: /album/6FLiJ4318RtpA5lYWJt2cL/
+"POST /album/6FLiJ4318RtpA5lYWJt2cL/ HTTP/1.1" 500 8848
+Internal Server Error: /album/6FLiJ4318RtpA5lYWJt2cL/
+"POST /album/6FLiJ4318RtpA5lYWJt2cL/ HTTP/1.1" 500 8848
+Internal Server Error: /album/6FLiJ4318RtpA5lYWJt2cL/
+"POST /album/6FLiJ4318RtpA5lYWJt2cL/ HTTP/1.1" 500 8827
