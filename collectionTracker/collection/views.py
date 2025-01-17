@@ -6,14 +6,20 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details
+from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details, update_album_from_discogs_url
 import json
 from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
 from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
 import logging
-from stats.models import DailyAlbumPrice
+from stats.models import DailyAlbumPrice, AlbumPricePrediction
 from django.utils import timezone
+from django.shortcuts import render
+from integration.lastfm_query import artist_recommendations
+from utils.stats_helpers import calculate_top_genres
+import requests  
+from .models import RecommendedArtist
+from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -29,14 +35,20 @@ def home_view(request):
         HttpResponse: The rendered home page. 
     """
     followed_artists = []
+    recommended_artists = []
     if request.user.is_authenticated:
         followed_artists = get_followed_artists(request.user)
+        # Fetch recommended artists
+        response = get_recommendations(request)
+        if response.status_code == 200:
+            recommended_artists = json.loads(response.content).get('recommended_artists', [])
     user_album_ids, user_blacklist_ids, user_wishlist_ids = get_user_lists(request.user)
     newest_albums = get_newest_albums(request.user)
 
     return render(request, 'collection/index.html', {  
         'settings': settings,
         'followed_artists': followed_artists,
+        'recommended_artists': recommended_artists,
         'user_album_ids': user_album_ids,  
         'user_blacklist_ids': user_blacklist_ids,
         'user_wishlist_ids': user_wishlist_ids,
@@ -58,13 +70,13 @@ def artist_detail(request, artist_id):
     
     if request.method == 'POST':
         discogs_url = request.POST.get('discogs_url')
-        if discogs_url:
-            update_artist_from_discogs_url(artist, discogs_url)
+        if (discogs_url):
+            update_artist_from_discogs_url(artist, discogs_url) 
             return redirect('artist_detail', artist_id=artist.id)
     
     return render(request, 'collection/artist_detail.html', {'artist': artist})
 
-def artist_search(request):
+def artist_search(request, artist_name=None):
     """
     Handle artist search requests.
     
@@ -75,6 +87,7 @@ def artist_search(request):
     
     Args:
         request (HttpRequest): The HTTP request object.
+        artist_name (str): The name of the artist to search for.
     
     Returns:
         HttpResponse: The rendered HTML page or JSON response with error message.
@@ -82,8 +95,9 @@ def artist_search(request):
 
     user = request.user
 
-    if request.method == 'POST':
-        artist_name = request.POST.get('artist_name')
+    if request.method == 'POST' or artist_name:
+        if not artist_name:
+            artist_name = request.POST.get('artist_name')
         
         if not artist_name:
             error = "Artist name is required."
@@ -93,7 +107,11 @@ def artist_search(request):
             })
         
         try:
-            context = get_artist_data(artist_name, request.user)
+            cache_key = f"artist_data_{artist_name.lower().replace(' ', '_')}_{user.id}"
+            context = cache.get(cache_key)
+            if not context:
+                context = get_artist_data(artist_name, request.user)
+                cache.set(cache_key, context, timeout=3600)  # Cache for 1 hour
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
@@ -107,22 +125,23 @@ def artist_search(request):
     
     return render(request, 'collection/artist_search.html')
 
-def artist_overview(request, artist_name):
+def artist_overview(request, artist_id):
     """ 
     Render the artist overview page. 
     Fetch and display detailed information about the specified artist.
     
     Args:
         request (HttpRequest): The HTTP request object.
-        artist_name (str): The name of the artist to display.
+        artist_id (str): The id of the artist to display.
     
     Returns:
         HttpResponse: The rendered HTML page with artist details.
     """
     try:
-        context = get_artist_data(artist_name, request.user) 
-        response = render(request, 'collection/artist_overview.html', context)
-        return response
+        artist = Artist.objects.get(id=artist_id)
+        artist_name = artist.name
+        # Redirect to the search page with the artist name
+        return redirect('artist_search', artist_name=artist_name)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
@@ -185,6 +204,9 @@ def list_overview(request, list_type):
     try:
         # Retrieve user album IDs and lists
         user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
+        recommended_album = None
+        avg_predicted_price = None
+        current_price = None
 
         # Determine the list type and corresponding template
         if list_type == 'collection':
@@ -193,6 +215,26 @@ def list_overview(request, list_type):
         elif list_type == 'wishlist':
             user_list = filter_list_by_artist(request, user_wishlist)
             template = 'collection/wishlist_overview.html'
+            if user_wishlist.exists():
+                best_price_change = None
+
+                for wishlist_entry in user_wishlist:
+                    print(wishlist_entry)
+                    album = wishlist_entry.album
+                    daily_prices = DailyAlbumPrice.objects.filter(album=album).order_by('-date')[:7]
+                    print(daily_prices)
+
+                    if daily_prices.exists():
+                        predicted_prices = AlbumPricePrediction.objects.filter(album=album).order_by('-date')[:7]
+                        if predicted_prices.exists():
+                            avg_predicted_price = round(sum([price.predicted_price for price in predicted_prices]) / len(predicted_prices), 2)
+                            current_price = daily_prices.first().price
+                            price_change = avg_predicted_price - current_price
+
+                            if best_price_change is None or price_change > best_price_change:
+                                best_price_change = price_change
+                                recommended_album = album
+                                print(recommended_album.name)
         elif list_type == 'blacklist':
             user_list = filter_list_by_artist(request, user_blacklist)
             template = 'collection/blacklist_overview.html'
@@ -200,8 +242,12 @@ def list_overview(request, list_type):
             return JsonResponse({'success': False, 'error': 'Invalid list type'}, status=400)
 
         artist_list = get_artist_list(request.user)  # Retrieve artist list
+        user_album_substatuses = UserAlbumCollection.SUBSTATUS
+        user_album_priorities = UserAlbumWishlist.PRIORITY_CHOICES
+        user_albums = Album.objects.filter(useralbumcollection__user=request.user)  
 
         return render(request, template, {
+            'user': request.user,
             'user_blacklist': user_blacklist,
             'user_blacklist_ids': user_blacklist_ids,
             'user_wishlist': user_wishlist,
@@ -210,6 +256,12 @@ def list_overview(request, list_type):
             'user_album_ids': user_album_ids,
             'artist_list': artist_list,
             'user_list': user_list,
+            'albums': user_albums,
+            'user_album_substatuses': [choice[1] for choice in user_album_substatuses],
+            'user_album_priorities': [choice[1] for choice in user_album_priorities],
+            'recommended_album': recommended_album,
+            'avg_predicted_price': avg_predicted_price,
+            'current_price': current_price,
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -295,14 +347,7 @@ class AlbumDetail(View):
             album = get_object_or_404(Album, id=album_id)
             if album:
                 logger.info(f"Album {album.name} with the id {album.id} found in database.")
-                album_data = fetch_basic_album_details(album.id)       
-                album.discogs_id = album_data.get('discogs_id')
-                album.genres = album_data.get('genres')
-                album.styles = album_data.get('styles')
-                album.labels = album_data.get('labels')
-                album.tracklist = album_data.get('tracklist')
-                album.lowest_price = album_data.get('lowest_price')
-                album.save()
+                album_data = fetch_basic_album_details(album.id)   
 
                 # Create DailyAlbumPrice entry if it doesn't exist
                 if album.lowest_price:
@@ -357,6 +402,12 @@ class AlbumDetail(View):
 
             if 'substatus' in request.POST:
                 return self.update_substatus(request, album)
+
+            if 'discogs_url' in request.POST:
+                discogs_url = request.POST.get('discogs_url')
+                if discogs_url:
+                    update_album_from_discogs_url(album, discogs_url)
+                    return redirect('album_detail', album_id=album.id)
 
             return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
         except Exception as e:
@@ -443,3 +494,89 @@ class AlbumDetail(View):
             'message': 'Substatus updated successfully',
             'substatus_display': collection_entry.get_substatus_display()
         }, status=200)
+
+@login_required
+def album_carousel(request):
+    user_albums = Album.objects.filter(useralbumcollection__user=request.user)
+    logger.debug("Found %d albums in user's collection", user_albums.count())
+    for album in user_albums:
+        logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
+    return render(request, 'collection/album_carousel.html', {'albums': user_albums})
+
+@login_required
+def get_recommendations(request):
+    user = request.user
+    recommended_artists = RecommendedArtist.objects.filter(user=user)
+
+    if not recommended_artists.exists():
+        recommended_artists = fetch_and_save_recommendations(user)
+
+    return JsonResponse({
+        'recommended_artists': [
+            {
+                'id': rec.artist.id,
+                'name': rec.artist.name,
+                'image_url': rec.artist.photo_url or '/static/img/default.jpg'
+            }
+            for rec in recommended_artists
+        ]
+    })
+
+def fetch_and_save_recommendations(user):
+    top_genres = calculate_top_genres(user)
+    genres = [genre.name for genre in top_genres]
+    print(genres)
+    
+    try:
+        response = artist_recommendations(genres)
+        data = response.json() if isinstance(response, requests.Response) else json.loads(response.content)
+        artists = data.get('artists', [])
+        error = None
+
+        # Fetch artist data from Spotify and save to the database
+        artist_objects = []
+        for name in artists:
+            artist_data = get_artist_data(name, user)
+            artist_objects.append(artist_data['artist'])
+
+        # Check if the artist IDs are in the user's followed artist list
+        followed_artist_ids = UserFollowedArtists.objects.filter(user=user).values_list('artist_id', flat=True)
+        recommended_artists = [
+            artist for artist in artist_objects if artist.id not in followed_artist_ids
+        ]
+
+        # Save recommended artists to the database
+        RecommendedArtist.objects.filter(user=user).delete()
+        for artist in recommended_artists:
+            RecommendedArtist.objects.create(user=user, artist=artist)
+
+        return RecommendedArtist.objects.filter(user=user)
+
+    except requests.exceptions.RequestException as e:
+        return []
+
+@login_required
+def reload_recommendations(request):
+    user = request.user
+    recommended_artists = fetch_and_save_recommendations(user)
+    return JsonResponse({
+        'recommended_artists': [
+            {
+                'id': rec.artist.id,
+                'name': rec.artist.name,
+                'image_url': rec.artist.photo_url or '/static/img/default.jpg'
+            }
+            for rec in recommended_artists
+        ]
+    })
+
+
+
+
+
+
+
+
+
+
+

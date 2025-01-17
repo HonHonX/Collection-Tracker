@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Error 400
+{% endblock %}
+
+{% block content %}
+    <div class="main-block">
+        <img src="{% static 'img/error.png' %}" alt="404 Error">
+        <h1>400 - Bad Request</h1>
+        <p>Sorry, your request could not be processed. Please try again later.</p>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/navigation.js' %}"></script>
+{% endblock %}

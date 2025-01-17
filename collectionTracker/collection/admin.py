@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists, Genre
+from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists, Genre, RecommendedArtist
 
 # Register the Genre model with the admin panel
 @admin.register(Genre)
@@ -97,4 +97,6 @@ class UserFollowedArtistsAdmin(admin.ModelAdmin):
     list_display = ('user', 'artist', 'followed_on')  # Display user, artist, and followed date
     search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
     list_filter = ('artist', 'followed_on')  # Filter by the date the artist was followed
+
+admin.site.register(RecommendedArtist)
 

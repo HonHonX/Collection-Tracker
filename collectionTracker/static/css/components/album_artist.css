@@ -110,25 +110,19 @@
 
     /* Album-Item : One Album item featuring the album image, info and controls */
     .album-item {
-        /* flex: 0 1 calc(20% - 1rem); */
         display: flex;
         flex-direction: column;
         width: var(--coverSize);
         margin-bottom: var(--gapDistance);
         background-color: var(--neutral100);
         box-sizing: border-box;
-        padding: 0.5rem;
+        padding: 0.5rem 0.5rem 1rem 0.5rem; 
         border-radius: var(--borderRadius);
         filter: grayscale(0);
-        max-height: 20rem;
+        max-height: 25rem;
         max-width: 10rem;
         transition: var(--transitionStyle);
     }
-    
-    /* .album-item:hover {
-        transform: scale(1.1); /* Enlarge the album item */
-        box-shadow: var(--boxShadow); /* Add a shadow on hover */
-    } */
 
     .album-item.disabled {
         filter: grayscale(1);  /* Ensure grayscale has a value */
@@ -162,6 +156,61 @@
         pointer-events: none;
     }
 
+    .placeholder {
+        display: flex;
+        flex-direction: row;
+        gap: var(--gapDistance);
+    }
+
+    .placeholder-item {
+        display: flex;
+        flex-direction: column;
+        width: var(--coverSize);
+        margin-bottom: var(--gapDistance);
+        background-color: var(--neutral70);
+        box-sizing: border-box;
+        padding: 0.5rem;
+        border-radius: var(--borderRadius);
+        filter: grayscale(0);
+        max-height: 20rem;
+        transition: var(--transitionStyle);
+    }
+
+    .placeholder-info {
+        flex-grow: 1;
+        margin-top: 1rem;
+        text-align: left;
+        color: var(--neutral0);
+        font-size: 0.6rem;
+        line-height: 1.25rem;
+        text-transform: capitalize;
+        height: 100%;
+    }  
+
+    #placeholder-2 {
+        opacity: 70%;
+    }
+
+    #placeholder-3 {
+        opacity: 50%;
+    }
+
+    #placeholder-4 {
+        opacity: 30%;
+    }
+
+    #placeholder-5 {
+        opacity: 10%;
+    }
+
+    .description{
+        margin-bottom: var(--gapDistance);
+    }
+
+    .default-cover {
+        border-radius: var(--borderRadius);
+        margin-top: 0.5rem;
+    }
 
     .album-cover {
         width: 100%;
@@ -266,6 +315,12 @@
     opacity: 0.5;  /* Dim the button */
 }
 
+@media (min-width: 768px) {
+    .overview-content{
+        display: flex;
+        flex-direction: row;
+    }
+}
 
 @media (max-width: 768px) {
 

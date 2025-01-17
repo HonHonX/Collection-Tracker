@@ -3,6 +3,8 @@
     /* Design Sizes */
     --defaultFont: 'Montserrat', 'Verdana' , sans-serif;
     --headlineFont: 'Bauhaus93', 'Montserrat', 'Verdana' , sans-serif;
+    --boxShadow: 0px 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
+    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;   
 }
 
 @font-face {
@@ -37,11 +39,17 @@ body {
 a {
     color: var(--accent100);
     text-decoration: none;
+    transition: var(--transitionStyle);
 }
 
 a:hover {
     color: var(--accentVariantB100);
     transform: translateY(-2px);
+    
+}
+
+a:hover img {
+    transform: scale(1.05);
 }
 
 a:hover,

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Badge, UserBadge, Notification, DailyAlbumPrice
+from .models import Badge, UserBadge, Notification, DailyAlbumPrice, AlbumPricePrediction
 
 # Register the Badge model with the admin panel
 @admin.register(Badge)
@@ -25,7 +25,13 @@ class NotificationAdmin(admin.ModelAdmin):
 @admin.register(DailyAlbumPrice)
 class DailyAlbumPriceAdmin(admin.ModelAdmin):
     list_display = ('album', 'date', 'price')
-    search_fields = ('album__name',)
+    search_fields = ('album__name', 'date')
     list_filter = ('date',)
+
+# Register the AlbumPricePrediction model with the admin panel
+@admin.register(AlbumPricePrediction)
+class AlbumPricePredictionAdmin(admin.ModelAdmin):
+    list_display = ('album', 'date', 'predicted_price')
+    search_fields = ('album__name', 'date')
 
 
