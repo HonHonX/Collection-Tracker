@@ -1,3 +1,8 @@
+main {
+    padding: 2rem;
+    height: 100%;
+}
+
 #welcome-block {
     width: 50%;
     height: auto;
@@ -6,11 +11,25 @@
     border-radius: var(--borderRadius);
     flex-direction: column;
     align-items: center;
-    padding: 2rem 5rem; /* Added padding for better spacing */
+    padding: 2rem 6rem; /* Added padding for better spacing */
     box-sizing: border-box; /* Ensures padding doesn't affect width */
-    gap: var(--gapBigBlocks);
+    gap: var(--gapDistance);
     margin: auto;
     box-sizing: border-box;
+}
+
+h1 {
+    text-align: justify;
+}
+
+p {
+    text-align: justify;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.introduction {
+    width: 80%;
 }
 
 .button-block {
@@ -33,10 +52,23 @@
 }
 
 /* Logo Adjustment */
-.logo {
+#logo-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     width: 100%;
+    height: 10rem;
+    align-items: center;
+}
+
+.logo {
+    flex: 1 0 80%;
     height: auto;
-} */
+} 
+
+.bopsy {
+    width: 20%
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

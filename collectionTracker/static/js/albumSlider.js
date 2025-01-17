@@ -1,6 +1,5 @@
-// @@ -0,0 +1,10 @@
-//Implement slider scroll behavior with mouse interaction
-document.querySelectorAll('.album-slider').forEach(slider => {
+// Implement slider scroll behavior with mouse interaction
+document.querySelectorAll('.album-slider, #events-slider').forEach(slider => {
     slider.addEventListener('wheel', (event) => {
         event.preventDefault(); // Prevent vertical scrolling
         slider.scrollBy({

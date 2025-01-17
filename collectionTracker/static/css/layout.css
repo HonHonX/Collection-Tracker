@@ -2,10 +2,8 @@
 :root {
     /* Design Sizes */
     --borderRadius: 0.5rem; /* Box Roundness */
-    --boxShadow: 0px 0.25rem 0.25rem var(--neutral100);
     --gapDistance: 1rem;
     --gapBigBlocks: 2rem;
-    --transitionStyle: background-color 0.3s ease, transform 0.3s ease;   
 }
 
 main {
@@ -24,6 +22,9 @@ body::-webkit-scrollbar {
 .content{
     display: flex;
     flex-direction: column;
+    flex: 1 0 auto%;
+    box-sizing: border-box; 
+    width: 100%;
 }
 
 .maincontent {
@@ -39,8 +40,8 @@ body::-webkit-scrollbar {
 }
 
 .buffer{
-    height: 8rem;
     background-color: var(--neutral100);
+    height: 2rem;
 }
 
 /* used for sites without a sidebar */

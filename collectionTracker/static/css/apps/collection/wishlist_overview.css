@@ -1,0 +1,55 @@
+.full-block {
+    gap: 0;
+}
+
+.wishlist-block {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
+}
+
+.left-column {
+    height: 100%;
+    flex: 0 0 20%;
+    background-color: var(--neutral90);
+    border-radius: var(--borderRadius);
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.recommended-purchase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gapDistance)
+}
+
+#recommendation-description {
+    color: var(--neutral0);
+    font-size: 0.8rem;
+    line-height: 1.25rem;
+}
+
+.right-column {
+    flex: 1 0 70%;
+}
+
+.recommendation-info {
+    color: var(--neutral0);
+    font-size: 0.6rem;
+    line-height: 1.25rem;
+}
+
+.recommendation-info strong{
+    color: var(--neutral0);
+    font-size: 0.8rem;
+    line-height: 1.25rem;
+}
+
+.album-cover {
+    margin: var(--gapDistance) 0;
+    flex: 1 0 80%;
+    height: auto;
+    aspect-ratio: 1/1;
+}

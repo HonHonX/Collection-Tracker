@@ -7,10 +7,11 @@
 
 {% block site_specific_css %}
     <link rel="stylesheet" href="{% static 'css/apps/collection/artist_detail.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slider.css' %}" type="text/css"> <!-- Add slider CSS -->
 {% endblock %}
 
 {% block maincontent %}
-    <a href="{% url 'artist_overview' artist.name %}">
+    <a href="{% url 'artist_search' artist.name %}">
         <img src="{% static 'icons/back.svg' %}" alt="Back" class="icon">
     </a>
 
@@ -31,16 +32,41 @@
                     {{ artist.members|join:", " }}
                 {% endif %}
             </div>
+            
+            <div class="bottom-block">
 
-            <div id="link">
-                {% if artist.urls %}
+                <div id="artist-events-block" data-artist-name="{{ artist.name }}">
+                    <h2>Upcoming Events</h2>
+                    <div id="events-slider" class="slider">
+                        <div class="slider-item">Loading...</div>
+                    </div>
+                </div>
+
+                <div id="link-block">
                     <h2>Web</h2>
                     <ul class="link-list">
                         {% for url in artist.urls %}
-                            <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                            <li class="link">
+                                <a href="{{ url }}" target="_blank">
+                                    {% if 'instagram' in url %}
+                                        <img src="{% static 'icons/instagram.svg' %}" alt="Instagram" class="icon">
+                                    {% elif 'facebook' in url %}
+                                        <img src="{% static 'icons/facebook.svg' %}" alt="Facebook" class="icon">
+                                    {% elif 'twitter' in url %}
+                                        <img src="{% static 'icons/twitter_x.svg' %}" alt="Twitter" class="icon">
+                                    {% elif 'youtube' in url %}
+                                        <img src="{% static 'icons/youtube.svg' %}" alt="YouTube" class="icon">
+                                    {% elif 'soundcloud' in url %}
+                                        <img src="{% static 'icons/soundcloud.svg' %}" alt="SoundCloud" class="icon">
+                                    {% else %}
+                                        <img src="{% static 'icons/website.svg' %}" alt="Website" class="icon">
+                                    {% endif %}
+                                    <span class="link-text">{{ url }}</span>
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
-                {% endif %}
+                </div>
             </div>
         </div> 
 
@@ -49,7 +75,6 @@
                 <img id="search-artist-photo" src="{{ artist.photo_url }}" alt="{{ artist.name }}'s photo">
             {% endif %}
 
-            <div id="spacer-1"></div>
             
             <div class="popularity-gauge">
                 <div class="gauge">
@@ -58,12 +83,13 @@
                 </div>
             </div>
 
+            <div id="spacer-2"></div>
+            <div id="spacer-2"></div>
+
             {% if artist_info.genres %}
                 <p>Genres: {{ artist.genres|join:", " }}</p>
             {% endif %}
-
-            <div id="spacer-1"></div> 
-            
+                        
             <div class="discogs">
                 <div id="wrong-info">
                     <img src="{% static 'icons/question.svg' %}" alt="Question" class="icon">
@@ -85,4 +111,7 @@
 
 {% block js %}
     <script src="{% static 'js/gauge.js' %}"></script>
+    <script src="{% static 'js/slider.js' %}"></script>
+    <script src="{% static 'js/eventsDisplay.js' %}"></script>
+    
 {% endblock %}

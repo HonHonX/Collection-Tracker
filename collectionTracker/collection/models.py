@@ -32,7 +32,7 @@ class Artist(models.Model):
     id = models.CharField(max_length=50, primary_key=True, default=0) 
     name = models.CharField(max_length=100)
     photo_url = models.URLField(blank=True, null=True)
-    genres = models.ManyToManyField(Genre, related_name='artists')
+    genres = models.ManyToManyField(Genre, related_name='artists', blank=True)
     popularity = models.IntegerField(default=0)
 
     # Attributes provided by discogs
@@ -67,8 +67,13 @@ class Album(models.Model):
     labels = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     lowest_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.genres:
+            self.genres = ["N/A"]
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.name 
+        return self.name  
 
     def formatted_lowest_price(self):
         return f"€{number_format(self.lowest_price, decimal_pos=2)}"
@@ -100,6 +105,10 @@ class UserAlbumCollection(models.Model):
         choices=SUBSTATUS, 
         default='unspecified', 
     )
+
+    def save(self, *args, **kwargs):
+        self.substatus = self.substatus.lower()
+        super().save(*args, **kwargs)
 
     class Meta:
         unique_together = ('user', 'album')
@@ -186,3 +195,8 @@ class UserFollowedArtists(models.Model):
 
     def __str__(self):
         return f"{self.user.username} follows {self.artist.name}"
+
+class RecommendedArtist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

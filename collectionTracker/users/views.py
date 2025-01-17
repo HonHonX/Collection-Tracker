@@ -196,7 +196,7 @@ def update_email(request):
     old_email = request.user.email
     data = json.loads(request.body)
     new_email = data.get('email')
-    if new_email:
+    if new_email and new_email != request.user.email:
         request.user.email = new_email
         request.user.save()
 
@@ -239,7 +239,6 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-    
             send_mail(
                 'Password changed',
                 'Your password has been changed. If you did not request this change, please contact us immediately.',

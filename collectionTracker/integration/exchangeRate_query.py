@@ -9,13 +9,10 @@ def fetch_and_save_usd_to_eur():
     Return the fetched exchange rate.
     """
     api_key = config('EXCHANGE_RATE_API_KEY')
-    print (api_key)
     url = f"https://v6.exchangerate-api.com/v6/{api_key}/latest/USD"
     response = requests.get(url)
     data = response.json()
-    print (data)
     usd_to_eur = data['conversion_rates']['EUR']
-    print (usd_to_eur)
 
     exchange_rate, created = DailyExchangeRate.objects.get_or_create(
         date=datetime.now().date(),

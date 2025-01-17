@@ -5,6 +5,17 @@
     gap: var(--gapBigBlocks);
 }
 
+h1 {
+    display: -webkit-box;           /* Required for the line-clamp property */
+    -webkit-line-clamp: 3;          /* Number of lines to show */
+    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
+    overflow: hidden;               /* Hides the overflowing text */
+    text-overflow: ellipsis;        /* Adds '...' for overflow */
+    line-height: 3rem;              /* Line height for one line */
+    max-height: 6rem;               /* Ensures the height accommodates exactly two lines */
+    font-size: 2rem;              /* Ensure consistent font size */
+}
+
 .album-detail {
     display: flex;
     flex-direction: column;
@@ -14,7 +25,7 @@
 }
 
 .album-detail img.album-cover {
-    width: 75%; 
+    width: 100%; 
     aspect-ratio: 1 / 1;
     border-radius: var(--borderRadius);
     object-fit: cover;
@@ -34,9 +45,15 @@
 }
 
 .album-detail p {
-    margin: 0.5rem 0;
+    margin: 0;
     font-size: 1rem;
     color: var(--neutral0);
+}
+
+.album-data {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5rem;
 }
 
 .custom-detail {
@@ -148,6 +165,12 @@ textarea {
     gap: var(--gapDistance);
     width: 60%;
     height: 100%;
+}
+
+#title-block {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gapDistance);
 }
 
 @media (max-width: 768px) {

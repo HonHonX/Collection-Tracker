@@ -17,7 +17,7 @@
 
         <div class="sidebar-logo">
             <a href="{% url 'index' %}">
-                <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+                <img src="{% static 'img/logo.gif' %}" alt="Logo" class="logo-img">
             </a>
         </div>
 
@@ -26,7 +26,7 @@
                 {% csrf_token %}
                 <div class="input-group">
                     <input type="text" name="artist_name" id="artist-name" placeholder="Enter artist name" class="input-field" required>
-                    <button type="submit" class="button"> <img class="icon" src="{% static 'icons/search.svg' %}"> </button>
+                    <button type="submit" class="button" id="icon-button"> <img class="icon" src="{% static 'icons/search.svg' %}"> </button>
                 </div>
             </form>    
         </div>

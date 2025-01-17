@@ -9,10 +9,55 @@
 <div class="full-block">
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
-        <p>You have {{ user_collection.count }} album(s) in your collection.</p>
+        <span class="album-details-header">
+            <p>You have {{ user_wishlist.count }} release{% if user_wishlist.count == 1 %}{% else %}s{% endif %} in your collection.</p>
+            <span>
+                <img id="arrow-carousel" class="icon" src="{% static 'icons/caret-down.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
+                <img id="toggle-carousel" class="icon" src="{% static 'icons/hide.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
+            </span>
+        </span>
+    </div>   
+
+    <!-- Image Carousel -->
+    <div class="carousel-container" id="carousel-container">
+        <div class="album-details">
+            <span>
+                <h2 id="album-title"></h2>
+            </span>
+            <p id="album-artist"></p>
+        </div>
+        
+        <div class="carousel">
+            {% for collection_entry in user_collection %}
+            <div class="carousel-item" data-title="{{ collection_entry.album.name }}" data-artist="{{ collection_entry.album.artist.name }}">
+                <a href="{% url 'album_detail' collection_entry.album.id %}">
+                    <img src="{{ collection_entry.album.image_url }}" alt="{{ collection_entry.album.name }}">
+                </a>
+                <div class="reflection">
+                    <img src="{{ collection_entry.album.image_url }}" alt="{{ collection_entry.album.name }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="indicators">
+            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+            {% for collection_entry in user_collection %}
+            <span class="indicator" onclick="moveSlide({{ forloop.counter0 }} - currentIndex)"></span>
+            {% endfor %}
+            <button class="next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
     </div>
 
     <div class="sorting-controls">
+
+        <label for="substatus-filter">Filter by Substatus:</label>
+        <select id="substatus-filter">
+            <option value="">All</option>
+            {% for substatus in user_album_substatuses %}
+                <option value="{{ substatus|lower }}">{{ substatus }}</option>
+            {% endfor %}
+        </select>
+
         <label for="artist-filter">Filter by Artist:</label>
         <select id="artist-filter">
             <option value="">All Artists</option> 
@@ -40,6 +85,7 @@
             data-album-type="{{ collection_entry.album.album_type }}" 
             data-release-date="{{ collection_entry.album.release_date }}" 
             data-album-id="{{ collection_entry.album.id }}"
+            data-substatus="{{ collection_entry.substatus|lower }}"
             data-in-collection="{% if collection_entry.album.id in user_album_ids %}true{% else %}false{% endif %}"
             data-in-wishlist="{% if collection_entry.album.id in user_wishlist_ids %}true{% else %}false{% endif %}"
             data-in-blacklist="{% if collection_entry.album.id in user_blacklist_ids %}true{% else %}false{% endif %}">
@@ -71,4 +117,24 @@
 <script src="{% static 'js/manageAlbumState.js' %}"></script>
 <script src="{% static 'js/sortAlbums.js' %}"></script>
 <script src="{% static 'js/filterByArtist.js' %}"></script>
+<script src="{% static 'js/imageCarousel.js' %}"></script>
+<script src="{% static 'js/filterBySubstatus.js' %}"></script>
+<script>
+    function toggleCarousel() {
+        const carouselContainer = document.getElementById('carousel-container');
+        const toggleIcon = document.getElementById('toggle-carousel');
+        const arrowIcon = document.getElementById('arrow-carousel');
+        if (carouselContainer.classList.contains('hidden')) {
+            carouselContainer.classList.remove('hidden');
+            carouselContainer.classList.add('visible');
+            toggleIcon.src = '{% static "icons/hide.svg" %}';
+            arrowIcon.src = '{% static "icons/caret-down.svg" %}';
+        } else {
+            carouselContainer.classList.add('hidden');
+            carouselContainer.classList.remove('visible');
+            toggleIcon.src = '{% static "icons/show.svg" %}';
+            arrowIcon.src = '{% static "icons/caret-up.svg" %}';
+        }
+    }
+</script>
 {% endblock %}

@@ -1,8 +1,13 @@
+.content {
+    width: 100%;
+}
+
 .maincontent {
     display: flex;
     flex-direction: column;
     gap: var(--gapDistance);
     height: 100%;
+    width: 100%;	
 }
 
 .top-block {

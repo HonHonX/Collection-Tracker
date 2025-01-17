@@ -115,6 +115,39 @@ def update_artist_from_discogs_url(artist, discogs_url):
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
+def update_album_from_discogs_url(album, discogs_url):
+    """
+    Update the album in the database based on the Discogs URL provided.
+    
+    Args:
+        album (Album): The album object to update.
+        discogs_url (str): The Discogs URL provided by the user.
+    """
+    match = re.search(r'/release/(\d+)-', discogs_url)
+    print(f"Match: {match}")
+    if match:
+        discogs_id = match.group(1)
+        print(f"Discogs ID to be saved: {discogs_id}")
+        try:
+            release = d.release(discogs_id)
+            print(f"Release: {release}")
+            album.discogs_id = discogs_id
+            print(f"Dicsogs ID: {album.discogs_id}")
+            album.title = format_string(release.title)
+            album.year = release.year
+            album.genres = [format_string(genre) for genre in release.genres]
+            album.styles = [format_string(style) for style in release.styles]
+            album.tracklist = [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in release.tracklist]
+            album.labels = [format_string(label.name) for label in release.labels]
+            lowest_price_usd = release.fetch('lowest_price')
+            if lowest_price_usd is not None:
+                album.lowest_price = round(float(usd_to_eur(lowest_price_usd)), 2)
+            print(f"Album before saving: {album}")
+            album.save()
+            print(f"Album saved: {album}")
+        except Exception as e:
+            print(f"Error updating album from Discogs: {e}")
+
 def fetch_basic_album_details(album_id):
     """
     Fetch basic album details from Discogs API.
@@ -132,7 +165,7 @@ def fetch_basic_album_details(album_id):
             album = results[0]
             release = d.release(album.id)
             lowest_price_usd = release.fetch('lowest_price')
-            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
+            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2) if lowest_price_usd is not None else None
 
             album_details = {
                 'discogs_id': album.id,
@@ -166,7 +199,7 @@ def fetch_album_price(album_id):
             print(f"Album Result: {album_result}")
             release = d.release(album_result.id)
             lowest_price_usd = release.fetch('lowest_price')
-            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2)
+            lowest_price_eur = round(float(usd_to_eur(lowest_price_usd)), 2) if lowest_price_usd is not None else None
             print(f"Lowest Price: {lowest_price_eur}")
             discogs_id = release.id
             print(f"Discogs ID: {discogs_id}")

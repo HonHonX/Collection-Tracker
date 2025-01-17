@@ -4,35 +4,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const url = canvas.dataset.url;
     const url_predict = canvas.dataset.urlpred;
 
+    const colorPrices = getComputedStyle(document.documentElement).getPropertyValue('--accent100').trim();
+    const colorPricesPredict = getComputedStyle(document.documentElement).getPropertyValue('--accentVariantB100').trim();
+
     Promise.all([ 
         fetch(url).then(response => response.json()), 
         fetch(url_predict).then(response => response.json()) 
     ])
     .then(([data, predictData]) => {
-        console.log('Fetched original data:', data); // Debug: Log original data
-        console.log('Fetched predicted data:', predictData); // Debug: Log predicted data
 
         const labels = data.map(entry => entry.date);
-        const prices = data.map(entry => entry.price);
+        const prices = data.map(entry => parseFloat(entry.price).toFixed(2));
         const predictLabels = predictData.map(entry => entry.ds);
-        const predictPrices = predictData.map(entry => entry.yhat);
+        const predictPrices = predictData.map(entry => parseFloat(entry.yhat).toFixed(2));
 
         const today = new Date();
-        const upcomingDays = [];
         const futureDates = [];
-
-        for (let i = 1; i <= 7; i++) {
+ 
+        for (let i = 0; i < 8; i++) {  // Include one more day (8 days total)
             let futureDate = new Date(today);
-            futureDate.setDate(today.getDate() + i); // Generate future dates (next 7 days)
+            futureDate.setDate(today.getDate() + i); // Generate future dates (next 8 days)
             futureDates.push(futureDate.toISOString().split('T')[0]); 
-            upcomingDays.push({ date: futureDates[i - 1], price: null });
         }
 
         const combinedLabels = [...labels, ...futureDates];
         const combinedPrices = [...prices, ...predictPrices]; 
-
-        console.log('Labels (combined):', combinedLabels); 
-        console.log('Prices (combined):', combinedPrices);
 
         const ctx = canvas.getContext('2d');
         const chart = new Chart(ctx, {
@@ -41,18 +37,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: combinedLabels,
                 datasets: [
                     {
-                        label: 'Price',
-                        data: prices, 
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        label: 'Price (in €)',
+                        data: combinedPrices.slice(0, labels.length), 
+                        borderColor: colorPrices,
                         borderWidth: 1,
                         fill: false,
                         pointRadius: 4,
                         hitRadius: 10
                     },
                     {
-                        label: 'Predicted Price',
-                        data: predictPrices, 
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        label: 'Predicted Price (in €)',
+                        data: combinedPrices.slice(labels.length), 
+                        borderColor: colorPricesPredict,
                         borderWidth: 1,
                         borderDash: [5, 5], 
                         fill: false,
@@ -67,10 +63,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         type: 'time',
                         time: {
                             unit: 'day'
+                        },
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat',
+                            }
                         }
                     },
                     y: {
-                        beginAtZero: false
+                        beginAtZero: false,
+                        ticks: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat', 
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                            font: {
+                                family: 'Montserrat',
+                            }
+                        }
                     }
                 }
             }
