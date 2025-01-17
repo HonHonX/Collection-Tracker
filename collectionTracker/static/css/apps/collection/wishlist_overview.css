@@ -54,6 +54,7 @@
     aspect-ratio: 1/1;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .wishlist-block {
         flex-direction: column;
