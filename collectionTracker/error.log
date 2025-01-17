@@ -4125,3 +4125,5 @@ django.template.exceptions.TemplateDoesNotExist: login.html
 "GET /login/?next=%2F HTTP/1.1" 500 93245
 Internal Server Error: /search/
 "POST /search/ HTTP/1.1" 500 60
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 39

@@ -105,10 +105,12 @@
     text-align: center;
     margin-top: 1.25rem;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .indicator {
-    display: inline-block;
     width: 0.8rem;
     height: 0.8rem;
     margin: 0 0.5rem;
@@ -119,6 +121,16 @@
 
 .indicator.active {
     background: var(--accent100);
+}
+
+.indicator-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    max-width: 75%;
+    justify-content: center;
+    align-items: center;
 }
 
 .album-details-header {
