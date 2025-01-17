@@ -76,7 +76,25 @@ function resetAutoSlide() {
     startAutoSlide();
 }
 
-// Event listeners for mouse interaction, input ChatGPT
+// Function to remove an album from the carousel
+function removeAlbumFromCarousel(albumId) {
+    const carousel = document.querySelector('.carousel');
+    const slides = document.querySelectorAll('.carousel-item');
+
+    slides.forEach((slide, index) => {
+        if (slide.dataset.albumId === albumId) {
+            carousel.removeChild(slide);
+            if (index === currentIndex) {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            }
+        }
+    });
+
+    // Update the carousel immediately
+    updateActiveSlide(true);
+}
+
+// Event listeners for mouse interaction
 document.addEventListener('DOMContentLoaded', () => {
     initializeCarousel(); // Set initial position
     updateActiveSlide(true); // Highlight the first image without animation
