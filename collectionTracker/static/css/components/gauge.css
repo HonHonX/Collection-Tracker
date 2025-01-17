@@ -1,6 +1,7 @@
 .popularity-gauge {
     width: 100%;
     height: 2rem;
+    min-height: 1rem;
     border-radius: var(--borderRadius);
     background: var(--neutral0);
     position: relative;
@@ -27,7 +28,7 @@
     transform: translate(-50%, -50%);
     font-weight: bold;
     color: var(--neutral90);
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .gauge-fill.low { background: var(--accentVariantA100); }

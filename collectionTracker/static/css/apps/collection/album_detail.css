@@ -185,6 +185,10 @@ textarea {
         margin-top: 3rem;
         transform: scale(0.9);
     }
+
+    .album-status{
+        display: none;
+    }
     .custom-detail {
         transform: scale(0.9);
         justify-content: center;
@@ -207,15 +211,6 @@ textarea {
         width: 100%; /* Full width for mobile screens */
     }
 
-    .wishlist{
-        flex-direction: column;
-    }
-
-    .collection{
-         flex-direction: row;
-         width: 100%;
-    }
-
     #substatus-form select{
         padding: 1rem;
         width: 10rem;
@@ -227,5 +222,15 @@ textarea {
 
     #priority-form{
         justify-content: center;
+    }
+
+    #priority{
+        transform: scale(1);
+        font-size: 0.9rem;
+    }
+
+    #substatus{
+        transform: scale(0.7);
+        font-size: 1.1rem;
     }
 }
