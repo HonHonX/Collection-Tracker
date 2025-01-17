@@ -1,44 +1,15 @@
-let currentIndex = 1; // Start with the middle slide
+let currentIndex = 0; // Start with the first slide
 let autoSlideInterval;
 
-// Function to initialize the carousel with clones
+// Function to initialize the carousel
 function initializeCarousel() {
     const carousel = document.querySelector('.carousel');
     const slides = document.querySelectorAll('.carousel-item');
-
-    const firstSlide = slides[0].cloneNode(true);
-    const lastSlide = slides[slides.length - 1].cloneNode(true);
-
-    carousel.appendChild(firstSlide);
-    carousel.insertBefore(lastSlide, slides[0]);
 
     // Adjust the transform to show the actual first slide
     const slideWidth = slides[0].offsetWidth + 20; 
     const offset = slideWidth * currentIndex;
     carousel.style.transform = `translateX(-${offset}px)`;
-
-    carousel.addEventListener('transitionend', handleSeamlessLoop);
-}
-
-// Function to handle seamless looping after the transition
-function handleSeamlessLoop() {
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel-item');
-
-    // Check if we've transitioned to a cloned slide
-    if (currentIndex === 0) {
-        // Jump to the last real slide without animation
-        const slideWidth = slides[0].offsetWidth + 20;
-        currentIndex = slides.length - 3; // Last real slide index
-        carousel.style.transition = 'none';
-        carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    } else if (currentIndex === slides.length - 1) {
-        // Jump to the first real slide without animation
-        const slideWidth = slides[0].offsetWidth + 20;
-        currentIndex = 1; // First real slide index
-        carousel.style.transition = 'none';
-        carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    }
 }
 
 // Function to update the album details
@@ -67,8 +38,7 @@ function updateActiveSlide(skipTransition = false) {
 
     indicators.forEach((indicator, index) => {
         indicator.classList.remove('active');
-        if (index === currentIndex - 1) {
-            // Adjust index for real slides
+        if (index === currentIndex) {
             indicator.classList.add('active');
         }
     });
@@ -108,8 +78,8 @@ function resetAutoSlide() {
 
 // Event listeners for mouse interaction, input ChatGPT
 document.addEventListener('DOMContentLoaded', () => {
-    initializeCarousel(); // Clone slides and set initial position
-    updateActiveSlide(true); // Highlight the middle image without animation
+    initializeCarousel(); // Set initial position
+    updateActiveSlide(true); // Highlight the first image without animation
     startAutoSlide(); // Start auto-slide
 
     // Pause auto-slide on hover

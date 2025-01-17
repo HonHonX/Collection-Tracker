@@ -10,7 +10,7 @@
     <div class="collection-header">
         <h1>{{ user.first_name }}'s Collection</h1>
         <span class="album-details-header">
-            <p>You have {{ user_wishlist.count }} release{% if user_wishlist.count == 1 %}{% else %}s{% endif %} in your collection.</p>
+            <p>You have {{ user_collection.count }} release{% if user_collection.count == 1 %}{% else %}s{% endif %} in your collection.</p>
             <span>
                 <img id="arrow-carousel" class="icon" src="{% static 'icons/caret-down.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
                 <img id="toggle-carousel" class="icon" src="{% static 'icons/hide.svg' %}" alt="Toggle Carousel" onclick="toggleCarousel()">
@@ -41,9 +41,11 @@
         </div>
         <div class="indicators">
             <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-            {% for collection_entry in user_collection %}
-            <span class="indicator" onclick="moveSlide({{ forloop.counter0 }} - currentIndex)"></span>
-            {% endfor %}
+            <div class="indicator-container">
+                {% for collection_entry in user_collection %}
+                <span class="indicator" onclick="moveSlide({{ forloop.counter0 }} - currentIndex)"></span>
+                {% endfor %}
+            </div>
             <button class="next" onclick="moveSlide(1)">&#10095;</button>
         </div>
     </div>
