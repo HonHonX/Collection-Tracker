@@ -128,3 +128,28 @@
     align-items: center;
     margin: auto 0;
 }
+
+@media (max-width: 768px) {
+    
+    #carousel-container {
+        height: 15rem;
+        max-height: 15rem; /* Ensure max-height is set to accommodate content */
+    }
+    .carousel-item {
+        transform: scale(1.2);
+    }
+
+    .carousel-item.active {
+        transform: scale(1.5) rotateY(0);
+    }
+
+    .indicators {
+        transform: scale(0.9);
+    }
+
+    .indicator {
+        display: none;
+    }
+    
+}
+

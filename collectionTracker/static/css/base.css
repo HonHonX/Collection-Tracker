@@ -23,7 +23,7 @@
 
 body {
     font-family: var(--defaultFont);
-    font-size: 1rem; /* 16px */
+    font-size: 14px;
     background-color: var(--neutral100);
     color: var(--neutral0);
     display: flex;
@@ -95,6 +95,12 @@ textarea:hover {
 
 input {
     font-family: var(--defaultFont);
+}
+
+@media (min-width: 1980px) {
+    body{
+        font-size: 16px;
+    }
 }
 
 /* Mobile Device adjustments */

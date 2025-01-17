@@ -25,7 +25,7 @@ p {
     align-items: center;
     box-sizing: border-box;
     justify-content: space-between;
-    flex: 0 0 25rem;
+    flex: 0 0 26rem;
 } 
 
 .artist-block p {
@@ -151,6 +151,7 @@ p {
     gap: var(--gapDistance);
     align-items: center;
 }
+
 
 @media (max-width: 768px) {
 

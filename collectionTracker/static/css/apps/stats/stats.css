@@ -61,7 +61,7 @@
 }
 
 .countable {
-    width: 13rem;
+    flex: 1 0 8rem;
     display: -webkit-box;           /* Required for the line-clamp property */
     -webkit-line-clamp: 1;          /* Number of lines to show */
     -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
