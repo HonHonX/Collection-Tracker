@@ -9,8 +9,6 @@ from django.contrib.auth import views as auth_views
 from .views import welcome_view, redirect_view, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetCompleteView, CustomPasswordResetConfirmView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    #path('accounts/', include('django.contrib.auth.urls')), # for logout, causes trouble with custom views    
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'), # for new users
     path('activate/<uidb64>/<token>/', views.ActivateAccount.as_view(), name='activate'), 

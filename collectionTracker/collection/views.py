@@ -19,6 +19,7 @@ from integration.lastfm_query import artist_recommendations
 from utils.stats_helpers import calculate_top_genres
 import requests  
 from .models import RecommendedArtist
+from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +107,11 @@ def artist_search(request, artist_name=None):
             })
         
         try:
-            context = get_artist_data(artist_name, request.user)
+            cache_key = f"artist_data_{artist_name.lower().replace(' ', '_')}_{user.id}"
+            context = cache.get(cache_key)
+            if not context:
+                context = get_artist_data(artist_name, request.user)
+                cache.set(cache_key, context, timeout=3600)  # Cache for 1 hour
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
