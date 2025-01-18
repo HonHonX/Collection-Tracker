@@ -32,7 +32,6 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -158,6 +157,9 @@ EMAIL_PORT = 587                                    # TLS-Port
 EMAIL_USE_TLS = True                                # TLS encryption activated
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')         # Email-Address   
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Email-Password
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGGING = {
     'version': 1,
