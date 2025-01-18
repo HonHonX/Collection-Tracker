@@ -9,14 +9,14 @@
 
 @font-face {
     font-family: 'Bauhaus93';
-    src: url("/static/fonts/BAUHS93.ttf") format('truetype');
+    src: local('Bauhaus93'), url("/static/fonts/BAUHS93.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Montserrat';
-    src: url("/static/fonts/MONTSERRAT-MEDIUM.ttf") format('truetype');
+    src: local('Montserrat'), url("/static/fonts/MONTSERRAT.ttf") format('truetype');
     font-weight: normal;
     font-style: normal;
 }

@@ -494,9 +494,6 @@ class AlbumDetail(View):
 @login_required
 def album_carousel(request):
     user_albums = Album.objects.filter(useralbumcollection__user=request.user)
-    logger.debug("Found %d albums in user's collection", user_albums.count())
-    for album in user_albums:
-        logger.debug("Album: %s, Artist: %s", album.name, album.artist.name)
     return render(request, 'collection/album_carousel.html', {'albums': user_albums})
 
 @login_required

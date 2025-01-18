@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM content loaded");
 
     const form = document.getElementById("edit-description-form");
     const descriptionInput = document.getElementById("description");
@@ -83,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
         substatusForm.addEventListener("submit", function (e) {
             e.preventDefault();
             const selectedSubstatus = substatusSelect.value;
-            console.log(selectedSubstatus);
 
             updateServer(substatusForm.action, { substatus: selectedSubstatus })
                 .then((data) => {
