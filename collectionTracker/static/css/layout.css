@@ -30,7 +30,6 @@ body::-webkit-scrollbar {
 .maincontent {
     height: 100vh;
     display: flex;
-    flex-direction: wrap;
     flex-grow: 1;
     padding: 2rem;
     box-sizing: border-box;
