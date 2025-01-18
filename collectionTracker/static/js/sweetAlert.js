@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then((response) => {
             if (!response.ok) {
                 console.error(`Failed to delete notification: {{ notification.id }}`);
-            } else {
-                console.log(`Notification deleted: {{ notification.id }}`);
             }
         });
     });

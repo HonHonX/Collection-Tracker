@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const albumItems = document.querySelectorAll('.album-item');
 
     artistFilter.addEventListener('change', function() {
-
-        console.log('artistFilter change event fired');
         const selectedArtist = artistFilter.value;
 
         albumItems.forEach(function(item) {

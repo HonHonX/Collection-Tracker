@@ -1,8 +1,14 @@
 document.getElementById('reload-recommendations-icon').addEventListener('click', function() {
+
+    var imageUrl = this.getAttribute('data-image-url');
     // Show SweetAlert2 notification
     Swal.fire({
         title: 'Refreshing Recommendations',
-        text: 'Please wait while we fetch new recommendations.',
+        text: 'Stay tuned! Bopsy is sorting through beats and bops to find the perfect artists for you.',
+        imageUrl: imageUrl,
+        imageWidth: 100,
+        imageHeight: 100, 
+        imageAlt: 'Bopsy Logo',
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,
