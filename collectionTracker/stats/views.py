@@ -15,7 +15,7 @@ from utils.stats_helpers import (
     calculate_user_and_friends_ranking,
     calculate_user_rank_for_artist
 )
-from stats.models import Notification
+from stats.models import Notification 
 from django.views.decorators.csrf import csrf_exempt
 from .models import DailyAlbumPrice, AlbumPricePrediction
 from sklearn.linear_model import LinearRegression

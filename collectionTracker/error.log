@@ -5190,3 +5190,23 @@ Internal Server Error: /manage_album/collection/remove/
 "POST /manage_album/collection/remove/ HTTP/1.1" 500 49
 Internal Server Error: /manage_album/collection/remove/
 "POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/remove/
+"POST /manage_album/collection/remove/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/add/
+"POST /manage_album/collection/add/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/add/
+"POST /manage_album/collection/add/ HTTP/1.1" 500 59
+Internal Server Error: /manage_album/collection/add/
+"POST /manage_album/collection/add/ HTTP/1.1" 500 59
