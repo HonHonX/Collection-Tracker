@@ -18,8 +18,6 @@ def update_user_progress(sender, instance, **kwargs):
     user = instance.user
     album = instance.album
 
-    logger.debug(f"Signal received for user: {user.username}, album: {album.name}")
-
     # Check if the album still has an associated artist
     if not album.artist_id:
         logger.debug("Album has no associated artist.")
@@ -41,31 +39,25 @@ def update_user_progress(sender, instance, **kwargs):
 
     try:
         with transaction.atomic():
-            logger.debug("Updating user progress...")
 
             # Query all albums related to this artist
             artist_albums = Album.objects.filter(artist=artist)
-            logger.debug(f"Albums for artist {artist.name}: {artist_albums}")
 
             # Calculate the total albums
             total_albums = artist_albums.count()
-            logger.debug(f"Total albums for artist {artist.name}: {total_albums}")
 
             # Albums in the user's collection
             collection_set = set(
                 UserAlbumCollection.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
-            logger.debug(f"Collection set for user {user.username}: {collection_set}")
 
             # Albums in the user's wishlist
             wishlist_set = set(
                 UserAlbumWishlist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
-            logger.debug(f"Wishlist set for user {user.username}: {wishlist_set}")
 
-            logger.debug(f"User:{user}: Artist: {artist}")
             # Get or create the UserArtistProgress object for the user and artist
             progress, created = UserArtistProgress.objects.get_or_create(user=user, artist=artist)
             if created:
@@ -88,8 +80,6 @@ def update_user_progress(sender, instance, **kwargs):
             progress.wishlist_count = len(progress.wishlist)
             progress.blacklist_count = len(progress.blacklist)
             progress.collection_and_wishlist_count = len(progress.collection_and_wishlist)
-
-            logger.debug(f"Progress for user {user.username}, artist {artist.name}: {progress}")
 
             progress.save()
 
@@ -121,7 +111,6 @@ def update_user_progress(sender, instance, **kwargs):
         else:
             user_progress.total_collection_and_wishlist_count = 0
 
-        logger.debug(f"UserProgress for user {user.username}: {user_progress}")
 
         user_progress.save()
 

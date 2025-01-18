@@ -93,8 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-        console.log('Chart rendered with predicted data and upcoming days'); // Debug: Log chart rendering
     })
     .catch(error => console.error('Error fetching data:', error)); // Debug: Log fetch errors
 });

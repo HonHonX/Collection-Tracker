@@ -127,7 +127,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
     align-items: center;
     flex-wrap: wrap;
     height: 75vh;
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */ 
     overflow-x: hidden; /* Disable horizontal scrolling */
     box-sizing: border-box; 
     scrollbar-width: thin; /* Firefox Scrollbar */
@@ -224,6 +224,10 @@ input[type="file"]:hover::-webkit-file-upload-button {
     display: flex;
     flex-direction: row nowrap;
     justify-content: start;
+}
+
+.icon:hover {
+    transform: translateY(-2px);
 }
 
 /* Mobile Responsiveness */

@@ -28,7 +28,7 @@ class UserBadge(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.badge.name}"
 
-class Notification(models.Model):
+class Notification(models.Model): 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_badge = models.ForeignKey(UserBadge, on_delete=models.CASCADE)
     message = models.TextField()

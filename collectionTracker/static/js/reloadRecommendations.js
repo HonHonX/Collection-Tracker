@@ -1,7 +1,28 @@
 document.getElementById('reload-recommendations-icon').addEventListener('click', function() {
+
+    var imageUrl = this.getAttribute('data-image-url');
+    // Show SweetAlert2 notification
+    Swal.fire({
+        title: 'Refreshing Recommendations',
+        text: 'Stay tuned! Bopsy is sorting through beats and bops to find the perfect artists for you.',
+        imageUrl: imageUrl,
+        imageWidth: 100,
+        imageHeight: 100, 
+        imageAlt: 'Bopsy Logo',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     fetch("/reload-recommendations/")
         .then(response => response.json())
         .then(data => {
+            // Close the SweetAlert2 notification
+            Swal.close();
+
             // Update the recommended artists section with the new data
             const artistRecommendationDiv = document.querySelector('.artist-recommendation');
             artistRecommendationDiv.innerHTML = '';
@@ -23,5 +44,13 @@ document.getElementById('reload-recommendations-icon').addEventListener('click',
                     artistRecommendationDiv.appendChild(artistLink);
                 });
             }
+        })
+        .catch(error => {
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try again later.'
+            });
         });
 });

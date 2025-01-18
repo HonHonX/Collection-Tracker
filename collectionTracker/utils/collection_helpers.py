@@ -1,11 +1,12 @@
 from django.http import JsonResponse
 from django.db import IntegrityError
 from collection.models import Artist, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists, Album
+from django.db.models import Q
 
 # Artist - helper functions
 def get_artist_list(user):
     """
-    Returns a list of unique artists from the user's collection.
+    Returns a list of unique artists from the user's collection and wishlist.
     
     Args:
         user (User): The user object.
@@ -14,8 +15,10 @@ def get_artist_list(user):
         QuerySet: A queryset of unique artists.
     """
     try:
-        # Retrieve the list of artists from the user's collection
-        return Artist.objects.filter(album__useralbumcollection__user=user).distinct()
+        # Retrieve the list of artists from the user's collection and wishlist
+        return Artist.objects.filter(
+            Q(album__useralbumcollection__user=user) | Q(album__useralbumwishlist__user=user)
+        ).distinct()
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 

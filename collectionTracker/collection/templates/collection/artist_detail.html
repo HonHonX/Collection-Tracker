@@ -24,8 +24,10 @@
             {% endif %}
 
             <div id="artist-bio">
-                <h2>About</h2>
-                {{ artist.profile }}
+                {% if artist.profile %}
+                    <h2>About</h2>
+                    {{ artist.profile }}
+                {% endif %}
         
                 {% if artist.members %}
                     <h2>Members</h2>

@@ -11,6 +11,7 @@ from django.contrib import messages
 from utils.stats_helpers import create_notification
 import logging
 import threading
+import execjs
 
 logger = logging.getLogger(__name__)
 
@@ -168,22 +169,4 @@ def award_collection_progress_badge(sender, instance, **kwargs):
                 UserBadge.objects.filter(user=user, badge=top_collector_badge).delete()
     except Exception as e:
         logger.error(f"Error in award_collection_progress_badge: {e}")
-
-
-@receiver(post_save, sender=Notification)
-@run_in_background
-def trigger_notification_alert(sender, instance, **kwargs):
-    """
-    Signal receiver to trigger a SweetAlert2 notification when a Notification is added to the database.
-    
-    Args:
-        sender (Model): The model class that sent the signal.
-        instance (Notification): The instance of the model that triggered the signal.
-        **kwargs: Additional keyword arguments.
-    """
-    try:
-        # This function will be used to trigger the SweetAlert2 notification
-        pass
-    except Exception as e:
-        logger.error(f"Error in trigger_notification_alert: {e}")
 
