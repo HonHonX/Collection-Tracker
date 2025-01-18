@@ -28,7 +28,6 @@ application = get_wsgi_application()
 def fetch_and_save_recommendations(user):
     top_genres = calculate_top_genres(user)
     genres = [genre.name for genre in top_genres]
-    print(genres)
     
     try:
         response = artist_recommendations(genres)

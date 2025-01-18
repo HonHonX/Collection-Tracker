@@ -14,7 +14,5 @@ response = requests.get(url, headers=headers)
 
 if response.status_code == 200:
     release_data = response.json()
-    print(f"Title: {release_data['title']}")
-    print(f"Artist: {release_data['artists'][0]['name']}")
 else:
     print(f"Error: {response.status_code}")

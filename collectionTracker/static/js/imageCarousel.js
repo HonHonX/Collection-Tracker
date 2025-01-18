@@ -1,13 +1,18 @@
 let currentIndex = 0; // Start with the first slide
 let autoSlideInterval;
 
+const hideIconUrl = '/static/icons/hide.svg';
+const showIconUrl = '/static/icons/show.svg';
+const caretDownIconUrl = '/static/icons/caret-down.svg';
+const caretUpIconUrl = '/static/icons/caret-up.svg';
+
 // Function to initialize the carousel
 function initializeCarousel() {
     const carousel = document.querySelector('.carousel');
     const slides = document.querySelectorAll('.carousel-item');
 
     // Adjust the transform to show the actual first slide
-    const slideWidth = slides[0].offsetWidth + 20; // Including margin
+    const slideWidth = slides[0].offsetWidth + 20; 
     const offset = slideWidth * currentIndex;
     carousel.style.transform = `translateX(-${offset}px)`;
 }
@@ -102,13 +107,13 @@ function toggleCarousel() {
     if (carouselContainer.classList.contains('hidden')) {
         carouselContainer.classList.remove('hidden');
         carouselContainer.classList.add('visible');
-        toggleIcon.src = '{% static "icons/hide.svg" %}';
-        arrowIcon.src = '{% static "icons/caret-down.svg" %}';
+        toggleIcon.src = hideIconUrl;
+        arrowIcon.src = caretDownIconUrl;
     } else {
         carouselContainer.classList.add('hidden');
         carouselContainer.classList.remove('visible');
-        toggleIcon.src = '{% static "icons/show.svg" %}';
-        arrowIcon.src = '{% static "icons/caret-up.svg" %}';
+        toggleIcon.src = showIconUrl;
+        arrowIcon.src = caretUpIconUrl;
     }
 }
 

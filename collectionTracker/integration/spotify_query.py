@@ -109,10 +109,7 @@ def get_artist_data(artist_name, user):
                             'artist': artist,
                         }
                     )
-                    if created:
-                        pass
-                        # print(f"Album {album_instance.name} by {album_instance.artist.name} with the id {album_instance.id} created.")
-
+                        
             if user.is_authenticated:
                 user_album_ids = list(UserAlbumCollection.objects.filter(user=user).values_list('album__id', flat=True))
                 user_wishlist_ids = list(UserAlbumWishlist.objects.filter(user=user).values_list('album__id', flat=True))

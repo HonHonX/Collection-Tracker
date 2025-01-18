@@ -3,6 +3,11 @@
     --iconSize: 2rem;
 }
 
+.icon {
+    transition: var(--transitionStyle);
+}
+
 .icon:hover {
     cursor: pointer;
+    transform: scale(1.1);
 }

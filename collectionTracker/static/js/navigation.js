@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupNavigation('mobile-collection-button', 'data-collection-url');
     setupNavigation('mobile-profile-button', 'data-profile-url');
     setupNavigation('mobile-wishlist-button', 'data-wishlist-url');
-  
+
         // Profile Button Click - Toggle Dropdown -> Topbar Dropdown (Settings, Friends, Statistics)
         const profileButton = document.getElementById('mobile-profile-button');
         if (profileButton) {

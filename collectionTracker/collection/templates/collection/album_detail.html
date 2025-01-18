@@ -70,7 +70,7 @@
                 <div class="collection">
                     {% if in_collection %}
                         <div class="collection-status">
-                            <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;" class="icon">
+                            <img src="{% static 'icons/collection.svg' %}" alt="In collection" style="opacity: 1;" class="icon" id="collection-icon">
                             <p>Album in collection.</p><br>
                         </div>
                         <div class="substatus-section">
@@ -86,7 +86,7 @@
                             </form>   
                         </div>
                     {% else %}
-                        <img src="{% static 'icons/collection.svg' %}" alt="Not in collection" style="opacity: 0.2;" class="icon">
+                        <img src="{% static 'icons/collection.svg' %}" alt="Not in collection" style="opacity: 0.2;" class="icon" id="collection-icon">
                         <p>Album not in collection.</p><br>
                     {% endif %}
                 </div> 
@@ -95,7 +95,7 @@
                 <div class="wishlist">
                     {% if in_wishlist %}
                         <div class="wishlist-status">
-                            <img src="{% static 'icons/wishlist.svg' %}" alt="In wishlist" style="opacity: 1;" class="icon">
+                            <img src="{% static 'icons/wishlist.svg' %}" alt="In wishlist" style="opacity: 1;" class="icon" id="wishlist-icon">
                             <p>Album in wishlist.</p><br>
                         </div>
                         <div class="wishlist-priority">                            
@@ -111,7 +111,7 @@
                             </form>
                         </div>
                     {% else %}
-                        <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon">
+                        <img src="{% static 'icons/wishlist.svg' %}" alt="Not in wishlist" style="opacity: 0.2;" class="icon" id="wishlist-icon">
                         <p>Album not in wishlist.</p><br>
                     {% endif %}
                 </div>
@@ -119,7 +119,7 @@
         </div>
         
         <!-- Album Description Section -->
-        <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}">
+        <form method="post" id="edit-description-form" action="{% url 'album_detail' album.id %}" id="description-icon">
             {% csrf_token %}
             <label for="description">
                 <img src="{% static 'icons/note.svg' %}" alt="Note" class="icon"> 
@@ -208,14 +208,14 @@
             var discogsDiv = document.getElementById('discogs-div');
             var tracklistDiv = document.getElementById('album-tracklist');
             var priceStatsDiv = document.getElementById('price-stats');
-            if (discogsDiv.style.display === 'none') {
-                discogsDiv.style.display = 'block';
-                if (tracklistDiv) tracklistDiv.style.display = 'none';
-                if (priceStatsDiv) priceStatsDiv.style.display = 'none';
+            
+            discogsDiv.classList.toggle('hidden');
+            if (discogsDiv.classList.contains('hidden')) {
+                if (tracklistDiv) tracklistDiv.classList.remove('hidden');
+                if (priceStatsDiv) priceStatsDiv.classList.remove('hidden');
             } else {
-                discogsDiv.style.display = 'none';
-                if (tracklistDiv) tracklistDiv.style.display = 'block';
-                if (priceStatsDiv) priceStatsDiv.style.display = 'block';
+                if (tracklistDiv) tracklistDiv.classList.add('hidden');
+                if (priceStatsDiv) priceStatsDiv.classList.add('hidden');
             }
         });
     </script>

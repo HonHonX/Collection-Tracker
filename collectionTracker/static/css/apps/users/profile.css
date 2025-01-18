@@ -124,7 +124,6 @@ input[type="file"]:hover::-webkit-file-upload-button {
     width: 100%;
     display: flex;
     gap: var(--gapDistance);
-    align-items: center;
     flex-wrap: wrap;
     height: 75vh;
     overflow-y: auto; /* Enable vertical scrolling */ 
@@ -230,6 +229,13 @@ input[type="file"]:hover::-webkit-file-upload-button {
     transform: translateY(-2px);
 }
 
+.swal2-confirm,
+.swal2-deny,
+.swal2-cancel,
+.swal2-actions{
+    font-family: var(--defaultFont);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     #settings-block {
@@ -257,6 +263,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
         justify-content: center;
         gap: 0.6rem;
         height: auto;
+        margin-bottom: 2rem;
     }
 
     .badge-item span {

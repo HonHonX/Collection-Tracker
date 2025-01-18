@@ -11,6 +11,7 @@ from django.contrib import messages
 from utils.stats_helpers import create_notification
 import logging
 import threading
+import execjs
 
 logger = logging.getLogger(__name__)
 
