@@ -81,7 +81,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Handle the click event for adding/removing albums from collection, wishlist, or blacklist
+    let isProcessing = false;
+
     async function handleAlbumClick(albumItem, listType, iconElement, addIcon, removeIcon, altAdd, altRemove) {
+        if (isProcessing) return;
+
+        isProcessing = true;
+
         try {
             const isInList = albumItem.dataset[`in${capitalize(listType)}`] === 'true';
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -169,6 +175,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
+        } finally {
+            isProcessing = false;
         }
     }
 
