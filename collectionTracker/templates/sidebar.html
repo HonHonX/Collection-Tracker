@@ -94,8 +94,14 @@
             <div class="nav-item" id="mobile-collection-button" data-collection-url="{% url 'list_overview' 'collection' %}">
                 <img class="icon" src="{% static 'icons/collection.svg' %}">
             </div>
-            <div class="nav-item" id="mobile-wishlist-button" data-wishlist-url="{% url 'list_overview' 'wishlist' %}">
+            <div class="nav-item" id="mobile-wishlist-button" data-wishlist-url=""> <!-- {% url 'list_overview' 'wishlist' %} -->
                 <img class="icon" src="{% static 'icons/wishlist.svg' %}">
+                <div class="nav-select" id="nav-select">
+                    <ul>
+                        <li><a href="{% url 'list_overview' 'wishlist' %}">Wishlist</a></li>
+                        <li><a href="{% url 'list_overview' 'blacklist' %}">Blacklist</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 

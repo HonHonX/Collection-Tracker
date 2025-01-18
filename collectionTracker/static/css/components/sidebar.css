@@ -155,17 +155,14 @@
 
     .navbar {
         position: fixed;
-        left: 10%;
-        right: 10%;
-        bottom: 5%;
-        width: 80%;
+        bottom: 0;
+        width: 100%;
+        height: 4rem;
         background-color: var(--neutral90);
         display: flex;
         justify-content: space-around;
         align-items: center;
-        padding: 5% 0;
         z-index: 1000;
-        border-radius: var(--borderRadius);
         box-shadow: var(--boxShadow);
     }
 
@@ -177,11 +174,6 @@
         align-items: center;
         pointer-events: auto; /* Ensure navigation items are clickable */
         z-index: 1001; /* Ensure nav items are above other elements */
-    }
-
-    /* Hover effect */
-    .nav-item:hover {
-        transform: scale(1.1);
     }
 
     /* Popup Search Bar */
@@ -289,6 +281,41 @@
     }
 
     .dropdown-menu ul li a:hover {
+        background-color: var(--accent100);
+        transform: translateY(-2px);
+    }
+
+    .nav-select {
+        display: none;
+        position: fixed;
+        bottom: 3.5rem; 
+        right: 1rem;
+        padding: 0.5rem;
+        background-color: var(--neutral90);
+        box-shadow: 0 2px 4px var(--boxShadow);
+        border-radius: var(--borderRadius);
+        width: 7rem; 
+        z-index: -1;
+    }
+
+    .nav-select.show {
+        display: block; /* Show when class 'show' is added */
+    }
+
+    .nav-select ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-select ul li a {
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem 1rem;
+        color: var(--neutral0);
+    }
+
+    .nav-select ul li a:hover {
         background-color: var(--accent100);
         transform: translateY(-2px);
     }
