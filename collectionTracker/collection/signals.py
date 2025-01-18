@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from .models import UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, Artist, Album
 
 # Set up logging
+logger = logging.getLogger(__name__)
 
 @receiver([post_save, post_delete], sender=UserAlbumCollection)
 @receiver([post_save, post_delete], sender=UserAlbumWishlist)
