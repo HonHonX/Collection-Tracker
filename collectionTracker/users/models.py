@@ -13,14 +13,18 @@ class Profile(models.Model):
     deletion_token = models.CharField(max_length=32, blank=True, null=True)
     email_verified = models.BooleanField(default=False)
 
+    @staticmethod
+    def get_or_create_profile(user):
+        profile, created = Profile.objects.get_or_create(user=user)
+        return profile
+
     def __str__(self):
         """
         String representation of the Profile model.
         """
         return self.user.username
 
-# Add this property method to the User model - AI code created during debugging
-User.profile = property(lambda u: Profile.objects.get_or_create(user=u)[0])
+User.profile = property(Profile.get_or_create_profile)
 
 class UserProfile(models.Model):
     """

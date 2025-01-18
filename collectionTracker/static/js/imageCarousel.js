@@ -1,47 +1,15 @@
-let currentIndex = 1; // Start with the middle slide
+let currentIndex = 0; // Start with the first slide
 let autoSlideInterval;
 
-// Function to initialize the carousel with clones
+// Function to initialize the carousel
 function initializeCarousel() {
     const carousel = document.querySelector('.carousel');
     const slides = document.querySelectorAll('.carousel-item');
-
-    // Clone the first and last slides
-    const firstSlide = slides[0].cloneNode(true);
-    const lastSlide = slides[slides.length - 1].cloneNode(true);
-
-    // Append and prepend the cloned slides
-    carousel.appendChild(firstSlide);
-    carousel.insertBefore(lastSlide, slides[0]);
 
     // Adjust the transform to show the actual first slide
     const slideWidth = slides[0].offsetWidth + 20; // Including margin
     const offset = slideWidth * currentIndex;
     carousel.style.transform = `translateX(-${offset}px)`;
-
-    // Add the event listener for transitionend to handle seamless looping
-    carousel.addEventListener('transitionend', handleSeamlessLoop);
-}
-
-// Function to handle seamless looping after the transition
-function handleSeamlessLoop() {
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel-item');
-
-    // Check if we've transitioned to a cloned slide
-    if (currentIndex === 0) {
-        // Jump to the last real slide without animation
-        const slideWidth = slides[0].offsetWidth + 20;
-        currentIndex = slides.length - 3; // Last real slide index
-        carousel.style.transition = 'none';
-        carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    } else if (currentIndex === slides.length - 1) {
-        // Jump to the first real slide without animation
-        const slideWidth = slides[0].offsetWidth + 20;
-        currentIndex = 1; // First real slide index
-        carousel.style.transition = 'none';
-        carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-    }
 }
 
 // Function to update the album details
@@ -70,8 +38,7 @@ function updateActiveSlide(skipTransition = false) {
 
     indicators.forEach((indicator, index) => {
         indicator.classList.remove('active');
-        if (index === currentIndex - 1) {
-            // Adjust index for real slides
+        if (index === currentIndex) {
             indicator.classList.add('active');
         }
     });
@@ -109,10 +76,46 @@ function resetAutoSlide() {
     startAutoSlide();
 }
 
+// Function to remove an album from the carousel
+function removeAlbumFromCarousel(albumId) {
+    const carousel = document.querySelector('.carousel');
+    const slides = document.querySelectorAll('.carousel-item');
+
+    slides.forEach((slide, index) => {
+        if (slide.dataset.albumId === albumId) {
+            carousel.removeChild(slide);
+            if (index === currentIndex) {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            }
+        }
+    });
+
+    // Update the carousel immediately
+    updateActiveSlide(true);
+}
+
+// Function to toggle the carousel
+function toggleCarousel() {
+    const carouselContainer = document.getElementById('carousel-container');
+    const toggleIcon = document.getElementById('toggle-carousel');
+    const arrowIcon = document.getElementById('arrow-carousel');
+    if (carouselContainer.classList.contains('hidden')) {
+        carouselContainer.classList.remove('hidden');
+        carouselContainer.classList.add('visible');
+        toggleIcon.src = '{% static "icons/hide.svg" %}';
+        arrowIcon.src = '{% static "icons/caret-down.svg" %}';
+    } else {
+        carouselContainer.classList.add('hidden');
+        carouselContainer.classList.remove('visible');
+        toggleIcon.src = '{% static "icons/show.svg" %}';
+        arrowIcon.src = '{% static "icons/caret-up.svg" %}';
+    }
+}
+
 // Event listeners for mouse interaction
 document.addEventListener('DOMContentLoaded', () => {
-    initializeCarousel(); // Clone slides and set initial position
-    updateActiveSlide(true); // Highlight the middle image without animation
+    initializeCarousel(); // Set initial position
+    updateActiveSlide(true); // Highlight the first image without animation
     startAutoSlide(); // Start auto-slide
 
     // Pause auto-slide on hover

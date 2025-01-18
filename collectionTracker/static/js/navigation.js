@@ -33,19 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
     setupNavigation('mobile-wishlist-button', 'data-wishlist-url');
 
     
-        // Profile Button Click - Toggle Dropdown
-        const profileButton = document.getElementById('mobile-profile-button');
-        if (profileButton) {
-            profileButton.addEventListener('click', function(event) {
-                const dropdownMenu = document.getElementById('dropdown-menu');
-                
-                if (dropdownMenu) {
-                    // Toggle dropdown visibility
-                    if (dropdownMenu.classList.contains('show')) {
-                        dropdownMenu.classList.remove('show');
-                    } else {
-                        dropdownMenu.classList.add('show'); 
-                    }
+    // Profile Button Click - Toggle Dropdown
+    const profileButton = document.getElementById('mobile-profile-button');
+    if (profileButton) {
+        profileButton.addEventListener('click', function(event) {
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            
+            if (dropdownMenu) {
+                // Toggle dropdown visibility
+                if (dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                } else {
+                    dropdownMenu.classList.add('show'); 
                 }
             });
         }  
