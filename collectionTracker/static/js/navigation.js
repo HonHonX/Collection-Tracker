@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupNavigation('mobile-wishlist-button', 'data-wishlist-url');
 
     
-        // Profile Button Click - Toggle Dropdown
+        // Profile Button Click - Toggle Dropdown -> Topbar Dropdown (Settings, Friends, Statistics)
         const profileButton = document.getElementById('mobile-profile-button');
         if (profileButton) {
             profileButton.addEventListener('click', function(event) {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }  
     
-        // Mobile Nav Selection: Wishlist & Blacklist in Menu
+        // Mobile Nav Selection: Wishlist & Blacklist in Menu -> Similar Dropdown Logic as in Topbar.
         const wishlist_button = document.getElementById('mobile-wishlist-button');
         if (wishlist_button) {
             wishlist_button.addEventListener('click', function(event) {
@@ -67,23 +67,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } 
 
-    // Mobile Search Bar Toggle
-    const searchIcon = document.getElementById("mobile-search"); // Search icon in the navbar
-    const searchBar = document.getElementById("popup-searchbar"); // Popup search bar
-    const backdrop = document.getElementById("backdrop"); // Backdrop element
-    const body = document.body; // Body to manage scrolling
+    // Mobile Search Bar Toggle: Handled with popup window and backdrop (for visual differentiation)
+    const searchIcon = document.getElementById("mobile-search");
+    const searchBar = document.getElementById("popup-searchbar");
+    const backdrop = document.getElementById("backdrop");
+    const body = document.body; 
 
     if (searchIcon && searchBar && backdrop) {
         function showSearchBar() {
             searchBar.classList.add("visible");
             backdrop.classList.add("visible");
-            body.classList.add("no-scroll"); // Prevent scrolling
+            body.classList.add("no-scroll");
         }
 
         function hideSearchBar() {
             searchBar.classList.remove("visible");
             backdrop.classList.remove("visible");
-            body.classList.remove("no-scroll"); // Restore scrolling
+            body.classList.remove("no-scroll");
         }
 
         searchIcon.addEventListener("click", showSearchBar);

@@ -6,20 +6,17 @@ function initializeCarousel() {
     const carousel = document.querySelector('.carousel');
     const slides = document.querySelectorAll('.carousel-item');
 
-    // Clone the first and last slides
     const firstSlide = slides[0].cloneNode(true);
     const lastSlide = slides[slides.length - 1].cloneNode(true);
 
-    // Append and prepend the cloned slides
     carousel.appendChild(firstSlide);
     carousel.insertBefore(lastSlide, slides[0]);
 
     // Adjust the transform to show the actual first slide
-    const slideWidth = slides[0].offsetWidth + 20; // Including margin
+    const slideWidth = slides[0].offsetWidth + 20; 
     const offset = slideWidth * currentIndex;
     carousel.style.transform = `translateX(-${offset}px)`;
 
-    // Add the event listener for transitionend to handle seamless looping
     carousel.addEventListener('transitionend', handleSeamlessLoop);
 }
 
@@ -109,7 +106,7 @@ function resetAutoSlide() {
     startAutoSlide();
 }
 
-// Event listeners for mouse interaction
+// Event listeners for mouse interaction, input ChatGPT
 document.addEventListener('DOMContentLoaded', () => {
     initializeCarousel(); // Clone slides and set initial position
     updateActiveSlide(true); // Highlight the middle image without animation

@@ -28,8 +28,8 @@
 
 .progress {
     height: 100%;
-    width: 0%;  /* Set to 0 by default and updated dynamically via JS */
-    transition: var(--transitionStyle) /* Smooth transition for width change */
+    width: 0%;
+    transition: var(--transitionStyle);
 }
 
 .collection-percentage {
@@ -58,7 +58,7 @@
 .wishlist-progress,
 .collection-and-wishlist-progress,
 .blacklist-progress {
-    transition: width 2s ease-out; /* Animation for the fill */
+    transition: width 2s ease-out;
 }
 
 .collection-progress,
@@ -95,6 +95,7 @@
     margin: 0 auto;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     
     .collection-percentage{
