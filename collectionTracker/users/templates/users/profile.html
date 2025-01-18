@@ -160,7 +160,7 @@
                             <div class="badge-description">
                                 <span><strong>{{ badge.name }}</strong></span><br>
                                 {% if user_badge %}
-                                    <span>{{ user_badge.awarded_date|date:"F j, Y" }}</span>
+                                    <span id="date">{{ user_badge.awarded_date|date:"F j, Y" }}</span>
                                 {% endif %}
                             </div>
                         </div>

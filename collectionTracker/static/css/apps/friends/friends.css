@@ -149,6 +149,10 @@ form {
 
 /* Mobile Responsiveness */
 @media screen and (max-width: 768px) {
+
+    .maincontent{
+        display: block;
+    }
     #user-block {
         flex-direction: column;
         gap: var(--gapDistance);
@@ -163,59 +167,36 @@ form {
     }
 
     #add-friend-form {
-        flex-direction: row; /* Ensure row layout on mobile as well */
-        gap: var(--gapDistance); /* Keep gap between input and button */
+        flex-direction: row;
+        gap: 0.6rem;
     }
     
     #friend-email {
         flex-grow: 1;
-        height: 3.5rem; /* Increase height slightly on mobile */
+        height: 3.5rem; 
     }
 
     #add-friend-form button {
-        height: 3.5rem; /* Same height for button on mobile */
+        height: 3.5rem; 
     }
 
     .share-link {
         flex-direction: column;
-        gap: var(--gapDistance);
+        gap: 0.6rem;
     }
 
     #my-wishlist, #my-collection {
         display: flex;
         flex-direction: row;
-        gap: var(--gapDistance);
+        gap: 0.6rem;
         align-items: center;
         width: 100%;
         padding-bottom: 1rem;
     }
 
     #friend-page {
-        gap: var(--gapDistance);
+        gap: 0.6rem;
         flex-direction: column;
-    }
-
-    #friend-legend {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .friend-info {
-        flex-direction: column;
-    }
-
-    .friend-username, .friend-mail, .friend-status {
-        width: 100%;
-    }
-
-    .friend-controls {
-        flex-direction: column;
-        gap: var(--gapDistance);
-        align-items: flex-start;
-    }
-
-    #remove-friend-form {
-        width: 100%;
     }
 
     #generate-token-button{
@@ -224,5 +205,64 @@ form {
 
     #token-display{
         height: auto;
+    }
+    
+    #token-box{
+        gap: 0.6rem;
+        width: 100%;
+    }
+
+    #friend-legend{
+        display: flex;
+        flex-direction: row;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
+    }
+    .friend{
+        flex-direction: column;
+        background-color: var(--neutral90);
+        border-radius: var(--borderRadius);
+        padding: 0.8rem;
+    }
+
+    #friend-legend {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .friend-info {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .friend-username {
+        width: 30%;
+        max-width: 30%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .friend-mail{
+        width: 45%;
+        max-width: 45%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .friend-status{
+        width: 25%;
+        max-width: 25%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .friend-controls {
+        padding: 1rem;
+        flex-direction: row;
+        gap: var(--gapDistance);
+        justify-content: center;
+    }
+
+    #see-wishlist, #see-collection{
+        padding: 0.8rem;
     }
 }

@@ -233,40 +233,50 @@ input[type="file"]:hover::-webkit-file-upload-button {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     #settings-block {
-        flex-direction: column; /* Stack sections vertically */
-        gap: 1.5rem; /* Reduce spacing for mobile */
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-    #first-column,
+    #first-column{
+        text-align: center;
+        width: 100%;
+    }
     #user-settings,
     .badges-block {
-        width: 100%; /* Ensure sections take full width */
+        width: 100%; 
     }
 
     .badge-item {
         width: 6rem;
         height: 12rem;
-        padding: 0.2rem;
     }
 
     .badge-display {
-        flex-direction: row; /* Stack badges vertically */
-        align-items: center; /* Center badges */
+        flex-direction: row; 
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        height: auto;
     }
 
     .badge-item span {
-        display: -webkit-box;           /* Required for the line-clamp property */
-        -webkit-line-clamp: 3;          /* Number of lines to show */
-        -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
-        overflow: hidden;               /* Hides the overflowing text */
-        text-overflow: ellipsis;        /* Adds '...' for overflow */
-        line-height: 1rem;              /* Line height for one line */
-        max-height: 2rem;               /* Ensures the height accommodates exactly two lines */
-        font-size: 0.7rem;              /* Ensure consistent font size */
+        display: -webkit-box;           
+        -webkit-line-clamp: 3;          
+        -webkit-box-orient: vertical;   
+        overflow: hidden;               
+        text-overflow: ellipsis;        
+        line-height: 1rem;              
+        max-height: 2rem;               
+        font-size: 0.7rem;              
+    }
+
+    .badge-description #date{
+        font-size: 0.6rem;
     }
 
     #spacer-2{
         display: none;
     }
+
 
 }

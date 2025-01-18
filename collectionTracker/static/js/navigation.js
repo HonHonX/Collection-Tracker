@@ -46,9 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     dropdownMenu.classList.add('show'); 
                 }
-            }
-        });
-    }  
+            });
+        }  
+    
+        // Mobile Nav Selection: Wishlist & Blacklist in Menu
+        const wishlist_button = document.getElementById('mobile-wishlist-button');
+        if (wishlist_button) {
+            wishlist_button.addEventListener('click', function(event) {
+                const navselect = document.getElementById('nav-select');
+                
+                if (navselect) {
+                    // Toggle dropdown visibility
+                    if (navselect.classList.contains('show')) {
+                        navselect.classList.remove('show');
+                    } else {
+                        navselect.classList.add('show'); 
+                    }
+                }
+            });
+        } 
 
     // Mobile Search Bar Toggle
     const searchIcon = document.getElementById("mobile-search"); // Search icon in the navbar
