@@ -40,7 +40,6 @@ document.getElementById('reload-recommendations-icon').addEventListener('click',
             }
         })
         .catch(error => {
-            // Close the SweetAlert2 notification and show an error message
             Swal.close();
             Swal.fire({
                 icon: 'error',

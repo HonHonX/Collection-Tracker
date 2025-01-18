@@ -94,6 +94,24 @@ function removeAlbumFromCarousel(albumId) {
     updateActiveSlide(true);
 }
 
+// Function to toggle the carousel
+function toggleCarousel() {
+    const carouselContainer = document.getElementById('carousel-container');
+    const toggleIcon = document.getElementById('toggle-carousel');
+    const arrowIcon = document.getElementById('arrow-carousel');
+    if (carouselContainer.classList.contains('hidden')) {
+        carouselContainer.classList.remove('hidden');
+        carouselContainer.classList.add('visible');
+        toggleIcon.src = '{% static "icons/hide.svg" %}';
+        arrowIcon.src = '{% static "icons/caret-down.svg" %}';
+    } else {
+        carouselContainer.classList.add('hidden');
+        carouselContainer.classList.remove('visible');
+        toggleIcon.src = '{% static "icons/show.svg" %}';
+        arrowIcon.src = '{% static "icons/caret-up.svg" %}';
+    }
+}
+
 // Event listeners for mouse interaction
 document.addEventListener('DOMContentLoaded', () => {
     initializeCarousel(); // Set initial position
