@@ -200,10 +200,6 @@
         display: inline;
     }
 
-    .album-item {
-        width: 4rem; 
-    }
-
     .album-cover {
         width: 100%; 
     }

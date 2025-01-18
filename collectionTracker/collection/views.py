@@ -111,7 +111,6 @@ def artist_search(request, artist_name=None):
             response = render(request, 'collection/artist_overview.html', context)
             
             # Start the background task
-            print(f"Starting background task for artist {context['artist'].name} with ID: {context['artist'].id}")
             start_background_artist_update(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
@@ -215,10 +214,8 @@ def list_overview(request, list_type):
                 best_price_change = None
 
                 for wishlist_entry in user_wishlist:
-                    print(wishlist_entry)
                     album = wishlist_entry.album
                     daily_prices = DailyAlbumPrice.objects.filter(album=album).order_by('-date')[:7]
-                    print(daily_prices)
 
                     if daily_prices.exists():
                         predicted_prices = AlbumPricePrediction.objects.filter(album=album).order_by('-date')[:7]
@@ -230,7 +227,6 @@ def list_overview(request, list_type):
                             if best_price_change is None or price_change > best_price_change:
                                 best_price_change = price_change
                                 recommended_album = album
-                                print(recommended_album.name)
         elif list_type == 'blacklist':
             user_list = filter_list_by_artist(request, user_blacklist)
             template = 'collection/blacklist_overview.html'
@@ -518,7 +514,6 @@ def get_recommendations(request):
 def fetch_and_save_recommendations(user):
     top_genres = calculate_top_genres(user)
     genres = [genre.name for genre in top_genres]
-    print(genres)
     
     try:
         response = artist_recommendations(genres)

@@ -173,6 +173,17 @@ textarea {
     gap: var(--gapDistance);
 }
 
+.hidden {
+    display: none;
+}
+
+#collection-icon:hover,
+#wishlist-icon:hover,
+#description-icon:hover {
+    cursor: default;
+    transform: none;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .maincontent {
