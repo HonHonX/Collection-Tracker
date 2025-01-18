@@ -116,27 +116,9 @@
 
 {% endblock %}
 {% block js %}
-<script src="{% static 'js/imageCarousel.js' %}"></script>
-<script src="{% static 'js/manageAlbumState.js' %}"></script>
-<script src="{% static 'js/sortAlbums.js' %}"></script>
-<script src="{% static 'js/filterByArtist.js' %}"></script>
-<script src="{% static 'js/filterBySubstatus.js' %}"></script>
-<script>
-    function toggleCarousel() {
-        const carouselContainer = document.getElementById('carousel-container');
-        const toggleIcon = document.getElementById('toggle-carousel');
-        const arrowIcon = document.getElementById('arrow-carousel');
-        if (carouselContainer.classList.contains('hidden')) {
-            carouselContainer.classList.remove('hidden');
-            carouselContainer.classList.add('visible');
-            toggleIcon.src = '{% static "icons/hide.svg" %}';
-            arrowIcon.src = '{% static "icons/caret-down.svg" %}';
-        } else {
-            carouselContainer.classList.add('hidden');
-            carouselContainer.classList.remove('visible');
-            toggleIcon.src = '{% static "icons/show.svg" %}';
-            arrowIcon.src = '{% static "icons/caret-up.svg" %}';
-        }
-    }
-</script>
+    <script src="{% static 'js/imageCarousel.js' %}"></script>
+    <script src="{% static 'js/manageAlbumState.js' %}"></script>
+    <script src="{% static 'js/sortAlbums.js' %}"></script>
+    <script src="{% static 'js/filterByArtist.js' %}"></script>
+    <script src="{% static 'js/filterBySubstatus.js' %}"></script>
 {% endblock %}
