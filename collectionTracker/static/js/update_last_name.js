@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     saveIcon.addEventListener('click', function() {
         const newName = input.value;
-        fetch('/update-last-name/', {  // Ersetzen Sie dies mit der korrekten URL
+        fetch('/update-last-name/', {  // Replace with correct URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

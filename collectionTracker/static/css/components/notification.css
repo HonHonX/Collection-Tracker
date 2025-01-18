@@ -9,25 +9,25 @@
 }
 
 .swal2-title {
-    color: var(--text-color); /* Title Color */
+    color: var(--text-color);
     font-family: var(--defaultFont);
 }
 
 .swal2-content {
-    color: var(--text-color); /* Content/Text Color */
+    color: var(--text-color); 
 }
 
 .swal2-toast {
-    background-color: var(--neutral90) !important; /* Hintergrundfarbe */
+    background-color: var(--neutral90) !important; 
     color: var(--text-color) !important; /* Textfarbe */
-    border-radius: var(--borderRadius) !important; /* Abgerundete Ecken */
-    box-shadow: var(--boxShadow) !important; /* Schatten */
+    border-radius: var(--borderRadius) !important;
+    box-shadow: var(--boxShadow) !important; 
 }
 
 /* Title und Content im Toast */
 .swal2-toast .swal2-title,
 .swal2-toast .swal2-content {
-    color: var(--text-color) !important; /* Titel und Text im Toast */
+    color: var(--text-color) !important; /* Titel and Text within Toast */
 }
 
 /* Buttons */
@@ -49,5 +49,5 @@
 
 /* Special */
 .swal2-timer-progress-bar {
-    background-color: var(--neutral70); /* Fortschrittsbalken-Farbe */
+    background-color: var(--neutral70);
 }

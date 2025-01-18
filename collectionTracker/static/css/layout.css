@@ -1,7 +1,7 @@
 /* Layout: Styles related to the overall layout and structure. */
 :root {
     /* Design Sizes */
-    --borderRadius: 0.5rem; /* Box Roundness */
+    --borderRadius: 0.5rem;
     --gapDistance: 1rem;
     --gapBigBlocks: 2rem;
 }
@@ -12,11 +12,11 @@ main {
     justify-content: flex-start;
     width: 100vw; 
     height: auto;
-    box-sizing: border-box; /* Include padding and border in dimensions */
+    box-sizing: border-box;
 }
 
 body::-webkit-scrollbar {
-    display: none; /* Hide vertical scrollbar*/
+    display: none;
 }
 
 .content{
@@ -30,7 +30,6 @@ body::-webkit-scrollbar {
 .maincontent {
     height: 100vh;
     display: flex;
-    flex-direction: wrap;
     flex-grow: 1;
     padding: 2rem;
     box-sizing: border-box;
@@ -44,7 +43,7 @@ body::-webkit-scrollbar {
     height: 2rem;
 }
 
-/* used for sites without a sidebar */
+/* used for sites without a sidebar, e.g. Login, Register etc. */
 .main-block {
     width: 50%;
     height: auto;
@@ -53,8 +52,8 @@ body::-webkit-scrollbar {
     border-radius: var(--borderRadius);
     flex-direction: column;
     align-items: center;
-    padding: 2rem 5rem; /* Added padding for better spacing */
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    padding: 2rem 5rem;
+    box-sizing: border-box; 
     gap: var(--gapBigBlocks);
     margin: auto;
     box-sizing: border-box;
@@ -65,7 +64,7 @@ body::-webkit-scrollbar {
 .sticky-top {
     position: sticky;
     top: 0;
-    z-index: 10; /* Ensure the sticky content stays on top */
+    z-index: 10;
     background: var(--neutral100);
 }
 
@@ -91,7 +90,7 @@ body::-webkit-scrollbar {
     height: 2rem;
 }
 
-/* Adjust vertical scrollbar */
+/* Adjust vertical scrollbar, input ChatGPT */
 ::-webkit-scrollbar {
     width: 0.5rem;
 }
@@ -106,36 +105,36 @@ body::-webkit-scrollbar {
     background-color: var(--neutral90); 
 }
 
-/* Mobile Adjustments */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     main {
-        flex-direction: column; /* Switch to column layout */
-        height: auto; /* Allow flexible height */
+        flex-direction: column;
+        height: auto;
         overflow-x: none;
     }
 
     .maincontent {
-        padding-top: 4rem; /* Reduce padding for smaller screens */
-        gap: 1rem; /* Smaller gap between elements */
+        padding-top: 4rem;
+        gap: 1rem;
     }
 
     .main-block {
-        width: 90%; /* Expand blocks to nearly full width */
-        padding: 1rem; /* Reduce padding for smaller screens */
-        gap: 1rem; /* Adjust spacing */
-        margin: 1rem auto; /* Add margin for better spacing */
+        width: 90%;
+        padding: 1rem;
+        gap: 1rem;
+        margin: 1rem auto;
     }
 
     .logo {
-        width: 80%; /* Adjust logo size */
+        width: 80%;
     }
 
     .full-block {
-        gap: 1rem; /* Reduce gap for compact layout */
+        gap: 1rem;
     }
 
     #spacer-1 {
-        height: 0.5rem; /* Adjust spacer sizes */
+        height: 0.5rem;
     }
 
     #spacer-2 {

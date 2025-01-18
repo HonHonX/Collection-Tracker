@@ -23,7 +23,7 @@
 
 body {
     font-family: var(--defaultFont);
-    font-size: 1rem; /* 16px */
+    font-size: 14px;
     background-color: var(--neutral100);
     color: var(--neutral0);
     display: flex;
@@ -97,7 +97,14 @@ input {
     font-family: var(--defaultFont);
 }
 
-/* Mobile Device adjustments */
+/* Responsiveness for Large Displays */
+@media (min-width: 1980px) {
+    body{
+        font-size: 16px;
+    }
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     body {
         font-size: 0.875rem; /* Reduce font size for better readability */

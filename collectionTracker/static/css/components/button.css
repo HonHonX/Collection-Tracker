@@ -36,12 +36,12 @@
     opacity: 0.6;
 }
 
-/* Mobile adjustments */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     :root {
-        --buttonWidth: 6rem; /* Reduce button width */
-        --buttonHeight: 2.5rem; /* Adjust button height */
-        --buttonPadding: 0.5rem 1rem; /* Smaller padding for mobile */
+        --buttonWidth: 6rem;
+        --buttonHeight: 2.5rem;
+        --buttonPadding: 0.5rem 1rem;
     }
 
     .button {

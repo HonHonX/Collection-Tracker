@@ -8,21 +8,21 @@
     overflow: hidden;
     height: 25rem;
     opacity: 1;
-    max-height: 25rem; /* Ensure max-height is set to accommodate content */
+    max-height: 25rem;
     transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 #carousel-container.hidden {
     max-height: 0;
     opacity: 0;
-    overflow: hidden; /* Ensure overflow is hidden */
+    overflow: hidden;
     transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 #carousel-container.visible {
     max-height: 25rem;
     opacity: 1;
-    overflow: hidden; /* Ensure overflow is hidden */
+    overflow: hidden;
     transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
@@ -65,11 +65,11 @@
 }
 
 .reflection img {
-    opacity: 0.5; /* Make the reflection semi-transparent */
-    width: 100%; /* Match the width of the parent */
-    height: auto; /* Maintain aspect ratio */
-    filter: blur(2px); /* Add subtle blur to the reflection */
-    transform: scaleY(-1); /* Flip the image vertically for the reflection */
+    opacity: 0.5;
+    width: 100%;
+    height: auto;
+    filter: blur(2px);
+    transform: scaleY(-1);
 }
 
 /* Navigation buttons */
@@ -140,3 +140,29 @@
     align-items: center;
     margin: auto 0;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    
+    #carousel-container {
+        height: 15rem;
+        max-height: 15rem;
+    }
+    .carousel-item {
+        transform: scale(1.2);
+    }
+
+    .carousel-item.active {
+        transform: scale(1.5) rotateY(0);
+    }
+
+    .indicators {
+        transform: scale(0.9);
+    }
+
+    .indicator {
+        display: none;
+    }
+    
+}
+

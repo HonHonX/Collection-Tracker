@@ -49,7 +49,7 @@
         display: flex; 
         flex-direction: column;
         flex: 1;
-        position: relative; /* Prevent album-overview from overflowing */
+        position: relative;
     }
 
     .spotify-block {
@@ -60,7 +60,7 @@
         justify-content: flex-end;
         padding: 0;
         background-color: var(--neutral100);
-        z-index: 10; /* Ensures they stay on top when scrolling */
+        z-index: 10;
         gap: 0;
     }
 
@@ -84,14 +84,14 @@
     .control-block {
         background-color: var(--neutral100);
         display: flex;
-        flex-direction: row; /* Aligns label and select elements in a row */
+        flex-direction: row; 
         align-items: center;
-        justify-content: flex-end; /* Pushes the controls to the right */
-        gap: var(--gapDistance); /* Adds spacing between elements */
+        justify-content: flex-end; 
+        gap: var(--gapDistance); 
         padding: 1rem 0;
-        color: var(--neutral0); /* Matches text color */
-        box-shadow: var(--boxShadow); /* Optional: Adds a shadow */
-        z-index: 10; /* Ensures they stay on top when scrolling */
+        color: var(--neutral0);
+        box-shadow: var(--boxShadow);
+        z-index: 10; 
     }
 
     .control-block label {
@@ -100,12 +100,12 @@
     }
 
     .control-block select:hover {
-        background-color: var(--accent100); /* Changes color on hover */
+        background-color: var(--accent100); 
     }
 
     .control-block select:focus {
         outline: none;
-        border: 1px solid var(--accent100); /* Highlight border on focus */
+        border: 1px solid var(--accent100); 
     }
 
     /* Album-Item : One Album item featuring the album image, info and controls */
@@ -125,11 +125,11 @@
     }
 
     .album-item.disabled {
-        filter: grayscale(1);  /* Ensure grayscale has a value */
+        filter: grayscale(1); 
     }
 
     .album-item.disabled .album-cover{
-        filter: grayscale(1);  /* Ensure grayscale has a value */
+        filter: grayscale(1);
     }
     
     .album-item #collection-control-icon,
@@ -142,7 +142,7 @@
     }
 
     .album-item #blacklist-control-icon {
-        opacity: 1;  /* Ensure opacity is 1 even if it's disabled */
+        opacity: 1;
         cursor: pointer;
         pointer-events: auto;
     }
@@ -240,16 +240,16 @@
     }
     
     .album-info .album-title { 
-        font-size: 0.8rem;                      /* Increases the font size for the album title */
+        font-size: 0.8rem;
         display: block;
-        display: -webkit-box;                   /* Required for the line-clamp property */
-        -webkit-line-clamp: 2;                  /* Number of lines to show */
-        -webkit-box-orient: vertical;           /* Ensures the box is vertically oriented */
-        overflow: hidden;                       /* Hides the overflowing text */
-        text-overflow: ellipsis;                /* Adds '...' for overflow */
+        display: -webkit-box; 
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 0.8rem;  
-        line-height: 1.25rem;                      /* Keeps the font size as specified */
-        max-height: calc(1.25rem * 2);             /* Ensures the height accommodates exactly two lines */
+        line-height: 1.25rem;
+        max-height: calc(1.25rem * 2);
     }
     
     .album-controls {
@@ -274,14 +274,14 @@
         justify-content: center;
         gap: 1.75rem;
         flex: 1;
-        max-height: 60vh; /* Limit the height of the grid to 60% of the viewport height */
-        overflow-y: auto; /* Enable vertical scrolling */
-        scrollbar-width: none; /* Hide scrollbar for Firefox */
-        -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer */
+        max-height: 60vh;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
     
     .album-grid::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+        display: none;
     }
 
     #blacklist-control-icon:hover,
@@ -291,28 +291,9 @@
         transform: scale(1.2);
     }
 
-/* Controls */
-/* .controls {
-    width: 100%;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--gapDistance);
-    color: var(--neutral0);
-    background-color: var(--neutral100);
-}
-
-.controls .icon {
-    height: 1rem;
-    width: auto;
-} */
-
-/* Album Overview */
-
 #save-button:disabled {
-    cursor: not-allowed;  /* Change the cursor to indicate the button is disabled */
-    opacity: 0.5;  /* Dim the button */
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 @media (min-width: 768px) {
@@ -322,6 +303,7 @@
     }
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
 
     .album-item {
@@ -334,9 +316,9 @@
     }
 
     .sorting-controls {
-        transform: scale(0.7);
+        transform: scale(0.5);
         justify-content: center;
-        font-size-adjust: -1;
+        font-size: 0.8rem;
     }
 
     .collection-header p{

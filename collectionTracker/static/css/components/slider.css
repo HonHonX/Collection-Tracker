@@ -1,16 +1,17 @@
 .album-slider {
     height: var(--sliderHeight);      
     display: flex;                   
-    flex-direction: row;             /* Arrange items in a row */
-    gap: var(--gapDistance);        /* Spacing between album items */              
+    flex-direction: row;
+    gap: var(--gapDistance);             
     flex-grow: 1;
-    overflow-x: auto;                /* Enable horizontal scrolling */
-    overflow-y: hidden;              /* Disable vertical scrolling*/
-    scroll-behavior: smooth;         /* Smooth scrolling */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
     box-sizing: border-box;          
     margin: 0;                  
 }
 
+/* Custom Scrollbar Design: ChatGPT Input */
 .album-slider::-webkit-scrollbar {
     height: 8px;                     /* Custom scrollbar height */
 }
@@ -24,7 +25,7 @@
     background-color: var(--neutral90); /* Scrollbar track color */
 }
 
-
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .album-slider{
         gap: 0.6rem;

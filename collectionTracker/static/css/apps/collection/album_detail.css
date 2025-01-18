@@ -1,19 +1,19 @@
 .maincontent {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap; /* Allow the content to wrap in smaller screen sizes */
+    flex-wrap: wrap;
     gap: var(--gapBigBlocks);
 }
 
 h1 {
-    display: -webkit-box;           /* Required for the line-clamp property */
-    -webkit-line-clamp: 3;          /* Number of lines to show */
-    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
-    overflow: hidden;               /* Hides the overflowing text */
-    text-overflow: ellipsis;        /* Adds '...' for overflow */
-    line-height: 3rem;              /* Line height for one line */
-    max-height: 6rem;               /* Ensures the height accommodates exactly two lines */
-    font-size: 2rem;              /* Ensure consistent font size */
+    display: -webkit-box;           
+    -webkit-line-clamp: 3;          
+    -webkit-box-orient: vertical;   
+    overflow: hidden;               
+    text-overflow: ellipsis;        
+    line-height: 3rem;             
+    max-height: 6rem;              
+    font-size: 2rem;         
 }
 
 .album-detail {
@@ -21,7 +21,7 @@ h1 {
     flex-direction: column;
     gap: var(--gapDistance);
     align-self: start;
-    width: 20%; /* Fixed width for album detail */
+    width: 20%; 
 }
 
 .album-detail img.album-cover {
@@ -61,7 +61,7 @@ h1 {
     flex-direction: column;
     background-color: var(--neutral90);
     padding: 2rem;
-    flex: 1; /* Ensure it takes the remaining space */
+    flex: 1;
     border-radius: var(--borderRadius);
     gap: var(--gapBigBlocks);
     width: 100%;
@@ -120,10 +120,10 @@ textarea {
 
 .wishlist-priority,
 .substatus-section {
-    display: flex; /* Use flexbox to arrange elements horizontally */
-    gap: var(--gapDistance); /* Add space between the select and button */
-    align-items: center; /* Vertically center the elements */
-    width: auto; /* Let the section take the width it needs */
+    display: flex; 
+    gap: var(--gapDistance); 
+    align-items: center;
+    width: auto;
 }
 
 .album-tracklist {
@@ -173,6 +173,7 @@ textarea {
     gap: var(--gapDistance);
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .maincontent {
         flex-direction: row; 
@@ -181,9 +182,13 @@ textarea {
     }
 
     .album-detail{
-        width: 100%; /* Full width for mobile screens */
+        width: 100%; 
         margin-top: 3rem;
         transform: scale(0.9);
+    }
+
+    .album-status{
+        display: none;
     }
     .custom-detail {
         transform: scale(0.9);
@@ -193,27 +198,18 @@ textarea {
     }
 
     .album-detail img.album-cover {
-        width: 100%; /* Album cover scales to full width */
-        max-width: 300px; /* Optional: Limit max size for readability */
+        width: 100%; 
+        max-width: 300px; 
     }
 
     .bottom-block {
-        flex-direction: column; /* Stack price stats and tracklist vertically */
+        flex-direction: column; 
         gap: var(--gapDistance);
     }
 
     .album-tracklist,
     .price-stats {
-        width: 100%; /* Full width for mobile screens */
-    }
-
-    .wishlist{
-        flex-direction: column;
-    }
-
-    .collection{
-         flex-direction: row;
-         width: 100%;
+        width: 100%; 
     }
 
     #substatus-form select{
@@ -227,5 +223,15 @@ textarea {
 
     #priority-form{
         justify-content: center;
+    }
+
+    #priority{
+        transform: scale(1);
+        font-size: 0.9rem;
+    }
+
+    #substatus{
+        transform: scale(0.7);
+        font-size: 1.1rem;
     }
 }

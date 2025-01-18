@@ -11,8 +11,8 @@ main {
     border-radius: var(--borderRadius);
     flex-direction: column;
     align-items: center;
-    padding: 2rem 6rem; /* Added padding for better spacing */
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    padding: 2rem 6rem; 
+    box-sizing: border-box;
     gap: var(--gapDistance);
     margin: auto;
     box-sizing: border-box;
@@ -70,7 +70,7 @@ p {
     width: 20%
 }
 
-/* Responsive Design */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     main {
         padding: 1.5rem 0;

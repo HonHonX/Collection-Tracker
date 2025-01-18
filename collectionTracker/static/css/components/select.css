@@ -5,7 +5,7 @@ select {
     color: var(--neutral0);
     border: none;
     border-radius: var(--borderRadius);
-    box-shadow: var(--boxShadow); /* Matches existing styles */
+    box-shadow: var(--boxShadow);
     transition: var(--transitionStyle);
     font-family: var(--defaultFont);
 }
@@ -75,7 +75,7 @@ select option .color-swatch {
 }
 
 .options-container.active {
-    max-height: 200px; /* Adjust as needed */
+    max-height: 200px;
     overflow-y: auto;
 }
 

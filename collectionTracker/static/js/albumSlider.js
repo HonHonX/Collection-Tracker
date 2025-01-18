@@ -4,7 +4,7 @@ document.querySelectorAll('.album-slider, #events-slider').forEach(slider => {
         event.preventDefault(); // Prevent vertical scrolling
         slider.scrollBy({
             left: event.deltaY, // Use vertical scroll input for horizontal scrolling
-            behavior: 'smooth'  // Smooth scrolling effect
+            behavior: 'smooth'
         });
     });
 });

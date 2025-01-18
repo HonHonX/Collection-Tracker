@@ -61,14 +61,14 @@
 }
 
 .countable {
-    width: 13rem;
-    display: -webkit-box;           /* Required for the line-clamp property */
-    -webkit-line-clamp: 1;          /* Number of lines to show */
-    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
-    overflow: hidden;               /* Hides the overflowing text */
-    text-overflow: ellipsis;        /* Adds '...' for overflow */
-    line-height: 1rem;              /* Line height for one line */
-    max-height: 1rem;               /* Ensures the height accommodates exactly two lines */
+    flex: 1 0 8rem;
+    display: -webkit-box;     
+    -webkit-line-clamp: 1;         
+    -webkit-box-orient: vertical;  
+    overflow: hidden;              
+    text-overflow: ellipsis;   
+    line-height: 1rem;    
+    max-height: 1rem;  
 }
 
 .full-block {
@@ -95,13 +95,13 @@
 
 .album-item p{
     margin: 0;
-    display: -webkit-box;           /* Required for the line-clamp property */
-    -webkit-line-clamp: 1;          /* Number of lines to show */
-    -webkit-box-orient: vertical;   /* Ensures the box is vertically oriented */
-    overflow: hidden;               /* Hides the overflowing text */
-    text-overflow: ellipsis;        /* Adds '...' for overflow */
-    line-height: 1rem;              /* Line height for one line */
-    max-height: 1rem;               /* Ensures the height accommodates exactly two lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical; 
+    overflow: hidden;     
+    text-overflow: ellipsis;  
+    line-height: 1rem; 
+    max-height: 1rem;  
 }
 
 .album-cover {
@@ -163,35 +163,35 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .stats-block {
-        flex-direction: column; /* Stack the blocks vertically */
+        flex-direction: column; 
     }
 
     .top-block {
-        width: 100%; /* Take full width */
+        width: 100%; 
     }
 
     .full-block {
         gap: var(--gapDistance);
-        width: 100%; /* Take full width */
+        width: 100%; 
     }
 
     .quantities-block, .competition-block {
-        flex-direction: column; /* Stack items vertically */
+        flex-direction: column;
         text-align: center;
         gap: var(--gapDistance);
     }
 
     .quantities-block .stat, .competition-block form, #artist-rank {
-        width: 100%; /* Full width */
+        width: 100%; 
     }
 
     .top-list {
-        height: auto; /* Allow content to expand naturally */
-        padding: 0.5rem; /* Reduce padding for smaller screens */
+        height: auto;
+        padding: 0.5rem; 
     }
 
     .ranked-item {
-        flex-direction: row; /* Stack the name and value vertically */
+        flex-direction: row; 
         align-items: flex-start;
         gap: 0.5rem;
     }
@@ -201,33 +201,33 @@
     }
 
     .album-item {
-        width: 4rem; /* Reduce album item width for smaller screens */
+        width: 4rem; 
     }
 
     .album-cover {
-        width: 100%; /* Maintain responsive scaling */
+        width: 100%; 
     }
 
     .friend-name {
-        flex-direction: column; /* Stack name and icon */
+        flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
 
     .user-icon {
-        width: 1.5rem; /* Reduce size for smaller screens */
+        width: 1.5rem; 
         height: 1.5rem;
     }
 
     #friend-collection, #similar-friends {
-        height: auto; /* Allow flexible height */
+        height: auto; 
     }
 
     select {
-        width: 100%; /* Full-width dropdown for mobile */
+        width: 100%;
     }
 
     #crown {
-        margin-top: 1rem; /* Add spacing for the crown */
+        margin-top: 1rem;
     }
 }
