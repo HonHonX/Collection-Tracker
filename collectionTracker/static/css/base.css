@@ -97,13 +97,14 @@ input {
     font-family: var(--defaultFont);
 }
 
+/* Responsiveness for Large Displays */
 @media (min-width: 1980px) {
     body{
         font-size: 16px;
     }
 }
 
-/* Mobile Device adjustments */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     body {
         font-size: 0.875rem; /* Reduce font size for better readability */

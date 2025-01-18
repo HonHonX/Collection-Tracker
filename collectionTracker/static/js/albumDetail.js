@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
     if (form && descriptionInput && saveButton) {
-        saveButton.disabled = true; // Initially disable the Save button
+        saveButton.disabled = true; 
         let originalDescription = descriptionInput.value.trim();
 
         descriptionInput.addEventListener("input", function () {
