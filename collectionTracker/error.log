@@ -5344,3 +5344,68 @@ Traceback (most recent call last):
     )
 django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 13: 'static', expected 'endblock'. Did you forget to register or load this tag?
 "GET /change-password/ HTTP/1.1" 500 181502
+Internal Server Error: /search/
+"POST /search/ HTTP/1.1" 500 70
+Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 49, in home_view
+    response = get_recommendations(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 511, in get_recommendations
+    recommended_artists = fetch_and_save_recommendations(user)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+                          ^^^^^^^^^^^^
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\utils\functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'user'
+"GET /home/ HTTP/1.1" 500 98634
+Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 49, in home_view
+    response = get_recommendations(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 511, in get_recommendations
+    recommended_artists = fetch_and_save_recommendations(user)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+                          ^^^^^^^^^^^^
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\utils\functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'user'
+"GET /home/ HTTP/1.1" 500 98634
+Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 49, in home_view
+    response = get_recommendations(request)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\User\Documents\FOM\WebTech\Collection-Tracker\collectionTracker\collection\views.py", line 511, in get_recommendations
+    recommended_artists = fetch_and_save_recommendations(user)
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\contrib\auth\decorators.py", line 57, in _view_wrapper
+    test_pass = test_func(request.user)
+                          ^^^^^^^^^^^^
+  File "C:\Users\User\miniconda3\envs\music\Lib\site-packages\django\utils\functional.py", line 253, in inner
+    return func(_wrapped, *args)
+AttributeError: 'User' object has no attribute 'user'
+"GET /home/ HTTP/1.1" 500 98454

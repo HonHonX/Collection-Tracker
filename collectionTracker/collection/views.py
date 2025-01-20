@@ -3,14 +3,13 @@ from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 from integration.spotify_query import get_artist_data
 from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details, update_album_from_discogs_url
 import json
-from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
+from utils.collection_helpers import get_user_album_ids, get_artist_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
 from django.conf import settings
-from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
+from .tasks import start_background_artist_update, start_background_album_update, update_album_details
 import logging
 from stats.models import DailyAlbumPrice, AlbumPricePrediction
 from django.utils import timezone
@@ -106,11 +105,10 @@ def artist_search(request, artist_name=None):
             })
         
         try:
-            # Remove caching
-            context = get_artist_data(artist_name, request.user)
+            context = get_artist_data(artist_name, user)
             response = render(request, 'collection/artist_overview.html', context)
             
-            # Start the background task
+            # Start the background task to retrieve further artist details
             start_background_artist_update(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
@@ -339,9 +337,17 @@ class AlbumDetail(View):
             album = get_object_or_404(Album, id=album_id)
             if album:
                 logger.info(f"Album {album.name} with the id {album.id} found in database.")
-                album_data = fetch_basic_album_details(album.id)   
+                album_data = fetch_basic_album_details(album.id)
+                
+                if not album.discogs_id:
+                    album.discogs_id = album_data.get('discogs_id')
+                    album.genres = album_data.get('genres')
+                    album.styles = album_data.get('styles')
+                    album.labels = album_data.get('labels')
+                    album.tracklist = album_data.get('tracklist')
+                    album.lowest_price = album_data.get('lowest_price')
+                    album.save()
 
-                # Create DailyAlbumPrice entry if it doesn't exist
                 if album.lowest_price:
                     DailyAlbumPrice.objects.get_or_create(
                         album=album,
@@ -399,6 +405,7 @@ class AlbumDetail(View):
                 discogs_url = request.POST.get('discogs_url')
                 if discogs_url:
                     update_album_from_discogs_url(album, discogs_url)
+                    start_background_album_update(album.id)  # Start background update for album details
                     return redirect('album_detail', album_id=album.id)
 
             return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
@@ -494,7 +501,7 @@ def album_carousel(request):
 
 @login_required
 def get_recommendations(request):
-    user = request.user
+    user = request.user 
     recommended_artists = RecommendedArtist.objects.filter(user=user)
 
     if not recommended_artists.exists():

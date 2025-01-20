@@ -1,13 +1,12 @@
 from django.urls import path
 from . import views
 from integration.ticketmaster_query import fetch_artist_events
-from integration.lastfm_query import artist_recommendations
 
 urlpatterns = [
 
     # Home route
     path('home/', views.home_view, name='index'),
-
+ 
     # Artist search
     path('search/', views.artist_search, name="artist_search"),
     path('search/<str:artist_name>/', views.artist_search, name="artist_search"),

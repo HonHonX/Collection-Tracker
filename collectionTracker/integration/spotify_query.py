@@ -1,16 +1,9 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from decouple import config
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
-import json
-from integration.discogs_query import get_more_artist_data, fetch_basic_album_details
 from datetime import datetime
-import requests
 import logging
 
 # Configure logging
@@ -24,8 +17,16 @@ client_secret = config('SPOTIFY_CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-# Helper function
 def convert_to_valid_date_format(date_value):
+    """
+    Converts a date string to a valid date format.
+
+    Parameters:
+    date_value (str): The date string to convert.
+
+    Returns:
+    str: The converted date string in the format 'YYYY-MM-DD'.
+    """
     try:
         if not date_value:
             # If there is no release date at all, set year to 1900
@@ -41,10 +42,18 @@ def convert_to_valid_date_format(date_value):
         # Handle the case where the date_value is not in the expected format
         print(f"Invalid date format for value: {date_value}")
         return None        
-    
-# View for searching artist and displaying albums
-def get_artist_data(artist_name, user):
 
+def get_artist_data(artist_name, user):
+    """
+    Retrieves artist data and their albums from Spotify and updates the database.
+
+    Parameters:
+    artist_name (str): The name of the artist to search for.
+    user (User): The user making the request.
+
+    Returns:
+    dict: A dictionary containing artist and album data, user-specific data, and error information.
+    """
     albums, artist_info, user_album_ids, user_wishlist_ids, user_blacklist_ids, user_followed_artist_ids = [], {}, [], [], [], []
     error, artist_photo_url, latest_album, artist = None, None, None, None
     collection_count, wishlist_count, blacklist_count = 0, 0, 0
@@ -74,13 +83,8 @@ def get_artist_data(artist_name, user):
                 })
 
             artist_info.update({
-                'id': artist_info['id'],
-                'name': artist_info['name'],
-                'genres': [genre for genre in artist_info['genres']],
-                'popularity': artist_info['popularity'],
                 'total_albums': total_albums
             })
-
             if sorted_albums:
                 latest_album = sorted_albums[0]
 

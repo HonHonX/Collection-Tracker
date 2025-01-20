@@ -1,9 +1,5 @@
 {% load static %}
 
-{% block extra_css %}
-    <!-- <link rel="stylesheet" href="{% static 'css/components/sidebar.css' %}" type="text/css"> -->
-{% endblock %}
-
 {% block content %}
     <!-- Desktop Sidebar -->
     <div class="sidebar">
@@ -94,7 +90,7 @@
             <div class="nav-item" id="mobile-collection-button" data-collection-url="{% url 'list_overview' 'collection' %}">
                 <img class="icon" src="{% static 'icons/collection.svg' %}">
             </div>
-            <div class="nav-item" id="mobile-wishlist-button" data-wishlist-url=""> <!-- {% url 'list_overview' 'wishlist' %} -->
+            <div class="nav-item" id="mobile-wishlist-button" data-wishlist-url="">
                 <img class="icon" src="{% static 'icons/wishlist.svg' %}">
                 <div class="nav-select" id="nav-select">
                     <ul>

@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('price-chart');
+    if (!canvas) {
+        return;
+    }
     const albumId = canvas.dataset.albumId;
     const url = canvas.dataset.url;
     const url_predict = canvas.dataset.urlpred;
