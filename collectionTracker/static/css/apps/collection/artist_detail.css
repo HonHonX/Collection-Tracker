@@ -61,6 +61,7 @@
     background-color: var(--neutral90);
     border-radius: var(--borderRadius);
     padding: 1rem;
+    margin-bottom: var(--gapDistance);
 }
 
 .discogs p {
