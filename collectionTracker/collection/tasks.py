@@ -6,6 +6,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 def update_artist_details_in_background(artist_id):
+    """
+    Update artist details in the background using Discogs data.
+
+    Parameters:
+    artist_id (int): The ID of the artist to update.
+
+    Returns:
+    None
+    """
     try:
         artist = Artist.objects.get(id=artist_id)
         if not artist.discogs_id:
@@ -23,10 +32,28 @@ def update_artist_details_in_background(artist_id):
         logger.error(f"Artist with ID {artist_id} does not exist.")
 
 def start_background_artist_update(artist_id):
+    """
+    Start a background thread to update artist details.
+
+    Parameters:
+    artist_id (int): The ID of the artist to update.
+
+    Returns:
+    None
+    """
     thread_artist = threading.Thread(target=update_artist_details_in_background, args=(artist_id,))
     thread_artist.start()
 
 def update_album_details(album_id):
+    """
+    Update album details using Discogs data.
+
+    Parameters:
+    album_id (int): The ID of the album to update.
+
+    Returns:
+    None
+    """
     try:
         album = Album.objects.get(id=album_id)
         album_data = fetch_basic_album_details(album.id)

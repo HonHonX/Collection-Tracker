@@ -1,12 +1,10 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
-from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import JSONField, CharField
-from django.contrib.postgres.fields import ArrayField
-import json
 from django.utils.formats import number_format
+import json
 
 class Genre(models.Model):
     """
@@ -85,7 +83,6 @@ class Album(models.Model):
     image_url = models.URLField(blank=True, null=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True)
 
-    # Attributes provided by Discogs
     discogs_id = models.IntegerField(blank=True, null=True)
     genres = JSONField(default=list, blank=True, null=True)  # Store as JSON field
     styles = JSONField(default=list, blank=True, null=True)  # Store as JSON field

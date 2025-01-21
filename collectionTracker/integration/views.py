@@ -1,25 +1,17 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from decouple import config
-from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists  # Import the model
+from collection.models import Artist, Album, UserAlbumCollection, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
 import json
 
-# Retrieving credentials from .env
 client_id = config('SPOTIFY_CLIENT_ID')
 client_secret = config('SPOTIFY_CLIENT_SECRET')
 
-# Authentication through Spotify API
 auth_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-# Create your views here.
-
-# View for searching artist and displaying albums
 def get_artist_data(artist_name, user): 
     albums = []
     error = None
@@ -35,30 +27,25 @@ def get_artist_data(artist_name, user):
     blacklist_count = 0
 
     try:
-        # Search by name → Spotify API
         result = sp.search(q=artist_name, type='artist')
 
-        if len(result['artists']['items']) == 0:  # List empty
+        if len(result['artists']['items']) == 0: 
             error = f"Artist {artist_name} not found!"
         else:
             artist_info = result['artists']['items'][0]
             artist_id = artist_info['id']
             artist_photo_url = artist_info['images'][0]['url'] if artist_info['images'] else None
 
-            # Get all albums for the artist using the artist ID
             album_results = sp.artist_albums(artist_id=artist_id)
 
-            # Sort albums by release date
             sorted_albums = sorted(
                 album_results['items'],
                 key=lambda x: x['release_date'],
-                reverse=True  # Set to True if you want latest albums first
+                reverse=True 
             )
 
-            # Count total number of albums
             total_albums = len(sorted_albums)
 
-            # Add album details to the albums list
             for album in sorted_albums:
                 albums.append({
                     'name': album['name'],
@@ -70,20 +57,17 @@ def get_artist_data(artist_name, user):
                     'spotify_id': album['id'],
                 })
 
-            # Add artist info to the context
             artist_info = {
-                'id': artist_info['id'],  # Spotify ID
+                'id': artist_info['id'], 
                 'name': artist_info['name'],
-                'genres': artist_info['genres'],  # List of genres
-                'popularity': artist_info['popularity'],  # Popularity score
-                'total_albums': total_albums  # Total number of albums
+                'genres': artist_info['genres'],
+                'popularity': artist_info['popularity'], 
+                'total_albums': total_albums,
             }
 
-            # The first album in the sorted list is the latest
             if sorted_albums:
                 latest_album = sorted_albums[0]
 
-            # Save artist and albums to the database
             with transaction.atomic():
                 artist, created = Artist.objects.get_or_create(
                     id=artist_info['id'],
@@ -108,33 +92,23 @@ def get_artist_data(artist_name, user):
                         }
                     )
 
-            # Get the list of user albums (user_album_ids), blacklist (user_blacklist_ids) and wishlist (user_wishlist_ids)
             if user.is_authenticated:
-                # Get albums in the user's collection
                 user_album_ids = list(
                     UserAlbumCollection.objects.filter(user=user)
                     .values_list('album__id', flat=True)
                 )
-
-                # Get albums in the user's wishlist
                 user_wishlist_ids = list(
                     UserAlbumWishlist.objects.filter(user=user)
                     .values_list('album__id', flat=True)
                 )
-
-                # Get albums in the user's blacklist
                 user_blacklist_ids = list(
                     UserAlbumBlacklist.objects.filter(user=user)
                     .values_list('album__id', flat=True)
                 )
-
-                # Get followed artists
                 user_followed_artist_ids = list(
                     UserFollowedArtists.objects.filter(user=user)
                     .values_list('artist__id', flat=True)
                 )
-
-                # Calculate counts for collection, wishlist, and blacklist
                 collection_count = sum(1 for album in sorted_albums if album['id'] in user_album_ids)
                 wishlist_count = sum(1 for album in sorted_albums if album['id'] in user_wishlist_ids)
                 blacklist_count = sum(1 for album in sorted_albums if album['id'] in user_blacklist_ids)
