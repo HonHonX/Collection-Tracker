@@ -258,6 +258,17 @@ height: 2rem;;
         width: 100%;
         flex: 1 1 auto;
     }
+    #artist-information {
+        flex-direction: column;
+    }
+
+    .column-left{
+        width: 100%;
+    }
+
+    .bottom-block{
+        flex-direction: column;
+    }
 
     .bottom-block {
         flex-direction: column;
