@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const criteria = sortCriteria.value;
         const order = sortToggle.dataset.sortOrder;
         const albums = Array.from(albumGrid.getElementsByClassName("album-item"));
-
+        // Sorting logic created with the help of AI
         albums.sort((a, b) => {
-            let valueA = a.dataset[criteria] || ''; // Fallback for missing attributes
-            let valueB = b.dataset[criteria] || ''; // Fallback for missing attributes
+            let valueA = a.dataset[criteria] || ''; 
+            let valueB = b.dataset[criteria] || ''; 
 
             if (criteria === 'release_date') {
-                // Parse dates for sorting
+
                 valueA = new Date(valueA).getTime() || 0;
                 valueB = new Date(valueB).getTime() || 0;
             } else {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return valueA < valueB ? 1 : -1;
             }
         });
-
+        // end of sorting logic created with the help of AI
         // Clear and re-append sorted albums
         albumGrid.innerHTML = '';
         albums.forEach(album => albumGrid.appendChild(album));

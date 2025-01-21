@@ -1,35 +1,39 @@
 from django.contrib import admin
 from .models import Album, UserAlbumCollection, Artist, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserArtistProgress, UserProgress, UserFollowedArtists, Genre, RecommendedArtist
 
-# Register the Genre model with the admin panel
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
-    list_display = ('name', 'get_artists', 'get_album_ids')  # Display name, artists, and album IDs
-    search_fields = ('name',)  # Allow searching by genre name
+    """
+    Admin interface for the Genre model.
+    """
+    list_display = ('name', 'get_artists', 'get_album_ids')
+    search_fields = ('name',)
 
     def get_artists(self, obj):
-        """Return a comma-separated list of artists for the genre."""
         return ", ".join([artist.name for artist in obj.get_artists()])
     get_artists.short_description = 'Artists'
 
     def get_album_ids(self, obj):
-        """Return a comma-separated list of album IDs for the genre."""
         return ", ".join(obj.get_album_ids())
     get_album_ids.short_description = 'Album IDs'
 
-# Register the Artist model with the admin panel
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'photo_url', 'popularity', 'discogs_id', 'profile')  # Display name, ID, photo URL, popularity, Discogs ID, and profile
-    search_fields = ('name', 'id', 'discogs_id')  # Allow searching by name, ID, and Discogs ID
-    filter_horizontal = ('genres',)  # Add genres to the admin panel
+    """
+    Admin interface for the Artist model.
+    """
+    list_display = ('name', 'id', 'photo_url', 'popularity', 'discogs_id', 'profile')
+    search_fields = ('name', 'id', 'discogs_id')
+    filter_horizontal = ('genres',)
 
-# Register the Album model with custom configuration
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price')  # Include new fields
-    search_fields = ('name', 'album_type', 'discogs_id')  # Allow searching by name, album type, and Discogs ID
-    list_filter = ('album_type', 'release_date')  # Optionally, filter by album type and release date
+    """
+    Admin interface for the Album model.
+    """
+    list_display = ('id', 'name', 'album_type', 'release_date', 'artist', 'discogs_id', 'lowest_price')
+    search_fields = ('name', 'album_type', 'discogs_id')
+    list_filter = ('album_type', 'release_date')
     readonly_fields = ('id',)
     fieldsets = (
         (None, {
@@ -40,63 +44,85 @@ class AlbumAdmin(admin.ModelAdmin):
         }),
     )
 
-# Register the UserAlbumCollection model with custom configuration
 @admin.register(UserAlbumCollection)
 class UserAlbumCollectionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on', 'substatus')  # Display user, album, date added, and substatus
-    list_filter = ('added_on',)  # Filter by the date the album was added
+    """
+    Admin interface for the UserAlbumCollection model.
+    """
+    list_display = ('user', 'album', 'added_on', 'substatus')
+    list_filter = ('added_on',)
 
-# Register the UserAlbumDescription model with custom configuration
 @admin.register(UserAlbumDescription)
 class UserAlbumDescriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'description')  # Display user, album, and description
-    search_fields = ('user__username', 'album__name')  # Allow searching by username or album name
-    list_filter = ('user',)  # Optionally, filter by user
+    """
+    Admin interface for the UserAlbumDescription model.
+    """
+    list_display = ('user', 'album', 'description')
+    search_fields = ('user__username', 'album__name')
+    list_filter = ('user',)
 
-# Register the UserAlbumWishlist model with custom configuration
 @admin.register(UserAlbumWishlist)
 class UserAlbumWishlistAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on', 'priority')  # Display user, album, date added, and priority
-    list_filter = ('added_on',)  # Filter by the date the album was added
+    """
+    Admin interface for the UserAlbumWishlist model.
+    """
+    list_display = ('user', 'album', 'added_on', 'priority')
+    list_filter = ('added_on',)
 
-# Register the UserAlbumBlacklist model with custom configuration
 @admin.register(UserAlbumBlacklist)
 class UserAlbumBlacklistAdmin(admin.ModelAdmin):
-    list_display = ('user', 'album', 'added_on')  # Display user, album, and date added
-    list_filter = ('added_on',)  # Filter by the date the album was added
+    """
+    Admin interface for the UserAlbumBlacklist model.
+    """
+    list_display = ('user', 'album', 'added_on')
+    list_filter = ('added_on',)
 
-# Register the UserArtistProgress model with custom configuration
 @admin.register(UserArtistProgress)
 class UserArtistProgressAdmin(admin.ModelAdmin):
+    """
+    Admin interface for the UserArtistProgress model.
+    """
     list_display = (
         'user', 'artist', 'total_albums', 'collection_count', 'wishlist_count', 
         'blacklist_count', 'collection_and_wishlist_count'
-    )  # Display relevant fields
-    search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
-    list_filter = ('user', 'artist')  # Filter by user and artist
-    readonly_fields = ('collection', 'wishlist', 'blacklist', 'collection_and_wishlist')  # Make the collection fields readonly 
+    )
+    search_fields = ('user__username', 'artist__name')
+    list_filter = ('user', 'artist')
+    readonly_fields = ('collection', 'wishlist', 'blacklist', 'collection_and_wishlist')
 
-# Register the UserProgress model with custom configuration
 @admin.register(UserProgress)
 class UserProgressAdmin(admin.ModelAdmin):
+    """
+    Admin interface for the UserProgress model.
+    """
     list_display = (
         'user', 'total_artists', 'total_albums', 'total_collection_count', 
         'total_wishlist_count', 'total_blacklist_count', 
         'total_collection_and_wishlist_count'
-    )  # Display the user's overall progress
-    search_fields = ('user__username',)  # Allow searching by username
+    )
+    search_fields = ('user__username',)
     readonly_fields = (
         'total_artists', 'total_albums', 'total_collection_count', 
         'total_wishlist_count', 'total_blacklist_count', 
         'total_collection_and_wishlist_count'
-    )  # Make the aggregated fields readonly
+    )
 
-# Register the UserFollowedArtists model with custom configuration
 @admin.register(UserFollowedArtists)
 class UserFollowedArtistsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'artist', 'followed_on')  # Display user, artist, and followed date
-    search_fields = ('user__username', 'artist__name')  # Allow searching by username and artist name
-    list_filter = ('artist', 'followed_on')  # Filter by the date the artist was followed
+    """
+    Admin interface for the UserFollowedArtists model.
+    """
+    list_display = ('user', 'artist', 'followed_on')
+    search_fields = ('user__username', 'artist__name')
+    list_filter = ('artist', 'followed_on')
 
-admin.site.register(RecommendedArtist)
+@admin.register(RecommendedArtist)
+class RecommendedArtistAdmin(admin.ModelAdmin):
+    """
+    Admin interface for the RecommendedArtist model.
+    """
+    list_display = ('user', 'artist', 'created_at')
+    search_fields = ('user__username', 'artist__name')
+    list_filter = ('created_at',)
+
 

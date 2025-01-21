@@ -32,10 +32,10 @@ urlpatterns = [
     # Album carousel
     path('album-carousel/', views.album_carousel, name='album_carousel'),
 
-    #Fetch artist events
+    # Fetch artist events
     path('fetch-artist-events/<str:artist_name>/', fetch_artist_events, name='fetch_artist_events'),
     
-    #Fetch recommended artists
+    # Fetch recommended artists
     path('fetch-recommendations/', views.get_recommendations, name="get_recommendations"),
 
     # Reload recommendations

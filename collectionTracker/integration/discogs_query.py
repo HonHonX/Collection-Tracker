@@ -91,7 +91,7 @@ def get_more_artist_data(artist_name):
     return {} 
 
 def update_artist_from_discogs_url(artist, discogs_url):
-    """
+    """ 
     Update the artist in the database based on the Discogs URL provided.
     
     Args:
@@ -104,15 +104,15 @@ def update_artist_from_discogs_url(artist, discogs_url):
         try:
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
-            artist.profile = format_string(discogs_artist.profile)  # Format the profile string
-            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases]  # Save as list
-            artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
-            artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
+            artist.profile = format_string(discogs_artist.profile) 
+            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases] 
+            artist.members = [format_string(member.name) for member in discogs_artist.members]
+            artist.urls = [str(url) for url in discogs_artist.urls] 
             artist.save()
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
-def update_album_from_discogs_url(album, discogs_url):
+def update_album_from_discogs_url(album, discogs_url): 
     """
     Update the album in the database based on the Discogs URL provided.
     

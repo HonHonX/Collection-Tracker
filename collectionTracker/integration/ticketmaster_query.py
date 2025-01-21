@@ -5,6 +5,17 @@ from django.http import JsonResponse
 api_key = config('TICKETMASTER_API_KEY')
 
 def fetch_artist_events(request, artist_name):
+    """
+    Fetch events for a given artist from the Ticketmaster API.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        artist_name (str): The name of the artist to search for events.
+        This function has been created with the help of the Ticketmaster API documentation and AI.
+
+    Returns:
+        JsonResponse: A JSON response containing a list of events for the artist.
+    """
     events = []
 
     if (artist_name):
