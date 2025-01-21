@@ -1,10 +1,10 @@
 import logging
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q, F, ExpressionWrapper, FloatField, IntegerField
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 from collection.models import UserProgress, Genre, UserAlbumCollection, Artist, UserArtistProgress, Album
 from friends.models import Friend
 from utils.stats_helpers import (
@@ -16,14 +16,11 @@ from utils.stats_helpers import (
     calculate_user_rank_for_artist
 )
 from stats.models import Notification 
-from django.views.decorators.csrf import csrf_exempt
 from .models import DailyAlbumPrice, AlbumPricePrediction
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
 import pandas as pd
-from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -193,35 +190,30 @@ def generate_album_price_predictions(album_id):
         return []
 
     try:
-        # Data Preparation
         prognosis_data = pd.DataFrame([{'ds': item['date'], 'y': item['price']} for item in data])
         prognosis_data['ds'] = pd.to_datetime(prognosis_data['ds'])
         prognosis_data.set_index('ds', inplace=True)
     except KeyError as e:
         raise ValueError(f'Error in the data processing: {str(e)}')
 
-    # Convert dates to ordinal
     prognosis_data['ds'] = prognosis_data.index.map(pd.Timestamp.toordinal)
     X = prognosis_data[['ds']]
     y = prognosis_data['y']
 
-    # Create the pipeline: PolynomialFeatures -> LinearRegression
     model_pipeline = Pipeline([
         ('poly_features', PolynomialFeatures(degree=5)),
         ('linear_regression', LinearRegression())
     ])
 
     try:
-        # Fit the model using the pipeline
         model_pipeline.fit(X, y)
 
-        # Adjust future dates to start from tomorrow
         tomorrow = pd.Timestamp.today().normalize() + pd.Timedelta(days=1)
         future_dates = pd.date_range(start=tomorrow, periods=7, freq='D')
         future_dates_ordinal = pd.DataFrame(future_dates.map(pd.Timestamp.toordinal), columns=['ds'])
         forecast = model_pipeline.predict(future_dates_ordinal)
 
-        forecast_data = [{'ds': date.strftime('%Y-%m-%d'), 'yhat': float(f"{price:.2f}")} for date, price in zip(future_dates, forecast)]
+        forecast_data = [{'ds': date.strftime('%Y-%m-%d'), 'yhat': max(0, float(f"{price:.2f}"))} for date, price in zip(future_dates, forecast)]
 
         if data:
             last_data_point = data[-1]

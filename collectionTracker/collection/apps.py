@@ -4,5 +4,5 @@ class CollectionConfig(AppConfig):
     name = 'collection'
 
     def ready(self):
-        import collection.signals  # Ensure signals are imported
+        import collection.signals
 

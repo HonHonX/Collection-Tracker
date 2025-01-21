@@ -20,7 +20,7 @@ def artist_recommendations(genres):
     artist_names = []
 
     for genre in genres:
-        # API parameters
+
         params = {
             'method': 'tag.getTopArtists',
             'tag': genre,
@@ -29,16 +29,13 @@ def artist_recommendations(genres):
             'limit': 15
         }
 
-        # Send the request to the API
         response = requests.get(url, params=params)
         if response.status_code == 200:
             data = response.json()
             artists = data.get('topartists', {}).get('artist', [])
             artist_names.extend([artist['name'] for artist in artists])
 
-    # Limit the total number of artists to 15
     artist_names = artist_names[:15]
 
-    # Return the results as JSON
     return JsonResponse({'artists': artist_names})
 

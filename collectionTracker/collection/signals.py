@@ -18,7 +18,6 @@ def update_user_progress(sender, instance, **kwargs):
     user = instance.user
     album = instance.album
 
-    # Check if the album still has an associated artist
     if not album.artist_id:
         logger.debug("Album has no associated artist.")
         return
@@ -39,33 +38,22 @@ def update_user_progress(sender, instance, **kwargs):
 
     try:
         with transaction.atomic():
-
-            # Query all albums related to this artist
             artist_albums = Album.objects.filter(artist=artist)
-
-            # Calculate the total albums
             total_albums = artist_albums.count()
-
-            # Albums in the user's collection
             collection_set = set(
                 UserAlbumCollection.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
-
-            # Albums in the user's wishlist
             wishlist_set = set(
                 UserAlbumWishlist.objects.filter(user=user, album__artist=artist)
                 .values_list('album__id', flat=True)
             )
-
-            # Get or create the UserArtistProgress object for the user and artist
             progress, created = UserArtistProgress.objects.get_or_create(user=user, artist=artist)
             if created:
                 logger.debug(f"Created new UserArtistProgress for user: {user.username}, artist: {artist.name}")
             else:
                 logger.debug(f"Updated UserArtistProgress for user: {user.username}, artist: {artist.name}")
 
-            # Update progress fields
             progress.total_albums = total_albums
             progress.collection = list(collection_set)
             progress.wishlist = list(wishlist_set)
@@ -75,7 +63,6 @@ def update_user_progress(sender, instance, **kwargs):
             )
             progress.collection_and_wishlist = list(collection_set.intersection(wishlist_set))
 
-            # Update the counts
             progress.collection_count = len(progress.collection)
             progress.wishlist_count = len(progress.wishlist)
             progress.blacklist_count = len(progress.blacklist)
@@ -83,26 +70,21 @@ def update_user_progress(sender, instance, **kwargs):
 
             progress.save()
 
-        # Update UserProgress for the user
         user_progress.total_artists = Artist.objects.filter(userartistprogress__user=user).distinct().count()
         user_progress.total_collection_count = UserAlbumCollection.objects.filter(user=user).count()
         user_progress.total_wishlist_count = UserAlbumWishlist.objects.filter(user=user).count()
         user_progress.total_blacklist_count = UserAlbumBlacklist.objects.filter(user=user).count()
 
-        # Fetch albums in both collection and wishlist for the user
         collection_albums = UserAlbumCollection.objects.filter(user=user).values_list('album_id', flat=True)
         wishlist_albums = UserAlbumWishlist.objects.filter(user=user).values_list('album_id', flat=True)
 
-        # Calculate the intersection of albums in both collection and wishlist
         user_progress.total_collection_and_wishlist_count = len(set(collection_albums).intersection(wishlist_albums))
 
-        # Calculate the total number of albums the user has in their collection, wishlist, and blacklist combined
         user_progress.total_albums = (
             user_progress.total_collection_count + 
             user_progress.total_wishlist_count 
         )
 
-        # Ensure no division by zero
         total_non_blacklisted_albums = user_progress.total_albums - user_progress.total_blacklist_count
         if total_non_blacklisted_albums > 0:
             user_progress.total_collection_and_wishlist_count = (
@@ -115,5 +97,4 @@ def update_user_progress(sender, instance, **kwargs):
         user_progress.save()
 
     except Exception as e:
-        # Handle error and log it
         logger.error(f"Error updating user progress: {e}")

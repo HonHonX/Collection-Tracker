@@ -1,20 +1,27 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from friends.models import Friend, FriendList
-from stats.models import Badge, UserBadge, Notification
-from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress, Album, Artist
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from utils.stats_helpers import get_or_create_badge, create_all_badges
 from django.dispatch import Signal, receiver
-from django.contrib import messages
-from utils.stats_helpers import create_notification
+from friends.models import Friend, FriendList
+from stats.models import Badge, UserBadge, Notification
+from utils.stats_helpers import create_notification, get_or_create_badge
+from collection.models import UserFollowedArtists, UserAlbumCollection, UserArtistProgress, Album, Artist
 import logging
 import threading
 
 logger = logging.getLogger(__name__)
 
 def run_in_background(func):
+    """
+    Decorator to run a function in a separate thread.
+    
+    Args:
+        func (function): The function to be run in the background.
+    
+    Returns:
+        function: The wrapped function that runs in a separate thread.
+    """
     def wrapper(*args, **kwargs):
         thread = threading.Thread(target=func, args=args, kwargs=kwargs)
         thread.start()

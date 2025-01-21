@@ -10,10 +10,28 @@ class GenreAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
     def get_artists(self, obj):
+        """
+        Return a comma-separated list of artists for the genre.
+        
+        Args:
+            obj (Genre): The genre object.
+        
+        Returns:
+            str: A comma-separated list of artist names.
+        """
         return ", ".join([artist.name for artist in obj.get_artists()])
     get_artists.short_description = 'Artists'
 
     def get_album_ids(self, obj):
+        """
+        Return a comma-separated list of album IDs for the genre.
+        
+        Args:
+            obj (Genre): The genre object.
+        
+        Returns:
+            str: A comma-separated list of album IDs.
+        """
         return ", ".join(obj.get_album_ids())
     get_album_ids.short_description = 'Album IDs'
 
