@@ -1,24 +1,23 @@
-from django.shortcuts import render, get_object_or_404, redirect
+import json
+import logging
+import requests
+
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from .models import Album, Artist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserAlbumBlacklist, UserFollowedArtists
-from integration.spotify_query import get_artist_data
-from integration.discogs_query import update_artist_from_discogs_url, fetch_basic_album_details, update_album_from_discogs_url
-import json
-from utils.collection_helpers import get_user_album_ids, get_artist_list, add_album_to_list, remove_album_from_list, get_album_list_model, manage_album_in_list, filter_list_by_artist, get_followed_artists, get_user_lists, get_newest_albums
-from django.conf import settings
-from .tasks import start_background_artist_update, start_background_album_update, update_album_details_in_background
-import logging
-from stats.models import DailyAlbumPrice, AlbumPricePrediction
-from django.utils import timezone
-from django.shortcuts import render
+
+from .models import Album, Artist, RecommendedArtist, UserAlbumBlacklist, UserAlbumCollection, UserAlbumDescription, UserAlbumWishlist, UserFollowedArtists
+from .tasks import start_background_album_update, start_background_artist_update
+from integration.discogs_query import fetch_basic_album_details, update_album_from_discogs_url, update_artist_from_discogs_url
 from integration.lastfm_query import artist_recommendations
+from integration.spotify_query import get_artist_data
+from stats.models import AlbumPricePrediction, DailyAlbumPrice
+from utils.collection_helpers import filter_list_by_artist, get_artist_list, get_followed_artists, get_newest_albums, get_user_album_ids, get_user_lists
 from utils.stats_helpers import calculate_top_genres
-import requests  
-from .models import RecommendedArtist
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +72,7 @@ def artist_detail(request, artist_id):
             update_artist_from_discogs_url(artist, discogs_url) 
             return redirect('artist_detail', artist_id=artist.id)
     
-    return render(request, 'collection/artist_detail.html', {'artist': artist})
+    return render(request, 'collection/artist_detail.html', {'artist': artist}) 
 
 def artist_search(request, artist_name=None):
     """
@@ -106,11 +105,9 @@ def artist_search(request, artist_name=None):
             })
         
         try:
-            # Remove caching
-            context = get_artist_data(artist_name, request.user)
+            context = get_artist_data(artist_name, user)
             response = render(request, 'collection/artist_overview.html', context)
             
-            # Start the background task
             start_background_artist_update(context['artist'].id)
             logger.info(f"Started background task for artist ID: {context['artist'].id}")
             
@@ -135,7 +132,7 @@ def artist_overview(request, artist_id):
     try:
         artist = Artist.objects.get(id=artist_id)
         artist_name = artist.name
-        # Redirect to the search page with the artist name
+
         return redirect('artist_search', artist_name=artist_name)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -148,6 +145,7 @@ def follow_artist(request):
     
     If the request method is POST, retrieve the artist data from the request and update the user's followed artists.
     If the artist is already followed, unfollow the artist. Otherwise, follow the artist.
+    The code for "follow_artist" has been created with the help of AI.
     
     Args:
         request (HttpRequest): The HTTP request object.
@@ -157,23 +155,18 @@ def follow_artist(request):
     """
     if request.method == 'POST':
         try:
-            # Parse the JSON data from the request body
             data = json.loads(request.body)
             user = request.user
             artist_id = data.get('artist_id')
 
-            # Retrieve the artist from the database
             artist = Artist.objects.get(id=artist_id)
 
-            # Check if the user already follows the artist
             follow_entry, created = UserFollowedArtists.objects.get_or_create(user=user, artist=artist)
 
             if not created:
-                # If the user already follows the artist, unfollow the artist
                 follow_entry.delete()
                 return JsonResponse({'success': True, 'message': 'Artist unfollowed.'})
             else:
-                # If the user does not follow the artist, follow the artist
                 return JsonResponse({'success': True, 'message': 'Artist followed.'})
         except Artist.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Artist does not exist.'})
@@ -197,13 +190,11 @@ def list_overview(request, list_type):
         HttpResponse: The rendered HTML page with the list details.
     """
     try:
-        # Retrieve user album IDs and lists
         user_album_ids, user_wishlist_ids, user_blacklist_ids, user_collection, user_wishlist, user_blacklist = get_user_album_ids(request.user)
         recommended_album = None
         avg_predicted_price = None
         current_price = None
 
-        # Determine the list type and corresponding template
         if list_type == 'collection':
             user_list = filter_list_by_artist(request, user_collection)
             template = 'collection/album_overview.html'
@@ -283,7 +274,6 @@ def manage_album(request, list_type, action):
 
             user = request.user
 
-            # Get or create the album
             album, _ = Album.objects.get_or_create(
                 id=album_id,
                 defaults={
@@ -294,7 +284,6 @@ def manage_album(request, list_type, action):
                 }
             )
 
-            # Handle adding/removing albums from collection, wishlist, or blacklist
             if list_type == 'collection':
                 if action == 'add':
                     UserAlbumCollection.objects.get_or_create(user=user, album=album)
@@ -339,9 +328,17 @@ class AlbumDetail(View):
             album = get_object_or_404(Album, id=album_id)
             if album:
                 logger.info(f"Album {album.name} with the id {album.id} found in database.")
-                album_data = fetch_basic_album_details(album.id)   
+                album_data = fetch_basic_album_details(album.id)
+                
+                if not album.discogs_id:
+                    album.discogs_id = album_data.get('discogs_id')
+                    album.genres = album_data.get('genres')
+                    album.styles = album_data.get('styles')
+                    album.labels = album_data.get('labels')
+                    album.tracklist = album_data.get('tracklist')
+                    album.lowest_price = album_data.get('lowest_price')
+                    album.save()
 
-                # Create DailyAlbumPrice entry if it doesn't exist
                 if album.lowest_price:
                     DailyAlbumPrice.objects.get_or_create(
                         album=album,
@@ -363,7 +360,7 @@ class AlbumDetail(View):
                 'priority_display': wishlist_entry.get_priority_display() if wishlist_entry else None,
                 'substatus_display': collection_entry.get_substatus_display() if collection_entry else None,
             }
-
+ 
             return render(request, 'collection/album_detail.html', context)
         except Exception as e:
             logger.error(f"Error fetching album details: {e}")
@@ -399,6 +396,7 @@ class AlbumDetail(View):
                 discogs_url = request.POST.get('discogs_url')
                 if discogs_url:
                     update_album_from_discogs_url(album, discogs_url)
+                    start_background_album_update(album.id)  # Start background update for album details
                     return redirect('album_detail', album_id=album.id)
 
             return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
@@ -489,12 +487,30 @@ class AlbumDetail(View):
 
 @login_required
 def album_carousel(request):
+    """
+    Render the album carousel page.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+    
+    Returns:
+        HttpResponse: The rendered HTML page with the user's albums.
+    """
     user_albums = Album.objects.filter(useralbumcollection__user=request.user)
     return render(request, 'collection/album_carousel.html', {'albums': user_albums})
 
 @login_required
 def get_recommendations(request):
-    user = request.user
+    """
+    Fetch and return recommended artists for the user.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+    
+    Returns:
+        JsonResponse: A JSON response containing recommended artists.
+    """
+    user = request.user 
     recommended_artists = RecommendedArtist.objects.filter(user=user)
 
     if not recommended_artists.exists():
@@ -512,28 +528,34 @@ def get_recommendations(request):
     })
 
 def fetch_and_save_recommendations(user):
+    """
+    Fetch and save artist recommendations for the user.
+    
+    Args:
+        user (User): The user object.
+    
+    Returns:
+        QuerySet: A queryset of recommended artists.
+    """
     top_genres = calculate_top_genres(user)
     genres = [genre.name for genre in top_genres]
     
     try:
-        response = artist_recommendations(genres)
+        response = artist_recommendations(genres) 
         data = response.json() if isinstance(response, requests.Response) else json.loads(response.content)
         artists = data.get('artists', [])
         error = None
 
-        # Fetch artist data from Spotify and save to the database
         artist_objects = []
         for name in artists:
             artist_data = get_artist_data(name, user)
             artist_objects.append(artist_data['artist'])
 
-        # Check if the artist IDs are in the user's followed artist list
         followed_artist_ids = UserFollowedArtists.objects.filter(user=user).values_list('artist_id', flat=True)
         recommended_artists = [
             artist for artist in artist_objects if artist.id not in followed_artist_ids
         ]
 
-        # Save recommended artists to the database
         RecommendedArtist.objects.filter(user=user).delete()
         for artist in recommended_artists:
             RecommendedArtist.objects.create(user=user, artist=artist)
@@ -545,6 +567,15 @@ def fetch_and_save_recommendations(user):
 
 @login_required
 def reload_recommendations(request):
+    """
+    Reload and return updated artist recommendations for the user.
+    
+    Args:
+        request (HttpRequest): The HTTP request object.
+    
+    Returns:
+        JsonResponse: A JSON response containing updated recommended artists.
+    """
     user = request.user
     recommended_artists = fetch_and_save_recommendations(user)
     return JsonResponse({

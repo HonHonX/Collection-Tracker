@@ -203,20 +203,5 @@
     <script src="{% static 'js/showPriceGraph.js' %}"></script>
     <script src="{% static 'js/albumDetail.js' %}"></script>
     <script src="{% static 'js/editDiscogsAlbumDetail.js' %}"></script>
-    <script>
-        document.getElementById('edit-discogs-button').addEventListener('click', function() {
-            var discogsDiv = document.getElementById('discogs-div');
-            var tracklistDiv = document.getElementById('album-tracklist');
-            var priceStatsDiv = document.getElementById('price-stats');
-            
-            discogsDiv.classList.toggle('hidden');
-            if (discogsDiv.classList.contains('hidden')) {
-                if (tracklistDiv) tracklistDiv.classList.remove('hidden');
-                if (priceStatsDiv) priceStatsDiv.classList.remove('hidden');
-            } else {
-                if (tracklistDiv) tracklistDiv.classList.add('hidden');
-                if (priceStatsDiv) priceStatsDiv.classList.add('hidden');
-            }
-        });
-    </script>
 {% endblock %}
+ 

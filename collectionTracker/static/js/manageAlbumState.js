@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     if (window.location.pathname.includes('search') || window.location.pathname.includes('home') || window.location.pathname.includes('artist_overview')) {
-        updateProgressBars();
+        updateProgressBars(); 
     }
 
     document.querySelectorAll('.album-item').forEach(albumItem => {

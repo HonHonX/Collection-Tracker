@@ -1,12 +1,10 @@
 from decouple import config
 import discogs_client
 from django.core.cache import cache
-from django.db import transaction
-from collection.models import Artist, Album
+from collection.models import Album
 from stats.models import DailyAlbumPrice
-import bleach
 import re
-from integration.exchangeRate_query import usd_to_eur, fetch_and_save_usd_to_eur
+from integration.exchangeRate_query import usd_to_eur
 from datetime import date
 
 
@@ -47,10 +45,9 @@ def format_string(string):
     # Remove the [l= and [a= parts and the surrounding brackets
     formatted_string = re.sub(r'\[a=|\[l=', '', formatted_string)
 
-    # Remove sentences containing [] brackets
-    formatted_string = re.sub(r'under \[[a-zA-Z0-9]+\]', '', formatted_string)
-    formatted_string = re.sub(r'\.[^.]*\[[^\]]*\][^.]*\.', '. ', formatted_string)
-    formatted_string = re.sub(r'\]', '', formatted_string)
+    # Remove sentences containing remaining [] brackets
+    formatted_string = re.sub(r'[^.]*\[.*?\][^.]*\.', '', formatted_string)
+    formatted_string = re.sub(r'[^.]*\[.*?\]', '', formatted_string)
 
     return formatted_string
 
@@ -91,10 +88,10 @@ def get_more_artist_data(artist_name):
 
     except Exception as e:
         print(f"Error fetching data from Discogs: {e}")
-    return {}
+    return {} 
 
 def update_artist_from_discogs_url(artist, discogs_url):
-    """
+    """ 
     Update the artist in the database based on the Discogs URL provided.
     
     Args:
@@ -107,15 +104,15 @@ def update_artist_from_discogs_url(artist, discogs_url):
         try:
             discogs_artist = d.artist(discogs_id)
             artist.discogs_id = discogs_id
-            artist.profile = format_string(discogs_artist.profile)  # Format the profile string
-            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases]  # Save as list
-            artist.members = [format_string(member.name) for member in discogs_artist.members]  # Save as list and format
-            artist.urls = [str(url) for url in discogs_artist.urls]  # Ensure URLs are strings
+            artist.profile = format_string(discogs_artist.profile) 
+            artist.aliases = [format_string(alias.name) for alias in discogs_artist.aliases] 
+            artist.members = [format_string(member.name) for member in discogs_artist.members]
+            artist.urls = [str(url) for url in discogs_artist.urls] 
             artist.save()
         except Exception as e:
             print(f"Error updating artist from Discogs: {e}")
 
-def update_album_from_discogs_url(album, discogs_url):
+def update_album_from_discogs_url(album, discogs_url): 
     """
     Update the album in the database based on the Discogs URL provided.
     
@@ -168,7 +165,7 @@ def fetch_basic_album_details(album_id):
                 'labels': [format_string(label.name) for label in album.labels],
                 'tracklist': [{'position': track.position, 'title': track.title, 'duration': track.duration} for track in album.tracklist],
                 'lowest_price': lowest_price_eur,
-            }            
+            }        
             return album_details
     except Exception as e:
         print(f"Error fetching basic album details from Discogs: {e}")

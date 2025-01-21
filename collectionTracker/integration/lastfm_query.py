@@ -6,6 +6,15 @@ from django.http import JsonResponse
 from decouple import config
 
 def artist_recommendations(genres):
+    """
+    Fetch artist recommendations based on the provided genres.
+
+    Args:
+        genres (list): A list of genre names.
+
+    Returns:
+        JsonResponse: A JSON response containing a list of recommended artist names.
+    """
     api_key = config('LAST_FM_API_KEY')
     url = "http://ws.audioscrobbler.com/2.0/"
     artist_names = []

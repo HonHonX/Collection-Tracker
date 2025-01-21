@@ -167,5 +167,15 @@ def get_or_create_badge(name, description, image_url, sub_icon_url=None, associa
     return badge, created
 
 def create_notification(user, user_badge):
+    """
+    Create a notification for a user when they earn a badge.
+
+    Args:
+        user (User): The user who earned the badge.
+        user_badge (UserBadge): The UserBadge instance representing the earned badge.
+
+    Returns:
+        None
+    """
     message = f"You've earned the '{user_badge.badge.name}' badge."
     Notification.objects.create(user=user, user_badge=user_badge, message=message)

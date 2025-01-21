@@ -29,42 +29,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Navigation setup using the function
     setupNavigation('mobile-home-button', 'data-home-url');
     setupNavigation('mobile-collection-button', 'data-collection-url');
-    setupNavigation('mobile-profile-button', 'data-profile-url');
-    setupNavigation('mobile-wishlist-button', 'data-wishlist-url');
-
-        // Profile Button Click - Toggle Dropdown -> Topbar Dropdown (Settings, Friends, Statistics)
-        const profileButton = document.getElementById('mobile-profile-button');
-        if (profileButton) {
-            profileButton.addEventListener('click', function(event) {
-                const dropdownMenu = document.getElementById('dropdown-menu');
-                
-                if (dropdownMenu) {
-                    // Toggle dropdown visibility
-                    if (dropdownMenu.classList.contains('show')) {
-                        dropdownMenu.classList.remove('show');
-                    } else {
-                        dropdownMenu.classList.add('show'); 
-                    }
-                }
-            });
-        }  
     
-        // Mobile Nav Selection: Wishlist & Blacklist in Menu -> Similar Dropdown Logic as in Topbar.
-        const wishlist_button = document.getElementById('mobile-wishlist-button');
-        if (wishlist_button) {
-            wishlist_button.addEventListener('click', function(event) {
-                const navselect = document.getElementById('nav-select');
-                
-                if (navselect) {
-                    // Toggle dropdown visibility
-                    if (navselect.classList.contains('show')) {
-                        navselect.classList.remove('show');
-                    } else {
-                        navselect.classList.add('show'); 
-                    }
+    // Profile Button Click - Toggle Dropdown -> Topbar Dropdown (Settings, Friends, Statistics)
+    const profileButton = document.getElementById('mobile-profile-button');
+    if (profileButton) {
+        profileButton.addEventListener('click', function(event) {
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            
+            if (dropdownMenu) {
+                // Toggle dropdown visibility
+                if (dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                } else {
+                    dropdownMenu.classList.add('show'); 
                 }
-            });
-        } 
+            }
+        });
+    }  
+
+    // Mobile Nav Selection: Wishlist & Blacklist in Menu -> Similar Dropdown Logic as in Topbar.
+    const wishlist_button = document.getElementById('mobile-wishlist-button');
+    if (wishlist_button) {
+        wishlist_button.addEventListener('click', function(event) {
+            const navselect = document.getElementById('nav-select');
+            
+            if (navselect) {
+                // Toggle dropdown visibility
+                if (navselect.classList.contains('show')) {
+                    navselect.classList.remove('show');
+                } else {
+                    navselect.classList.add('show'); 
+                }
+            }
+        });
+    } 
 
     // Mobile Search Bar Toggle: Handled with popup window and backdrop (for visual differentiation)
     const searchIcon = document.getElementById("mobile-search");

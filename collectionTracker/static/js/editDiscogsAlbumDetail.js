@@ -12,3 +12,4 @@ document.getElementById('edit-discogs-button').addEventListener('click', functio
         if (priceStatsDiv) priceStatsDiv.style.display = 'block';
     }
 });
+ 
